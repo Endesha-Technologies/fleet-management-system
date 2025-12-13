@@ -13,7 +13,7 @@ import {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between bg-white px-6 shadow-md">
+    <header className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white px-6 shadow-md">
       <div className="flex items-center gap-4 md:hidden">
         <span className="text-lg font-bold text-blue-600">Fleet Manager</span>
       </div>
@@ -44,7 +44,7 @@ export function Header() {
         
         {/* Mobile User Dropdown */}
         <div className="md:hidden">
-          <DropdownMenu>
+          <DropdownMenu modal={true}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
                 <Avatar className="h-8 w-8">
