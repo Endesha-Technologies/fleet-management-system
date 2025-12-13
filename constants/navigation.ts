@@ -3,6 +3,7 @@ import {
   Users, 
   Map, 
   Truck, 
+  Fuel,
   Package, 
   Wrench, 
   Disc 
@@ -23,6 +24,11 @@ export const NAV_ITEMS = [
     name: 'Trips',
     href: '/trips',
     icon: Truck,
+  },
+  {
+    name: 'Fuel',
+    href: '/fuel',
+    icon: Fuel,
   },
   {
     name: 'Inventory',

@@ -15,12 +15,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white px-6 shadow-md">
       <div className="flex items-center gap-4 md:hidden">
-        <span className="text-lg font-bold text-blue-600">Fleet Manager</span>
+        <span className="text-lg font-bold text-[#020887]">Fleet Manager</span>
       </div>
       
       <div className="hidden md:flex items-center gap-4 flex-1">
         <h2 className="text-xl font-semibold text-gray-800">
-          Welcome back, <span className="text-blue-600">Admin User</span>
+          Welcome back, <span className="text-[#020887]">Admin User</span>
         </h2>
       </div>
 
@@ -29,7 +29,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-gray-200">
             <AvatarImage src="/avatars/01.png" alt="@admin" />
-            <AvatarFallback className="bg-blue-100 text-blue-600">AD</AvatarFallback>
+            <AvatarFallback className="bg-[#020887]/10 text-[#020887]">AD</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start">
             <span className="text-sm font-medium text-gray-900">Admin User</span>
@@ -58,7 +58,7 @@ export function Header() {
                 <div className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
                   <Avatar className="h-10 w-10 border border-gray-200">
                     <AvatarImage src="/avatars/01.png" alt="@admin" />
-                    <AvatarFallback className="bg-blue-100 text-blue-600">AD</AvatarFallback>
+                    <AvatarFallback className="bg-[#020887]/10 text-[#020887]">AD</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col space-y-0.5">
                     <p className="text-sm font-semibold text-gray-900">Admin User</p>

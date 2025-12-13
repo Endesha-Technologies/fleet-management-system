@@ -21,7 +21,7 @@ export function BottomNav() {
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
                   isActive
-                    ? "text-blue-600"
+                    ? "text-[#020887]"
                     : "text-gray-500 hover:text-gray-900"
                 )}
               >

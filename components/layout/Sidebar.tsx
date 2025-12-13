@@ -23,7 +23,7 @@ export function Sidebar() {
         "flex h-16 items-center border-b border-slate-800 px-4",
         isCollapsed ? "justify-center" : "justify-between"
       )}>
-        {!isCollapsed && <span className="text-lg font-bold text-blue-400 truncate">Fleet Manager</span>}
+        {!isCollapsed && <span className="text-lg font-bold text-white truncate">Fleet Manager</span>}
         <Button 
           variant="ghost" 
           size="icon" 
@@ -46,7 +46,7 @@ export function Sidebar() {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-blue-500/20 text-blue-400 border border-blue-500/50"
+                      ? "bg-[#020887] text-white shadow-md"
                       : "text-slate-400 hover:bg-slate-800 hover:text-white",
                     isCollapsed && "justify-center px-2"
                   )}
