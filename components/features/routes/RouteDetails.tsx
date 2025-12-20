@@ -91,7 +91,7 @@ export function RouteDetails({ route }: RouteDetailsProps) {
           </div>
         </div>
 
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div className="flex items-center justify-between p-3 shadow-sm rounded-lg bg-white">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
@@ -117,7 +117,7 @@ export function RouteDetails({ route }: RouteDetailsProps) {
             </div>
             <Button variant="ghost" size="sm" className="text-blue-600">Change</Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
