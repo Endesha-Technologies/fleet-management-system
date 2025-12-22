@@ -5,6 +5,7 @@ export interface FuelLog {
   vehiclePlate: string;
   driverName: string;
   tripId?: string;
+  tripName?: string;
   fuelStation: string;
   location: string;
   litersPurchased: number;
@@ -15,6 +16,10 @@ export interface FuelLog {
   paymentMethod: 'Cash' | 'Card' | 'Mobile Money' | 'Account';
   receiptNumber?: string;
   notes?: string;
+  // Trip fuel tracking
+  fuelStart?: number; // Liters at start of trip
+  fuelUsed?: number; // Liters used during trip
+  fuelEnd?: number; // Liters remaining at end
 }
 
 export interface FuelEfficiency {
