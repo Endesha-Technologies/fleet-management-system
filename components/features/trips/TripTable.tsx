@@ -3,9 +3,8 @@
 import React, { useState } from 'react';
 import { Trip } from '@/types/trip';
 import { Button } from '@/components/ui/button';
-import { Edit, Eye, Printer, PlayCircle, StopCircle, MapPin, Navigation } from 'lucide-react';
+import { Edit, Eye, Printer, PlayCircle, StopCircle, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { StartTripModal } from './StartTripModal';
 import { EndTripModal } from './EndTripModal';
 
@@ -14,7 +13,6 @@ interface TripTableProps {
 }
 
 export function TripTable({ trips }: TripTableProps) {
-  const router = useRouter();
   const [startModalOpen, setStartModalOpen] = useState(false);
   const [endModalOpen, setEndModalOpen] = useState(false);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
@@ -40,11 +38,6 @@ export function TripTable({ trips }: TripTableProps) {
     console.log('Ending trip:', selectedTrip?.id, { actualEndTime, reason });
     // In production: API call to update status to "Completed" and record actual end time
     alert(`Trip ${selectedTrip?.id} completed at ${new Date(actualEndTime).toLocaleString()}${reason ? `\nReason: ${reason}` : ''}`);
-  };
-
-  const handleTrackTrip = (trip: Trip) => {
-    // Navigate to tracking page under trips
-    router.push('/trips/tracking');
   };
 
   const handlePrint = (trip: Trip) => {
@@ -152,19 +145,6 @@ export function TripTable({ trips }: TripTableProps) {
                 >
                   <StopCircle className="h-3 w-3 mr-1" />
                   End Trip
-                </Button>
-              )}
-              
-              {/* Track Trip Button - Only for In Progress trips */}
-              {trip.status === 'In Progress' && (
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="text-blue-700 border-blue-300 hover:bg-blue-50"
-                  onClick={() => handleTrackTrip(trip)}
-                >
-                  <Navigation className="h-3 w-3 mr-1" />
-                  Track
                 </Button>
               )}
               
@@ -307,19 +287,6 @@ export function TripTable({ trips }: TripTableProps) {
                       >
                         <StopCircle className="h-3 w-3 mr-1" />
                         End
-                      </Button>
-                    )}
-                    
-                    {/* Track Trip Button - Only for In Progress trips */}
-                    {trip.status === 'In Progress' && (
-                      <Button 
-                        variant="ghost"
-                        size="sm"
-                        className="text-blue-700 hover:bg-blue-50 cursor-pointer"
-                        onClick={() => handleTrackTrip(trip)}
-                      >
-                        <Navigation className="h-3 w-3 mr-1" />
-                        Track
                       </Button>
                     )}
                     

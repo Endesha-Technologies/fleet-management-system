@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Plus, TrendingUp, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Plus, TrendingUp, Clock, CheckCircle, AlertCircle, Navigation } from 'lucide-react';
 import { TripTable } from '@/components/features/trips/TripTable';
 import { MOCK_TRIPS } from '@/constants/trips';
 
@@ -33,12 +33,20 @@ export default function TripsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Trip Dispatch Center</h1>
           <p className="text-sm text-gray-500 mt-1">Assign, track, and manage all fleet trips</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" asChild>
-          <Link href="/trips/create" scroll={false} prefetch={true}>
-            <Plus className="h-4 w-4 mr-2" />
-            Assign New Trip
-          </Link>
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50" asChild>
+            <Link href="/trips/tracking">
+              <Navigation className="h-4 w-4 mr-2" />
+              Track Trips
+            </Link>
+          </Button>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" asChild>
+            <Link href="/trips/create" scroll={false} prefetch={true}>
+              <Plus className="h-4 w-4 mr-2" />
+              Assign New Trip
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
