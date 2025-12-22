@@ -38,33 +38,33 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="w-full h-full flex flex-col">
-      <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 shrink-0">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold">{isEditing ? 'Update Trip' : 'Assign New Trip'}</h2>
-          <p className="text-sm text-muted-foreground">
+      <div className="flex flex-col gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-gray-100 shrink-0 px-1">
+        <div>
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold">{isEditing ? 'Update Trip' : 'Assign New Trip'}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             {isEditing ? 'Update trip details and status.' : 'Assign a route, vehicle, and driver to create a new trip dispatch.'}
           </p>
         </div>
-        <div className="flex gap-2 justify-end">
-          <Button type="button" variant="outline" onClick={() => router.back()}>
+        <div className="flex gap-2 sm:gap-3">
+          <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1 sm:flex-none">
             Cancel
           </Button>
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white flex-1 sm:flex-none">
             {isEditing ? 'Update Trip' : 'Assign Trip'}
           </Button>
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto py-4 pr-2 space-y-6">
+      <div className="flex-1 overflow-y-auto py-3 sm:py-4 px-1 space-y-4 sm:space-y-6">
         {/* Route Selection */}
-        <div className="space-y-4 pb-4 border-b border-gray-100">
-          <h3 className="font-medium text-gray-900">Route Details</h3>
+        <div className="space-y-3 sm:space-y-4 pb-3 sm:pb-4 border-b border-gray-100">
+          <h3 className="font-medium text-sm sm:text-base text-gray-900">Route Details</h3>
           <div className="space-y-2">
-            <Label htmlFor="route">Select Route *</Label>
+            <Label htmlFor="route" className="text-xs sm:text-sm">Select Route *</Label>
             <select 
               id="route" 
               name="routeId"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={selectedRoute}
               onChange={(e) => setSelectedRoute(e.target.value)}
               required
@@ -79,7 +79,7 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           </div>
 
           {route && (
-            <div className="bg-blue-50 p-4 rounded-lg text-sm space-y-2 border border-blue-200">
+            <div className="bg-blue-50 p-3 sm:p-4 rounded-lg text-xs sm:text-sm space-y-2 border border-blue-200">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <span className="text-blue-700 font-medium">Distance:</span>
@@ -103,14 +103,14 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
         </div>
 
         {/* Assignment Details */}
-        <div className="space-y-4 pb-4 border-b border-gray-100">
-          <h3 className="font-medium text-gray-900">Assignment</h3>
+        <div className="space-y-3 sm:space-y-4 pb-3 sm:pb-4 border-b border-gray-100">
+          <h3 className="font-medium text-sm sm:text-base text-gray-900">Assignment</h3>
           <div className="space-y-2">
-            <Label htmlFor="vehicleId">Select Vehicle *</Label>
+            <Label htmlFor="vehicleId" className="text-xs sm:text-sm">Select Vehicle *</Label>
             <select 
               id="vehicleId" 
               name="vehicleId"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={selectedVehicle}
               onChange={(e) => setSelectedVehicle(e.target.value)}
               required
@@ -125,7 +125,7 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           </div>
 
           {vehicle && (
-            <div className="bg-gray-50 p-3 rounded-lg text-sm space-y-1 border border-gray-200">
+            <div className="bg-gray-50 p-3 rounded-lg text-xs sm:text-sm space-y-1 border border-gray-200">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <span className="text-gray-600">Plate:</span>
@@ -146,11 +146,11 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="driverId">Select Driver *</Label>
+            <Label htmlFor="driverId" className="text-xs sm:text-sm">Select Driver *</Label>
             <select 
               id="driverId" 
               name="driverId"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={selectedDriver}
               onChange={(e) => setSelectedDriver(e.target.value)}
               required
@@ -165,7 +165,7 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           </div>
 
           {driver && (
-            <div className="bg-gray-50 p-3 rounded-lg text-sm space-y-1 border border-gray-200">
+            <div className="bg-gray-50 p-3 rounded-lg text-xs sm:text-sm space-y-1 border border-gray-200">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <span className="text-gray-600">Name:</span>
@@ -185,26 +185,28 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
         </div>
 
         {/* Schedule Times */}
-        <div className="space-y-4 pb-4 border-b border-gray-100">
-          <h3 className="font-medium text-gray-900">Schedule</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-3 sm:space-y-4 pb-3 sm:pb-4 border-b border-gray-100">
+          <h3 className="font-medium text-sm sm:text-base text-gray-900">Schedule</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="scheduledStartTime">Scheduled Start Time *</Label>
+              <Label htmlFor="scheduledStartTime" className="text-xs sm:text-sm">Scheduled Start Time *</Label>
               <Input 
                 id="scheduledStartTime" 
                 name="scheduledStartTime"
                 type="datetime-local"
+                className="h-9 sm:h-10 text-xs sm:text-sm"
                 defaultValue={initialData?.scheduledStartTime?.slice(0, 16)}
                 required 
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="scheduledEndTime">Scheduled End Time *</Label>
+              <Label htmlFor="scheduledEndTime" className="text-xs sm:text-sm">Scheduled End Time *</Label>
               <Input 
                 id="scheduledEndTime" 
                 name="scheduledEndTime"
                 type="datetime-local"
+                className="h-9 sm:h-10 text-xs sm:text-sm"
                 defaultValue={initialData?.scheduledEndTime?.slice(0, 16)}
                 required 
               />
@@ -214,14 +216,14 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
 
         {/* Trip Status & Actual Times (Only when editing) */}
         {isEditing && (
-          <div className="space-y-4 pb-4 border-b border-gray-100">
-            <h3 className="font-medium text-gray-900">Status & Actual Times</h3>
+          <div className="space-y-3 sm:space-y-4 pb-3 sm:pb-4 border-b border-gray-100">
+            <h3 className="font-medium text-sm sm:text-base text-gray-900">Status & Actual Times</h3>
             <div className="space-y-2">
-              <Label htmlFor="status">Trip Status</Label>
+              <Label htmlFor="status" className="text-xs sm:text-sm">Trip Status</Label>
               <select 
                 id="status" 
                 name="status"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 defaultValue={initialData?.status}
               >
                 <option value="Scheduled">Scheduled</option>
@@ -231,23 +233,25 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
               </select>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-2">
-                <Label htmlFor="actualStartTime">Actual Start Time</Label>
+                <Label htmlFor="actualStartTime" className="text-xs sm:text-sm">Actual Start Time</Label>
                 <Input 
                   id="actualStartTime" 
                   name="actualStartTime"
                   type="datetime-local"
+                  className="h-9 sm:h-10 text-xs sm:text-sm"
                   defaultValue={initialData?.actualStartTime?.slice(0, 16)}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="actualEndTime">Actual End Time</Label>
+                <Label htmlFor="actualEndTime" className="text-xs sm:text-sm">Actual End Time</Label>
                 <Input 
                   id="actualEndTime" 
                   name="actualEndTime"
                   type="datetime-local"
+                  className="h-9 sm:h-10 text-xs sm:text-sm"
                   defaultValue={initialData?.actualEndTime?.slice(0, 16)}
                 />
               </div>
@@ -257,69 +261,73 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
 
         {/* Fuel & Odometer (Only when editing) */}
         {isEditing && (
-          <div className="space-y-4 pb-4 border-b border-gray-100">
-            <h3 className="font-medium text-gray-900">Fuel & Odometer Readings</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="space-y-3 sm:space-y-4 pb-3 sm:pb-4 border-b border-gray-100">
+            <h3 className="font-medium text-sm sm:text-base text-gray-900">Fuel & Odometer Readings</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fuelStart">Fuel Start (L)</Label>
+                <Label htmlFor="fuelStart" className="text-xs sm:text-sm">Fuel Start (L)</Label>
                 <Input 
                   id="fuelStart" 
                   name="fuelStart"
                   type="number"
                   step="0.1"
-                  placeholder="45.5" 
+                  placeholder="45.5"
+                  className="h-9 sm:h-10 text-xs sm:text-sm" 
                   defaultValue={initialData?.fuelStart}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="fuelEnd">Fuel End (L)</Label>
+                <Label htmlFor="fuelEnd" className="text-xs sm:text-sm">Fuel End (L)</Label>
                 <Input 
                   id="fuelEnd" 
                   name="fuelEnd"
                   type="number"
                   step="0.1"
-                  placeholder="40.0" 
+                  placeholder="40.0"
+                  className="h-9 sm:h-10 text-xs sm:text-sm" 
                   defaultValue={initialData?.fuelEnd}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="fuelConsumed">Fuel Consumed (L)</Label>
+                <Label htmlFor="fuelConsumed" className="text-xs sm:text-sm">Fuel Consumed (L)</Label>
                 <Input 
                   id="fuelConsumed" 
                   name="fuelConsumed"
                   type="number"
                   step="0.1"
-                  placeholder="5.5" 
+                  placeholder="5.5"
+                  className="h-9 sm:h-10 text-xs sm:text-sm bg-gray-100" 
                   defaultValue={initialData?.fuelConsumed}
                   readOnly
-                  className="bg-gray-100"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-2">
-                <Label htmlFor="odometerStart">Odometer Start (km)</Label>
+                <Label htmlFor="odometerStart" className="text-xs sm:text-sm">Odometer Start (km)</Label>
                 <Input 
                   id="odometerStart" 
                   name="odometerStart"
                   type="number"
                   step="0.1"
-                  placeholder="125430" 
+                  placeholder="125430"
+                  className="h-9 sm:h-10 text-xs sm:text-sm" 
                   defaultValue={initialData?.odometerStart}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="odometerEnd">Odometer End (km)</Label>
+                <Label htmlFor="odometerEnd" className="text-xs sm:text-sm">Odometer End (km)</Label>
                 <Input 
                   id="odometerEnd" 
                   name="odometerEnd"
                   type="number"
                   step="0.1"
-                  placeholder="125445" 
+                  placeholder="125445"
+                  className="h-9 sm:h-10 text-xs sm:text-sm" 
                   defaultValue={initialData?.odometerEnd}
                 />
               </div>
@@ -328,14 +336,14 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
         )}
 
         {/* Notes & Issues */}
-        <div className="space-y-4">
-          <h3 className="font-medium text-gray-900">Notes & Instructions</h3>
+        <div className="space-y-3 sm:space-y-4">
+          <h3 className="font-medium text-sm sm:text-base text-gray-900">Notes & Instructions</h3>
           <div className="space-y-2">
-            <Label htmlFor="dispatcherNotes">Dispatcher Instructions</Label>
+            <Label htmlFor="dispatcherNotes" className="text-xs sm:text-sm">Dispatcher Instructions</Label>
             <textarea 
               id="dispatcherNotes" 
               name="dispatcherNotes"
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Special instructions, priorities, or notes for the driver..."
               defaultValue={initialData?.dispatcherNotes}
             />
@@ -344,22 +352,22 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           {isEditing && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="maintenanceIssues">Maintenance Issues</Label>
+                <Label htmlFor="maintenanceIssues" className="text-xs sm:text-sm">Maintenance Issues</Label>
                 <textarea 
                   id="maintenanceIssues" 
                   name="maintenanceIssues"
-                  className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="Any vehicle issues encountered during the trip..."
                   defaultValue={initialData?.maintenanceIssues}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="routeDeviations">Route Deviations</Label>
+                <Label htmlFor="routeDeviations" className="text-xs sm:text-sm">Route Deviations</Label>
                 <textarea 
                   id="routeDeviations" 
                   name="routeDeviations"
-                  className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="Any deviations from the planned route..."
                   defaultValue={initialData?.routeDeviations}
                 />
@@ -368,11 +376,11 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="notes">General Notes</Label>
+            <Label htmlFor="notes" className="text-xs sm:text-sm">General Notes</Label>
             <textarea 
               id="notes" 
               name="notes"
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Additional trip notes, incidents, or observations..."
               defaultValue={initialData?.notes}
             />

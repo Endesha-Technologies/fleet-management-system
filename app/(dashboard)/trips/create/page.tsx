@@ -1,19 +1,13 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { TripForm } from '@/components/features/trips/TripForm'
 
 export default function CreateTripPage() {
-  const router = useRouter()
-  
-  useEffect(() => {
-    // Redirect to trigger intercepting route (modal)
-    router.push('/trips/create')
-  }, [router])
-
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <TripForm />
+      </div>
     </div>
   )
 }
