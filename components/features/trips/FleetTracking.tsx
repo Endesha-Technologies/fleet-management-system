@@ -82,9 +82,10 @@ function TrackingMap({
 
   return (
     <MapContainer
+      key="fleet-tracking-map"
       center={center}
       zoom={7}
-      style={{ height: '100%', width: '100%' }}
+      style={{ height: '100%', width: '100%', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       zoomControl={true}
     >
       <TileLayer
@@ -415,7 +416,7 @@ export default function FleetTrackingPage() {
   const [selectedTruck, setSelectedTruck] = useState<TruckLocation | null>(null);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-gray-100">
       {/* Header */}
       <div className="bg-white border-b px-6 py-4">
         <div className="flex items-center justify-between">
@@ -433,7 +434,7 @@ export default function FleetTrackingPage() {
       </div>
 
       {/* Map and Details */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" style={{ height: 'calc(100vh - 88px)' }}>
         <TrackingMap 
           trucks={MOCK_TRUCK_LOCATIONS}
           selectedTruck={selectedTruck}
