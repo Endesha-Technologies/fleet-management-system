@@ -18,5 +18,9 @@ const FleetTrackingPage = dynamic(
 );
 
 export default function TrackingPage() {
-  return <FleetTrackingPage />;
+  return (
+    <div className="h-full w-full -mt-4 -mr-4 md:-mt-6 md:-mr-6 md:-mb-6 pb-16 md:pb-0">
+      <FleetTrackingPage />
+    </div>
+  );
 }

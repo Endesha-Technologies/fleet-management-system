@@ -416,7 +416,7 @@ export default function FleetTrackingPage() {
   const [selectedTruck, setSelectedTruck] = useState<TruckLocation | null>(null);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
       {/* Header */}
       <div className="bg-white border-b px-6 py-4">
         <div className="flex items-center justify-between">
@@ -434,7 +434,7 @@ export default function FleetTrackingPage() {
       </div>
 
       {/* Map and Details */}
-      <div className="flex-1 relative" style={{ height: 'calc(100vh - 88px)' }}>
+      <div className="flex-1 relative">
         <TrackingMap 
           trucks={MOCK_TRUCK_LOCATIONS}
           selectedTruck={selectedTruck}
