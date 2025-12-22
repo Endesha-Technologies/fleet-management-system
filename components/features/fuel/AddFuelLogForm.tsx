@@ -57,8 +57,9 @@ export default function AddFuelLogModal() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto flex flex-col">
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Date & Time */}
             <div>
               <Label htmlFor="date">Date & Time *</Label>
@@ -255,18 +256,19 @@ export default function AddFuelLogModal() {
                 </div>
               </div>
             )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50">
+            <Button type="button" variant="outline" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit">
+              Add Fuel Log
+            </Button>
           </div>
         </form>
-
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50">
-          <Button type="button" variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button type="submit" onClick={handleSubmit}>
-            Add Fuel Log
-          </Button>
-        </div>
       </div>
     </div>
   );
