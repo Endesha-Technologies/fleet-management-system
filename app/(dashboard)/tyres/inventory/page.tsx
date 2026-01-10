@@ -356,7 +356,7 @@ export default function TyreInventoryPage() {
                         {openMenuId === tyre.id && (
                           <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
                             <Link
-                              href={`/dashboard/tyres/${tyre.id}`}
+                              href={`/tyres/${tyre.id}`}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                               onClick={() => setOpenMenuId(null)}
                             >
@@ -365,7 +365,7 @@ export default function TyreInventoryPage() {
                             
                             {tyre.status === 'storage' && (
                               <Link
-                                href={`/dashboard/tyres/${tyre.id}/assign`}
+                                href={`/tyres/${tyre.id}/assign`}
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                 onClick={() => setOpenMenuId(null)}
                               >
