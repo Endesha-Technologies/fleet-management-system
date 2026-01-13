@@ -62,3 +62,6 @@ export const MOCK_VEHICLES: Vehicle[] = [
     currentOdometer: 178900,
   },
 ];
+
+// Export alias for backward compatibility
+export const VEHICLES = MOCK_VEHICLES;
