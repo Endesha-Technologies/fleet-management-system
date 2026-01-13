@@ -270,7 +270,7 @@ export default function EditMaintenanceSchedulePage() {
                     <option value="">Choose a vehicle...</option>
                     {MOCK_VEHICLES.map((vehicle) => (
                       <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.plate} - {vehicle.make} {vehicle.model} ({vehicle.year})
+                        {vehicle.plateNumber} - {vehicle.make} {vehicle.model} ({vehicle.year})
                       </option>
                     ))}
                   </select>
@@ -283,14 +283,14 @@ export default function EditMaintenanceSchedulePage() {
                       <div>
                         <span className="text-gray-600">Status:</span>
                         <span className={`ml-2 ${
-                          selectedVehicle.status === 'active' ? 'text-green-600' : 'text-red-600'
+                          selectedVehicle.status === 'Active' ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {selectedVehicle.status}
                         </span>
                       </div>
                       <div>
                         <span className="text-gray-600">Odometer:</span>
-                        <span className="ml-2 text-gray-900">{selectedVehicle.odometer?.toLocaleString() || 'N/A'} km</span>
+                        <span className="ml-2 text-gray-900">{selectedVehicle.currentOdometer?.toLocaleString() || 'N/A'} km</span>
                       </div>
                       <div>
                         <span className="text-gray-600">Type:</span>
@@ -298,7 +298,7 @@ export default function EditMaintenanceSchedulePage() {
                       </div>
                       <div>
                         <span className="text-gray-600">Driver:</span>
-                        <span className="ml-2 text-gray-900">{selectedVehicle.driver || 'Unassigned'}</span>
+                        <span className="ml-2 text-gray-900">{selectedVehicle.currentDriver || 'Unassigned'}</span>
                       </div>
                     </div>
                   </Card>
