@@ -52,7 +52,7 @@ export const MOCK_TRIPS: Trip[] = [
     vehiclePlate: 'KBD 789C',
     driverId: 'd3',
     driverName: 'Mike Johnson',
-    driverPhone: '+254 733 567 890',
+    driverPhone: '+254 733 568 890',
     status: 'Completed',
     scheduledStartTime: '2025-12-19T09:00:00',
     scheduledEndTime: '2025-12-19T09:20:00',
