@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Truck } from "./Truck";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from "typeorm";
+import { PartSupplier } from "./PartSupplier";
 
 export enum TyreStatus {
     IN_INVENTORY = "in_inventory",
@@ -7,31 +7,84 @@ export enum TyreStatus {
     DISPOSED = "disposed"
 }
 
-@Entity()
+export enum TyreType {
+    STEER = "steer",
+    DRIVE = "drive",
+    TRAILER = "trailer",
+    SPARE = "spare"
+}
+
+export enum DisposalReason {
+    WORN_OUT = "worn_out",
+    DAMAGED = "damaged",
+    PUNCTURE = "puncture",
+    AGE = "age",
+    WARRANTY_CLAIM = "warranty_claim"
+}
+
+export enum DisposalType {
+    SCRAP = "scrap",
+    RETREAD = "retread",
+    RESALE = "resale",
+    WARRANTY_RETURN = "warranty_return"
+}
+
+@Entity("tyres")
+@Index(["tyreNumber"], { unique: true })
+@Index(["serialNumber"], { unique: true, where: "serialNumber IS NOT NULL" })
 export class Tyre {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ unique: true })
-    serialNumber: string; // DOT number
+    @Column({ unique: true, nullable: false })
+    tyreNumber: string;
 
-    @Column()
+    @Column({ unique: true, nullable: true })
+    serialNumber: string;
+
+    @Column({ nullable: false })
     brand: string;
 
-    @Column()
+    @Column({ nullable: false })
     model: string;
 
-    @Column()
+    @Column({ nullable: false })
     size: string;
 
-    @Column()
-    type: string; // steer, drive, trailer, etc.
+    @Column({
+        type: "enum",
+        enum: TyreType,
+        nullable: false
+    })
+    tyreType: TyreType;
 
-    @Column()
+    @Column({ nullable: true })
+    plyRating: string;
+
+    @Column({ nullable: true })
+    loadIndex: string;
+
+    @Column({ nullable: true })
+    speedRating: string;
+
+    @Column({ type: "date", nullable: false })
     purchaseDate: Date;
 
-    @Column({ type: "float" })
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
     purchaseCost: number;
+
+    @Column({ type: "uuid", nullable: true })
+    supplierId: string;
+
+    @ManyToOne(() => PartSupplier, { nullable: true })
+    @JoinColumn({ name: "supplierId" })
+    supplier: PartSupplier;
+
+    @Column({ type: "int", nullable: true })
+    warrantyMileage: number;
+
+    @Column({ type: "date", nullable: true })
+    warrantyExpiryDate: Date;
 
     @Column({
         type: "enum",
@@ -40,21 +93,34 @@ export class Tyre {
     })
     status: TyreStatus;
 
-    @Column({ type: "float", default: 0 })
+    @Column({ type: "decimal", precision: 15, scale: 2, default: 0 })
     totalAccumulatedMileage: number;
 
-    @Column({ type: "float" })
+    @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
     currentTreadDepth: number;
 
-    // Installation details (nullable if in inventory)
-    @ManyToOne(() => Truck, { nullable: true })
-    currentTruck: Truck;
+    @Column({ type: "decimal", precision: 5, scale: 2, nullable: false })
+    originalTreadDepth: number;
 
-    @Column({ nullable: true })
-    currentAxle: string;
+    @Column({ type: "date", nullable: true })
+    disposalDate: Date;
 
-    @Column({ nullable: true })
-    currentPosition: string; // e.g., "Front-Left"
+    @Column({
+        type: "enum",
+        enum: DisposalReason,
+        nullable: true
+    })
+    disposalReason: DisposalReason;
+
+    @Column({
+        type: "enum",
+        enum: DisposalType,
+        nullable: true
+    })
+    disposalType: DisposalType;
+
+    @Column({ type: "text", nullable: true })
+    notes: string;
 
     @CreateDateColumn()
     createdAt: Date;

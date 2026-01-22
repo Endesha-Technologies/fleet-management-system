@@ -1,33 +1,80 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from "typeorm";
+import { User } from "./User";
+
+export enum AssetType {
+    TRUCK = "truck",
+    TRAILER = "trailer",
+    EQUIPMENT = "equipment"
+}
+
+export enum MaintenanceType {
+    PREVENTIVE = "preventive",
+    INSPECTION = "inspection",
+    REGULATORY = "regulatory"
+}
 
 export enum TriggerType {
     MILEAGE = "mileage",
+    ENGINE_HOURS = "engine_hours",
+    TIME_DAYS = "time_days",
     TIME_MONTHS = "time_months",
-    ENGINE_HOURS = "engine_hours"
+    TRIP_COUNT = "trip_count"
 }
 
-@Entity()
+@Entity("maintenance_plans")
+@Index(["planCode"], { unique: true })
 export class MaintenancePlan {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
+    @Column({ unique: true, nullable: false })
+    planCode: string;
+
+    @Column({ nullable: false })
     name: string;
 
-    @Column()
-    assetType: string; // truck, trailer, etc.
+    @Column({ type: "text", nullable: true })
+    description: string;
 
     @Column({
         type: "enum",
-        enum: TriggerType
+        enum: AssetType,
+        nullable: false
+    })
+    assetType: AssetType;
+
+    @Column({
+        type: "enum",
+        enum: MaintenanceType,
+        nullable: false
+    })
+    maintenanceType: MaintenanceType;
+
+    @Column({
+        type: "enum",
+        enum: TriggerType,
+        nullable: false
     })
     triggerType: TriggerType;
 
-    @Column({ type: "int" })
-    triggerValue: number; // e.g. 10000 km or 6 months
+    @Column({ type: "int", nullable: false })
+    triggerValue: number;
 
-    @Column("text")
-    tasks: string; // JSON or description of tasks
+    @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
+    estimatedDurationHours: number;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    estimatedCost: number;
+
+    @Column({ default: true })
+    isActive: boolean;
+
+    @Column({ type: "uuid", nullable: true })
+    createdBy: string;
+
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn({ name: "createdBy" })
+    createdByUser: User;
 
     @CreateDateColumn()
     createdAt: Date;

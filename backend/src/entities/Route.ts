@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from "typeorm";
+import { User } from "./User";
 
 export enum RouteType {
     SHORT_HAUL = "short_haul",
@@ -7,39 +8,86 @@ export enum RouteType {
     INTERNATIONAL = "international"
 }
 
-@Entity()
+export enum StopType {
+    WAYPOINT = "waypoint",
+    REST_AREA = "rest_area",
+    FUEL_STATION = "fuel_station",
+    CHECKPOINT = "checkpoint",
+    DELIVERY_POINT = "delivery_point"
+}
+
+export interface RouteStopData {
+    stopSequence: number;
+    locationName: string;
+    locationCoords?: { latitude: number; longitude: number };
+    stopType: StopType;
+    estimatedArrivalMinutes?: number;
+    plannedStayMinutes?: number;
+    notes?: string;
+}
+
+@Entity("routes")
+@Index(["routeCode"], { unique: true })
 export class Route {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
+    @Column({ unique: true, nullable: false })
+    routeCode: string;
+
+    @Column({ nullable: false })
     name: string;
 
-    @Column()
-    startLocation: string;
+    @Column({ type: "text", nullable: true })
+    description: string;
 
-    @Column()
-    endLocation: string;
+    @Column({ nullable: false })
+    startLocationName: string;
 
-    @Column("simple-array", { nullable: true })
-    stops: string[];
+    @Column({ type: "geography", spatialFeatureType: "Point", srid: 4326, nullable: true })
+    startLocationCoords: string;
 
-    @Column({ type: "float" })
-    estimatedDistanceKm: number;
+    @Column({ nullable: false })
+    endLocationName: string;
 
-    @Column({ type: "float" })
-    estimatedDurationHours: number;
+    @Column({ type: "geography", spatialFeatureType: "Point", srid: 4326, nullable: true })
+    endLocationCoords: string;
+
+    @Column({ type: "jsonb", nullable: false, default: '[]' })
+    stops: RouteStopData[];
 
     @Column({
         type: "enum",
         enum: RouteType,
         default: RouteType.REGIONAL
     })
-    type: RouteType;
+    routeType: RouteType;
+
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+    estimatedDistanceKm: number;
+
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+    estimatedDurationHours: number;
+
+    @Column({ default: true })
+    isActive: boolean;
+
+    @Column({ type: "uuid", nullable: true })
+    createdBy: string;
+
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn({ name: "createdBy" })
+    createdByUser: User;
+
+    @Column({ type: "text", nullable: true })
+    notes: string;
 
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }

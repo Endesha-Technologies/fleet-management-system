@@ -1,39 +1,48 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany } from "typeorm";
+import { UserRole } from "./UserRole";
+import { AuditLog } from "./AuditLog";
 
-export enum UserRole {
-    ADMIN = "admin",
-    FLEET_MANAGER = "fleet_manager",
-    DRIVER = "driver",
-    MECHANIC = "mechanic"
-}
-
-@Entity()
+@Entity("users")
 export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
-    name: string;
-
-    @Column({ unique: true })
+    @Column({ unique: true, nullable: false })
     email: string;
 
-    @Column({ select: false })
+    @Column({ select: false, nullable: false })
     passwordHash: string;
 
-    @Column({
-        type: "enum",
-        enum: UserRole,
-        default: UserRole.DRIVER
-    })
-    role: UserRole;
+    @Column({ nullable: false })
+    firstName: string;
+
+    @Column({ nullable: false })
+    lastName: string;
+
+    @Column({ nullable: true })
+    phoneNumber: string;
 
     @Column({ default: true })
     isActive: boolean;
+
+    @Column({ default: false })
+    emailVerified: boolean;
+
+    @Column({ type: "timestamp", nullable: true })
+    lastLoginAt: Date;
+
+    @Column({ type: "timestamp", nullable: true })
+    passwordChangedAt: Date;
+
+    @OneToMany(() => UserRole, userRole => userRole.user)
+    userRoles: UserRole[];
 
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
