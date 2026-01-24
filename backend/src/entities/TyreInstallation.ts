@@ -24,9 +24,16 @@ export enum RemovalReason {
     END_OF_LIFE = "end_of_life"
 }
 
+export enum EventType {
+    INSTALLATION = "installation",
+    ROTATION = "rotation",
+    REMOVAL = "removal"
+}
+
 @Entity("tyre_installations")
 @Index(["tyreId", "truckId"])
 @Index(["truckId", "axlePosition", "wheelPosition", "status"])
+@Index(["eventType", "installationDate"])
 export class TyreInstallation {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -44,6 +51,23 @@ export class TyreInstallation {
     @ManyToOne(() => Truck)
     @JoinColumn({ name: "truckId" })
     truck: Truck;
+
+    @Column({
+        type: "enum",
+        enum: EventType,
+        default: EventType.INSTALLATION
+    })
+    eventType: EventType;
+
+    @Column({ nullable: true })
+    previousAxlePosition: string;
+
+    @Column({
+        type: "enum",
+        enum: WheelPosition,
+        nullable: true
+    })
+    previousWheelPosition: WheelPosition;
 
     @Column({ nullable: false })
     axlePosition: string;

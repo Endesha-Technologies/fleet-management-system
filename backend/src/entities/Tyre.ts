@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from "typeorm";
-import { PartSupplier } from "./PartSupplier";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from "typeorm";
 
 export enum TyreStatus {
     IN_INVENTORY = "in_inventory",
@@ -73,12 +72,15 @@ export class Tyre {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
     purchaseCost: number;
 
-    @Column({ type: "uuid", nullable: true })
-    supplierId: string;
+    // @Column({ type: "uuid", nullable: true })
+    // supplierId: string;
 
-    @ManyToOne(() => PartSupplier, { nullable: true })
-    @JoinColumn({ name: "supplierId" })
-    supplier: PartSupplier;
+    // @ManyToOne(() => PartSupplier, { nullable: true })
+    // @JoinColumn({ name: "supplierId" })
+    // supplier: PartSupplier;
+
+    @Column({ nullable: true })
+    supplierName: string;
 
     @Column({ type: "int", nullable: true })
     warrantyMileage: number;

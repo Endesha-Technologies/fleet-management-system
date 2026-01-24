@@ -10,6 +10,7 @@ export enum Priority {
 }
 
 export enum ScheduleStatus {
+    ACTIVE = "active",
     SCHEDULED = "scheduled",
     DUE = "due",
     OVERDUE = "overdue",
@@ -38,9 +39,49 @@ export class MaintenanceSchedule {
     @JoinColumn({ name: "truckId" })
     truck: Truck;
 
-    @Column({ type: "date", nullable: false })
+    @Column({ type: "date", nullable: true })
     scheduledDate: Date;
 
+    // Baseline values (when tracking started)
+    @Column({ type: "date", nullable: false })
+    startDate: Date;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    baselineOdometer: number;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    baselineEngineHours: number;
+
+    @Column({ type: "int", nullable: true })
+    baselineTripCount: number;
+
+    // Last service values
+    @Column({ type: "date", nullable: true })
+    lastServiceDate: Date;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    lastServiceOdometer: number;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    lastServiceEngineHours: number;
+
+    @Column({ type: "int", nullable: true })
+    lastServiceTripCount: number;
+
+    // Next due values (calculated)
+    @Column({ type: "date", nullable: true })
+    nextDueDate: Date;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    nextDueOdometer: number;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    nextDueEngineHours: number;
+
+    @Column({ type: "int", nullable: true })
+    nextDueTripCount: number;
+
+    // Legacy fields (kept for backward compatibility)
     @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
     dueAtOdometer: number;
 
@@ -57,7 +98,7 @@ export class MaintenanceSchedule {
     @Column({
         type: "enum",
         enum: ScheduleStatus,
-        default: ScheduleStatus.SCHEDULED
+        default: ScheduleStatus.ACTIVE
     })
     status: ScheduleStatus;
 

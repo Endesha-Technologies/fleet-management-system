@@ -15,7 +15,6 @@ export enum FuelTypeEnum {
 export enum PaymentMethod {
     CASH = "cash",
     CARD = "card",
-    FLEET_CARD = "fleet_card",
     ACCOUNT = "account"
 }
 

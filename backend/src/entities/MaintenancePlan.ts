@@ -18,7 +18,13 @@ export enum TriggerType {
     ENGINE_HOURS = "engine_hours",
     TIME_DAYS = "time_days",
     TIME_MONTHS = "time_months",
-    TRIP_COUNT = "trip_count"
+    TRIP_COUNT = "trip_count",
+    COMBINED = "combined"
+}
+
+export enum CombinedTriggerLogic {
+    OR = "or",
+    AND = "and"
 }
 
 @Entity("maintenance_plans")
@@ -57,8 +63,17 @@ export class MaintenancePlan {
     })
     triggerType: TriggerType;
 
-    @Column({ type: "int", nullable: false })
+    @Column({ type: "int", nullable: true })
     triggerValue: number;
+
+    @Column({ type: "jsonb", nullable: true })
+    combinedTriggers: {
+        logic: CombinedTriggerLogic;
+        conditions: Array<{
+            triggerType: TriggerType;
+            triggerValue: number;
+        }>;
+    };
 
     @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
     estimatedDurationHours: number;
