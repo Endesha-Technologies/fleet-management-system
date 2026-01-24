@@ -6,6 +6,7 @@ import { TripIncident, IncidentType, Severity } from "../entities/TripIncident";
 import { TripTracking } from "../entities/TripTracking";
 import { Truck } from "../entities/Truck";
 import { AuditLog } from "../entities/AuditLog";
+import { FuelLogService } from "./fuelLog.service";
 
 export class TripService {
   private tripRepository: Repository<Trip>;
@@ -13,6 +14,7 @@ export class TripService {
   private tripIncidentRepository: Repository<TripIncident>;
   private tripTrackingRepository: Repository<TripTracking>;
   private auditLogRepository: Repository<AuditLog>;
+  private fuelLogService: FuelLogService;
 
   constructor() {
     this.tripRepository = AppDataSource.getRepository(Trip);
@@ -20,6 +22,7 @@ export class TripService {
     this.tripIncidentRepository = AppDataSource.getRepository(TripIncident);
     this.tripTrackingRepository = AppDataSource.getRepository(TripTracking);
     this.auditLogRepository = AppDataSource.getRepository(AuditLog);
+    this.fuelLogService = new FuelLogService();
   }
 
   /**
@@ -340,7 +343,13 @@ export class TripService {
     trip.actualArrival = data.actualArrival;
     trip.odometerEnd = data.odometerEnd;
     trip.engineHoursEnd = data.engineHoursEnd;
-    if (data.fuelConsumedLitres !== undefined) {
+    
+    // Calculate fuel consumed from fuel logs linked to this trip
+    const fuelSummary = await this.fuelLogService.getTripFuelSummary(tripId);
+    if (fuelSummary.refillCount > 0) {
+      trip.fuelConsumedLitres = fuelSummary.totalLitres;
+    } else if (data.fuelConsumedLitres !== undefined) {
+      // Use manual input if no fuel logs exist
       trip.fuelConsumedLitres = data.fuelConsumedLitres;
     }
 
@@ -371,13 +380,22 @@ export class TripService {
       }
     );
 
-    // Create audit log
+    // Create audit log with fuel consumption info
+    let auditDescription = `Trip ${trip.tripNumber} completed. Distance: ${trip.actualDistanceKm} km, Engine Hours Used: ${actual_engine_hours}`;
+    if (trip.fuelConsumedLitres) {
+      const fuelEfficiency = trip.actualDistanceKm / trip.fuelConsumedLitres;
+      auditDescription += `, Fuel Consumed: ${trip.fuelConsumedLitres}L (${fuelEfficiency.toFixed(2)} km/l)`;
+      if (fuelSummary.refillCount > 0) {
+        auditDescription += ` from ${fuelSummary.refillCount} refill(s)`;
+      }
+    }
+    
     await this.createAuditLog(
       "TRIP_COMPLETED",
       completedBy,
       "Trip",
       trip.id,
-      `Trip ${trip.tripNumber} completed. Distance: ${trip.actualDistanceKm} km, Engine Hours Used: ${data.engineHoursEnd - trip.engineHoursStart}`
+      auditDescription
     );
 
     return trip;

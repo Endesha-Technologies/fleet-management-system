@@ -3,8 +3,10 @@ import { TripService } from "../services/trip.service";
 import { TripStatus } from "../entities/Trip";
 import { TripStopType } from "../entities/TripStop";
 import { IncidentType, Severity } from "../entities/TripIncident";
+import { FuelLogService } from "../services/fuelLog.service";
 
 const tripService = new TripService();
+const fuelLogService = new FuelLogService();
 
 export class TripController {
   /**
@@ -472,6 +474,34 @@ export class TripController {
       res.status(500).json({
         success: false,
         message: error.message || "Failed to fetch trip statistics"
+      });
+    }
+  }
+
+  /**
+   * Get fuel summary for a specific trip
+   */
+  async getTripFuelSummary(req: Request, res: Response): Promise<void> {
+    try {
+      const tripId = req.params.id as string;
+      const fuelSummary = await fuelLogService.getTripFuelSummary(tripId);
+      
+      // Also get trip details to calculate efficiency
+      const trip = await tripService.getTripById(tripId);
+      const response: any = { ...fuelSummary };
+      
+      if (trip.actualDistanceKm && fuelSummary.totalLitres > 0) {
+        response.tripFuelEfficiency = trip.actualDistanceKm / fuelSummary.totalLitres; // km/l
+      }
+      
+      res.status(200).json({
+        success: true,
+        data: response
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message || "Failed to fetch trip fuel summary"
       });
     }
   }

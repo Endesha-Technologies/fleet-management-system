@@ -44,6 +44,17 @@ router.get(
 );
 
 /**
+ * @route   GET /api/trips/:id/fuel-summary
+ * @desc    Get fuel consumption summary for a specific trip
+ * @access  Private (requires trip:read permission)
+ */
+router.get(
+  "/:id/fuel-summary",
+  authorize("trip:read"),
+  tripController.getTripFuelSummary.bind(tripController)
+);
+
+/**
  * @route   GET /api/trips/:id
  * @desc    Get trip by ID
  * @access  Private (requires trip:read permission)
