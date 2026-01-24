@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, Index } from "typeorm";
-import { User } from "./User";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from "typeorm";
 
 export enum DriverStatus {
     ACTIVE = "active",
@@ -29,19 +28,28 @@ export interface DriverCertificationData {
 @Entity("drivers")
 @Index(["licenseNumber"], { unique: true })
 @Index(["employeeNumber"], { unique: true })
+@Index(["email"], { unique: true })
 export class Driver {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ type: "uuid", unique: true })
-    userId: string;
-
-    @OneToOne(() => User)
-    @JoinColumn({ name: "userId" })
-    user: User;
-
     @Column({ unique: true, nullable: true })
     employeeNumber: string;
+
+    @Column({ nullable: false })
+    firstName: string;
+
+    @Column({ nullable: false })
+    lastName: string;
+
+    @Column({ unique: true, nullable: false })
+    email: string;
+
+    @Column({ nullable: false })
+    phone: string;
+
+    @Column({ type: "text", nullable: true })
+    address: string;
 
     @Column({ unique: true, nullable: false })
     licenseNumber: string;
