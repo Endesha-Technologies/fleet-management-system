@@ -13,6 +13,7 @@ import partRoutes from "./routes/part.routes";
 import routeRoutes from "./routes/route.routes";
 import tripRoutes from "./routes/trip.routes";
 import fuelLogRoutes from "./routes/fuelLog.routes";
+import tyreRoutes from "./routes/tyre.routes";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/parts", partRoutes);
 app.use("/api/routes", routeRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/fuel-logs", fuelLogRoutes);
+app.use("/api/tyres", tyreRoutes);
 
 // 404 handler
 app.use((req, res) => {
