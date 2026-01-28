@@ -159,9 +159,9 @@ export function InspectionTable({ inspections, onView, onExport }: InspectionTab
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">Pending</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">In Progress</div>
               <div className="text-lg md:text-xl font-bold text-yellow-600 mt-1">
-                {inspections.filter(i => i.status === 'pending').length}
+                {inspections.filter(i => i.status === 'in-progress').length}
               </div>
             </div>
             <div>
