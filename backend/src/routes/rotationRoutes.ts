@@ -13,7 +13,7 @@ router.get("/schedules/:truckId", async (req: Request, res: Response) => {
   try {
     const { truckId } = req.params;
     const schedules = await scheduleRepository.find({
-      where: { truckId, isActive: true },
+      where: { truckId: truckId as string, isActive: true },
     });
 
     res.json(schedules);
@@ -51,7 +51,7 @@ router.get("/schedules", async (req: Request, res: Response) => {
 router.get("/schedules/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const schedule = await scheduleRepository.findOne({ where: { id } });
+    const schedule = await scheduleRepository.findOne({ where: { id: id as string } });
 
     if (!schedule) {
       return res.status(404).json({ error: "Schedule not found" });
@@ -106,7 +106,7 @@ router.put("/schedules/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const schedule = await scheduleRepository.findOne({ where: { id } });
+    const schedule = await scheduleRepository.findOne({ where: { id: id as string } });
     if (!schedule) {
       return res.status(404).json({ error: "Schedule not found" });
     }
@@ -130,7 +130,7 @@ router.get("/records/:truckId", async (req: Request, res: Response) => {
   try {
     const { truckId } = req.params;
     const records = await rotationRepository.find({
-      where: { truckId },
+      where: { truckId: truckId as string },
       order: { rotationDate: "DESC" },
     });
 
@@ -169,7 +169,7 @@ router.get("/records", async (req: Request, res: Response) => {
 router.get("/records/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const record = await rotationRepository.findOne({ where: { id } });
+    const record = await rotationRepository.findOne({ where: { id: id as string } });
 
     if (!record) {
       return res.status(404).json({ error: "Record not found" });
@@ -237,7 +237,7 @@ router.put("/records/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const record = await rotationRepository.findOne({ where: { id } });
+    const record = await rotationRepository.findOne({ where: { id: id as string } });
     if (!record) {
       return res.status(404).json({ error: "Record not found" });
     }
@@ -259,7 +259,7 @@ router.put("/records/:id", async (req: Request, res: Response) => {
 router.delete("/schedules/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const schedule = await scheduleRepository.findOne({ where: { id } });
+    const schedule = await scheduleRepository.findOne({ where: { id: id as string } });
 
     if (!schedule) {
       return res.status(404).json({ error: "Schedule not found" });
@@ -280,16 +280,16 @@ router.get("/stats/:truckId", async (req: Request, res: Response) => {
     const { truckId } = req.params;
 
     const totalRotations = await rotationRepository.count({
-      where: { truckId },
+      where: { truckId: truckId as string },
     });
 
     const lastRotation = await rotationRepository.findOne({
-      where: { truckId },
+      where: { truckId: truckId as string },
       order: { rotationDate: "DESC" },
     });
 
     const schedule = await scheduleRepository.findOne({
-      where: { truckId, isActive: true },
+      where: { truckId: truckId as string, isActive: true },
     });
 
     const stats = {

@@ -39,11 +39,6 @@ export function RotationHistoryTable({
     });
   };
 
-  const getTyreMovementSummary = (rotationId: string) => {
-    const rotation = rotations.find((r) => r.id === rotationId);
-    return rotation?.tyreMovements.length || 0;
-  };
-
   return (
     <div className="space-y-4">
       {/* Desktop Table View */}

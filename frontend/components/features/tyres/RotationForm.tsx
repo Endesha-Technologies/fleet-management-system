@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import type { RotationSchedule, RotationPattern } from '@/types/rotation';
+import type { RotationSchedule } from '@/types/rotation';
 import { ROTATION_PATTERNS, DEFAULT_ROTATION_INTERVAL_DAYS, DEFAULT_ROTATION_INTERVAL_KM } from '@/constants/rotation';
 import { X } from 'lucide-react';
 
@@ -28,6 +28,12 @@ export function RotationForm({
   onCancel,
   isLoading = false,
 }: RotationFormProps) {
+  const getDefaultNextDueDate = () => {
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 30);
+    return nextDate.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState<Partial<RotationSchedule>>({
     vehicleId,
     vehicleName,
@@ -36,7 +42,7 @@ export function RotationForm({
     rotationPattern: schedule?.rotationPattern || 'cross',
     intervalDays: schedule?.intervalDays || DEFAULT_ROTATION_INTERVAL_DAYS,
     intervalMileage: schedule?.intervalMileage || DEFAULT_ROTATION_INTERVAL_KM,
-    nextDueDate: schedule?.nextDueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    nextDueDate: schedule?.nextDueDate || getDefaultNextDueDate(),
     nextDueMileage: schedule?.nextDueMileage || currentMileage + DEFAULT_ROTATION_INTERVAL_KM,
     isActive: schedule?.isActive !== false,
   });
@@ -97,7 +103,8 @@ export function RotationForm({
   };
 
   const calculateNextDueDate = (days: number) => {
-    const nextDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + days);
     const formattedDate = nextDate.toISOString().split('T')[0];
     setFormData((prev) => ({
       ...prev,

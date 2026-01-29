@@ -1,6 +1,6 @@
 'use client';
 
-import type { TyreWearData, TyrePosition } from '@/types/rotation';
+import type { TyreWearData } from '@/types/rotation';
 import { TYRE_POSITIONS, TREAD_DEPTH_THRESHOLDS } from '@/constants/rotation';
 import { AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -202,7 +202,7 @@ export function TyrePositionTracker({
         <div className="space-y-2 text-sm">
           {calculateAverageWear() > 75 && (
             <div className="flex items-start gap-2 p-2 bg-red-50 rounded">
-              <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
               <div>
                 <div className="font-medium text-red-900">Replace Tyres Soon</div>
                 <div className="text-red-800 text-xs">Average wear is above 75%. Schedule replacement.</div>
@@ -211,7 +211,7 @@ export function TyrePositionTracker({
           )}
           {Number(getMaxWearVariation()) > 2 && (
             <div className="flex items-start gap-2 p-2 bg-orange-50 rounded">
-              <AlertCircle className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="h-4 w-4 text-orange-600 shrink-0 mt-0.5" />
               <div>
                 <div className="font-medium text-orange-900">Uneven Wear Detected</div>
                 <div className="text-orange-800 text-xs">Variation exceeds 2mm. Rotation recommended.</div>
@@ -220,7 +220,7 @@ export function TyrePositionTracker({
           )}
           {calculateAverageWear() <= 50 && Number(getMaxWearVariation()) <= 1.5 && (
             <div className="flex items-start gap-2 p-2 bg-green-50 rounded">
-              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
               <div>
                 <div className="font-medium text-green-900">Tyres in Good Condition</div>
                 <div className="text-green-800 text-xs">Wear is even and within normal range.</div>
