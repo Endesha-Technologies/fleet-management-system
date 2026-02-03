@@ -30,7 +30,7 @@ export default function AssignTyrePage() {
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Tyre Not Found</h2>
-          <p className="text-gray-600 mb-6">The tyre you're trying to assign doesn't exist.</p>
+          <p className="text-gray-600 mb-6">The tyre you&apos;re trying to assign doesn&apos;t exist.</p>
           <Link
             href="/dashboard/tyres/inventory"
             className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"

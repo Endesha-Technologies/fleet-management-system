@@ -16,6 +16,11 @@ export const NAV_ITEMS = [
     icon: LayoutDashboard,
   },
   {
+    name: 'Truck Management',
+    href: '/trucks',
+    icon: Truck,
+  },
+  {
     name: 'Routes',
     href: '/routes',
     icon: Map,
