@@ -53,7 +53,10 @@ export default function TrucksPage() {
         </div>
         <Button
           className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-          onClick={() => setShowAddDrawer(true)}
+          onClick={() => {
+            setSelectedTruck(null);
+            setShowAddDrawer(true);
+          }}
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Truck
@@ -158,7 +161,10 @@ export default function TrucksPage() {
       {/* Add Truck Drawer */}
       <AddTruckDrawer
         open={showAddDrawer}
-        onOpenChange={setShowAddDrawer}
+        onOpenChange={(open) => {
+          setShowAddDrawer(open);
+          if (!open) setSelectedTruck(null);
+        }}
         initialTruck={selectedTruck}
         onAddComplete={() => {
           setShowAddDrawer(false);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Truck } from '@/types/truck';
@@ -50,16 +50,8 @@ export interface FormData {
   twinTyresOnDrive: boolean;
 }
 
-export function AddTruckDrawer({
-  open,
-  onOpenChange,
-  initialTruck,
-  onAddComplete,
-}: AddTruckDrawerProps) {
-  const [currentStep, setCurrentStep] = useState<FormStep>('basic');
-  const [showTyreAssignment, setShowTyreAssignment] = useState(false);
-  const [showAssignLaterDialog, setShowAssignLaterDialog] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+function getInitialFormData(initialTruck?: Truck | null): FormData {
+  return {
     plateNumber: initialTruck?.plateNumber || '',
     make: initialTruck?.make || '',
     model: initialTruck?.model || '',
@@ -80,7 +72,26 @@ export function AddTruckDrawer({
     driveAxles: initialTruck?.axleConfig ? extractAxleCount(initialTruck.axleConfig, 'drive') : '2',
     liftAxlePresent: initialTruck?.axleConfig?.includes('Lift') || false,
     twinTyresOnDrive: false,
-  });
+  };
+}
+
+export function AddTruckDrawer({
+  open,
+  onOpenChange,
+  initialTruck,
+  onAddComplete,
+}: AddTruckDrawerProps) {
+  const [currentStep, setCurrentStep] = useState<FormStep>('basic');
+  const [showTyreAssignment, setShowTyreAssignment] = useState(false);
+  const [showAssignLaterDialog, setShowAssignLaterDialog] = useState(false);
+  const [formData, setFormData] = useState<FormData>(getInitialFormData(initialTruck));
+
+  useEffect(() => {
+    if (open) {
+      setFormData(getInitialFormData(initialTruck));
+      setCurrentStep('basic');
+    }
+  }, [open, initialTruck]);
 
   const handleStepChange = (step: FormStep) => {
     setCurrentStep(step);
@@ -107,31 +118,7 @@ export function AddTruckDrawer({
   };
 
   const handleClose = () => {
-    if (!initialTruck) {
-      setFormData({
-        plateNumber: '',
-        make: '',
-        model: '',
-        yearOfManufacture: '',
-        vinNumber: '',
-        color: '',
-        insuranceExpiryDate: '',
-        roadLicenceExpiryDate: '',
-        inspectionExpiryDate: '',
-        registrationNumber: '',
-        fuelType: 'Diesel',
-        fuelTankCapacity: '',
-        engineNumber: '',
-        engineCapacity: '',
-        transmissionType: 'Manual',
-        odometerReadingAtEntry: '',
-        steerAxles: '2',
-        driveAxles: '2',
-        liftAxlePresent: false,
-        twinTyresOnDrive: false,
-      });
-    }
-    setCurrentStep('basic');
+    // Resetting is handled by useEffect when opening
     onOpenChange(false);
   };
 
