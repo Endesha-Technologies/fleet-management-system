@@ -16,6 +16,7 @@ router.get("/expiring-licenses", authorize("driver:read"), (req, res) => driverC
 router.get("/:id", authorize("driver:read"), (req, res) => driverController.getDriverById(req, res));
 router.put("/:id", authorize("driver:update"), (req, res) => driverController.updateDriver(req, res));
 router.patch("/:id/status", authorize("driver:update"), (req, res) => driverController.updateDriverStatus(req, res));
+router.patch("/:id/deactivate", authorize("driver:update"), (req, res) => driverController.deactivateDriver(req, res));
 router.delete("/:id", authorize("driver:delete"), (req, res) => driverController.deleteDriver(req, res));
 
 // Certification routes

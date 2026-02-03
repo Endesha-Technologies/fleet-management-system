@@ -296,10 +296,6 @@ export default function EditMaintenanceSchedulePage() {
                         <span className="text-gray-600">Type:</span>
                         <span className="ml-2 text-gray-900 capitalize">{selectedVehicle.type || 'N/A'}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-600">Driver:</span>
-                        <span className="ml-2 text-gray-900">{selectedVehicle.currentDriver || 'Unassigned'}</span>
-                      </div>
                     </div>
                   </Card>
                 )}
