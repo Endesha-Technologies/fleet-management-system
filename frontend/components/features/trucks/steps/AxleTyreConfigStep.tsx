@@ -22,7 +22,6 @@ export function AxleTyreConfigStep({ formData, setFormData }: AxleTyreConfigStep
 
   const generateTyrePositions = useMemo(() => {
     const positions: TyrePosition[] = [];
-    let id = 1;
 
     // Steer Axle (1)
     const steerCount = parseInt(formData.steerAxles) || 2;
@@ -149,7 +148,7 @@ export function AxleTyreConfigStep({ formData, setFormData }: AxleTyreConfigStep
         </div>
         <div className="p-4 bg-white">
           <div className="grid grid-cols-2 gap-3">
-            {generateTyrePositions.map((position, idx) => (
+            {generateTyrePositions.map((position) => (
               <div
                 key={position.id}
                 className="border border-gray-200 rounded-lg p-3 bg-gray-50"
@@ -166,7 +165,7 @@ export function AxleTyreConfigStep({ formData, setFormData }: AxleTyreConfigStep
 
       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
         <p className="text-sm text-green-800">
-          After you submit, you'll be able to assign tyres to these positions.
+          After you submit, you&apos;ll be able to assign tyres to these positions.
         </p>
       </div>
     </div>

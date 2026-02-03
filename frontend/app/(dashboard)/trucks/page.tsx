@@ -4,11 +4,13 @@ import React, { useState, useMemo } from 'react';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TruckTable } from '@/components/features/trucks/TruckTable';
+import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
 import { MOCK_TRUCKS } from '@/constants/trucks';
 import { Truck, TruckFilters } from '@/types/truck';
-import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
+import { useRouter } from 'next/navigation';
 
 export default function TrucksPage() {
+  const router = useRouter();
   const [showAddDrawer, setShowAddDrawer] = useState(false);
   const [filters, setFilters] = useState<TruckFilters>({
     status: 'All',
@@ -85,7 +87,7 @@ export default function TrucksPage() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             value={filters.status || 'All'}
             onChange={(e) =>
-              setFilters({ ...filters, status: e.target.value as any })
+              setFilters({ ...filters, status: e.target.value as TruckFilters['status'] })
             }
           >
             <option value="All">All Status</option>
@@ -150,6 +152,7 @@ export default function TrucksPage() {
         <div className="p-6">
           <TruckTable
             trucks={filteredTrucks}
+            onView={(truck) => router.push(`/trucks/${truck.id}`)}
             onEdit={(truck) => {
               setSelectedTruck(truck);
               setShowAddDrawer(true);

@@ -5,12 +5,13 @@ import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet
 import L from 'leaflet';
 import { TruckLocation } from '@/types/tracking';
 import { MOCK_TRUCK_LOCATIONS, getHeadingDirection, getTimeAgo } from '@/constants/tracking';
-import { Truck, Clock, Fuel, Navigation as NavigationIcon, Phone, MapPin, Calendar, Gauge, Package, AlertTriangle, Thermometer, TrendingUp } from 'lucide-react';
+import { Truck, Clock, Fuel, Navigation as NavigationIcon, MapPin, Calendar, Gauge, Package, AlertTriangle, Thermometer, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import 'leaflet/dist/leaflet.css';
 
 // Fix default marker icon issue in Next.js
 if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (L.Icon.Default.prototype as any)._getIconUrl;
   L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -157,9 +158,11 @@ interface TruckDetailsProps {
 }
 
 function TruckDetails({ truck, onClose }: TruckDetailsProps) {
+  // Use state to keep the reference time stable during render cycle and pure
+  const [now] = React.useState(Date.now());
+
   // Calculate time remaining
   const timeRemaining = () => {
-    const now = Date.now();
     const etaTime = new Date(truck.eta).getTime();
     const diff = etaTime - now;
     const hours = Math.floor(diff / (60 * 60 * 1000));

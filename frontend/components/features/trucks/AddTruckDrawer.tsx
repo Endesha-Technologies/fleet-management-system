@@ -88,14 +88,12 @@ export function AddTruckDrawer({
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line 
       setFormData(getInitialFormData(initialTruck));
       setCurrentStep('basic');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialTruck]);
-
-  const handleStepChange = (step: FormStep) => {
-    setCurrentStep(step);
-  };
 
   const handleNext = () => {
     const steps: FormStep[] = ['basic', 'registration', 'technical', 'axle-tyre'];
