@@ -76,6 +76,9 @@ export function UsersTab({
       setUsers(response.user || []);
     } catch (error) {
       console.error('Failed to fetch users:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch users';
+      setError(errorMessage);
+      // Show mock data as fallback
       setUsers([
         {
           id: '1',

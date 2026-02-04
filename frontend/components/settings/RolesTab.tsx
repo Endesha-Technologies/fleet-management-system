@@ -87,6 +87,8 @@ export function RolesTab({
       setPermissions(groupPermissions(permissionsResponse.permissions || []));
     } catch (error) {
       console.error('Failed to fetch data:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch roles';
+      setError(errorMessage);
       setRoles([
         {
           id: '1',

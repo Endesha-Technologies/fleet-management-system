@@ -30,17 +30,24 @@ class ApiClient {
       ...options.headers,
     };
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || `Request failed with status ${response.status}`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `Request failed with status ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        throw new Error(`Unable to connect to API at ${this.baseURL}. Make sure the backend server is running.`);
+      }
+      throw error;
     }
-
-    return response.json();
   }
 
   // Users

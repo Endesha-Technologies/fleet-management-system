@@ -71,6 +71,8 @@ export function DriversTab({
       setDrivers(response.driver || []);
     } catch (error) {
       console.error('Failed to fetch drivers:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch drivers';
+      setError(errorMessage);
       setDrivers([
         {
           id: '1',
