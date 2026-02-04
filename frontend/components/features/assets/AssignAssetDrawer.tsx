@@ -48,7 +48,7 @@ export default function AssignAssetDrawer({ open, onOpenChange, asset }: AssignA
   useEffect(() => {
       if (truckId) {
           const truck = MOCK_VEHICLES.find(v => v.id === truckId);
-          if (truck) {
+          if (truck && truck.currentOdometer) {
               setOdometer(truck.currentOdometer);
           }
       }

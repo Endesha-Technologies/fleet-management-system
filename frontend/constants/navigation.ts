@@ -25,11 +25,11 @@ export const NAV_ITEMS = [
     href: '/trips',
     icon: Truck,
   },
-  {
-    name: 'Fuel',
-    href: '/fuel',
-    icon: Fuel,
-  },
+  // {
+  //   name: 'Fuel',
+  //   href: '/fuel',
+  //   icon: Fuel,
+  // },
   {
     name: 'Asset Inventory',
     href: '/inventory',
@@ -41,14 +41,14 @@ export const NAV_ITEMS = [
     icon: Truck,
   },
 
-  {
-    name: 'Maintenance',
-    href: '/maintenance',
-    icon: Wrench,
-  },
-  {
-    name: 'Tyres',
-    href: '/tyres',
-    icon: Disc,
-  },
+  // {
+  //   name: 'Maintenance',
+  //   href: '/maintenance',
+  //   icon: Wrench,
+  // },
+  // {
+  //   name: 'Tyres',
+  //   href: '/tyres',
+  //   icon: Disc,
+  // },
 ];

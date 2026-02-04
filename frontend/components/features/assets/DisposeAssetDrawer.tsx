@@ -248,8 +248,8 @@ export default function DisposeAssetDrawer({
                             <TableRow className="bg-gray-50 border-gray-200">
                                 <TableHead className="w-[50px]">
                                     <Checkbox checked={stockUnits.length > 0 && item.selectedSerialIds.size === stockUnits.length}
-                                        onCheckedChange={(c) => {
-                                            if (!c) updateItem(item.id, { selectedSerialIds: new Set() });
+                                        onChange={(e) => {
+                                            if (!e.target.checked) updateItem(item.id, { selectedSerialIds: new Set() });
                                             else {
                                                 const allIds = stockUnits.map(u => u.id);
                                                 updateItem(item.id, { selectedSerialIds: new Set(allIds) });
@@ -272,7 +272,7 @@ export default function DisposeAssetDrawer({
                                 return (
                                     <TableRow key={unit.id} className="border-gray-200">
                                         <TableCell>
-                                           <Checkbox checked={isSelected} onCheckedChange={() => {
+                                           <Checkbox checked={isSelected} onChange={() => {
                                                const newSet = new Set(item.selectedSerialIds);
                                                if (newSet.has(unit.id)) newSet.delete(unit.id);
                                                else newSet.add(unit.id);
@@ -437,7 +437,7 @@ export default function DisposeAssetDrawer({
                       <TableHead className="w-[50px]">
                           <Checkbox 
                              checked={units.length > 0 && item.selectedSerialIds.size === units.length}
-                             onCheckedChange={(c) => handleSelectAllInView(!!c, units)}
+                             onChange={(e) => handleSelectAllInView(e.target.checked, units)}
                           />
                       </TableHead>
                       <TableHead>Serial</TableHead>
@@ -460,7 +460,7 @@ export default function DisposeAssetDrawer({
                                     <TableCell>
                                         <Checkbox 
                                             checked={isSelected}
-                                            onCheckedChange={() => toggleSelectionInView(unit.id)}
+                                            onChange={() => toggleSelectionInView(unit.id)}
                                         />
                                     </TableCell>
                                     <TableCell className="font-medium">{unit.serialNumber}</TableCell>
