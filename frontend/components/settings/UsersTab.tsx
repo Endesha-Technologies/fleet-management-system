@@ -7,11 +7,17 @@ import {
   Lock,
   Plus,
   Search,
-  AlertCircle,
   Loader,
   CheckCircle,
 } from 'lucide-react';
-import { Sheet } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet';
 import { apiClient } from '@/lib/api';
 
 interface User {
@@ -344,14 +350,6 @@ export function UsersTab({
         </div>
       )}
 
-      {/* Error Message */}
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 max-w-full">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-          <p className="text-red-800 text-sm">{error}</p>
-        </div>
-      )}
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -462,16 +460,13 @@ export function UsersTab({
           setShowAddSheetLocal(open);
           externalSetShowAddSheet?.(open);
         }}
-        title="Add New User"
-        description="Create a new user account"
       >
-        <div className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Add New User</SheetTitle>
+            <SheetDescription>Create a new user account</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-4 mt-6">
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -657,7 +652,7 @@ export function UsersTab({
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowAddSheet(false);
@@ -685,6 +680,7 @@ export function UsersTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Edit User Sheet */}
@@ -697,16 +693,15 @@ export function UsersTab({
           }
           setShowEditSheet(open);
         }}
-        title="Edit User"
-        description={`Edit ${selectedUser?.firstName} ${selectedUser?.lastName}'s details`}
       >
-        <div className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Edit User</SheetTitle>
+            <SheetDescription>
+              Edit {selectedUser?.firstName} {selectedUser?.lastName}&apos;s details
+            </SheetDescription>
+          </SheetHeader>
+          <div className="space-y-4 mt-6">
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -837,7 +832,7 @@ export function UsersTab({
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowEditSheet(false);
@@ -866,6 +861,7 @@ export function UsersTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Change Password Sheet */}
@@ -879,16 +875,15 @@ export function UsersTab({
           }
           setShowPasswordSheet(open);
         }}
-        title="Change Password"
-        description={`Change password for ${selectedUser?.firstName} ${selectedUser?.lastName}`}
       >
-        <div className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Change Password</SheetTitle>
+            <SheetDescription>
+              Change password for {selectedUser?.firstName} {selectedUser?.lastName}
+            </SheetDescription>
+          </SheetHeader>
+        <div className="space-y-4 mt-6">
 
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
             Password must be at least 8 characters long.
@@ -947,7 +942,7 @@ export function UsersTab({
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowPasswordSheet(false);
@@ -977,6 +972,7 @@ export function UsersTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Delete Confirmation Dialog */}

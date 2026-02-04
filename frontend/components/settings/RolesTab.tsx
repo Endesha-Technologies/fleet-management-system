@@ -8,11 +8,17 @@ import {
   Plus,
   Search,
   Check,
-  AlertCircle,
   Loader,
   CheckCircle,
 } from 'lucide-react';
-import { Sheet } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet';
 import { apiClient } from '@/lib/api';
 
 interface Permission {
@@ -291,14 +297,6 @@ export function RolesTab({
         </div>
       )}
 
-      {/* Error Message */}
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 max-w-full">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-          <p className="text-red-800 text-sm">{error}</p>
-        </div>
-      )}
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -407,16 +405,13 @@ export function RolesTab({
           setShowAddSheetLocal(open);
           externalSetShowAddSheet?.(open);
         }}
-        title="Add New Role"
-        description="Create a new role with permissions"
       >
-        <div className="space-y-6">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Add New Role</SheetTitle>
+            <SheetDescription>Create a new role with permissions</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-6 mt-6">
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -475,7 +470,7 @@ export function RolesTab({
             </label>
             <div className="space-y-4 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
               {permissions.map(group => (
-                <div key={group.resource} className="border-b pb-4 last:border-b-0">
+                <div key={group.resource} className="border-b border-gray-200 pb-4 last:border-b-0">
                   <h4 className="font-semibold text-gray-900 mb-3 capitalize">
                     {group.resource.replace(/_/g, ' ')} Management
                   </h4>
@@ -501,7 +496,7 @@ export function RolesTab({
             <p className="text-gray-500 text-xs mt-2">{selectedPermissions.length} permission(s) selected</p>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowAddSheetLocal(false);
@@ -530,6 +525,7 @@ export function RolesTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Edit Role Sheet */}
@@ -542,16 +538,15 @@ export function RolesTab({
           }
           setShowEditSheet(open);
         }}
-        title="Edit Role"
-        description={`Edit ${selectedRole?.name} role and permissions`}
       >
-        <div className="space-y-6">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Edit Role</SheetTitle>
+            <SheetDescription>
+              Edit {selectedRole?.name} role and permissions
+            </SheetDescription>
+          </SheetHeader>
+          <div className="space-y-6 mt-6">
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -608,7 +603,7 @@ export function RolesTab({
             </label>
             <div className="space-y-4 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
               {permissions.map(group => (
-                <div key={group.resource} className="border-b pb-4 last:border-b-0">
+                <div key={group.resource} className="border-b border-gray-200 pb-4 last:border-b-0">
                   <h4 className="font-semibold text-gray-900 mb-3 capitalize">
                     {group.resource.replace(/_/g, ' ')} Management
                   </h4>
@@ -634,7 +629,7 @@ export function RolesTab({
             <p className="text-gray-500 text-xs mt-2">{selectedPermissions.length} permission(s) selected</p>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowEditSheet(false);
@@ -663,6 +658,7 @@ export function RolesTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* View Permissions Dialog */}
@@ -702,7 +698,7 @@ export function RolesTab({
                 <p className="text-gray-600 text-center py-4">No permissions assigned</p>
               )}
             </div>
-            <div className="flex gap-3 mt-6 pt-4 border-t">
+            <div className="flex gap-3 mt-6 pt-4 border-t border-gray-200">
               <button
                 onClick={() => {
                   setShowViewDialog(false);

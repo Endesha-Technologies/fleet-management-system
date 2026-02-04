@@ -11,7 +11,14 @@ import {
   CheckCircle,
   AlertTriangle,
 } from 'lucide-react';
-import { Sheet } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet';
 import { apiClient } from '@/lib/api';
 
 interface Driver {
@@ -280,14 +287,6 @@ export function DriversTab({
         </div>
       )}
 
-      {/* Error Message */}
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 max-w-full">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-          <p className="text-red-800 text-sm">{error}</p>
-        </div>
-      )}
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -414,16 +413,13 @@ export function DriversTab({
           setShowAddSheetLocal(open);
           externalSetShowAddSheet?.(open);
         }}
-        title="Add New Driver"
-        description="Register a new driver or turn boy"
       >
-        <div className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Add New Driver</SheetTitle>
+            <SheetDescription>Register a new driver or turn boy</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-4 mt-6">
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -575,7 +571,7 @@ export function DriversTab({
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowAddSheet(false);
@@ -603,6 +599,7 @@ export function DriversTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Edit Driver Sheet */}
@@ -615,16 +612,15 @@ export function DriversTab({
           }
           setShowEditSheet(open);
         }}
-        title="Edit Driver"
-        description={`Edit ${selectedDriver?.firstName} ${selectedDriver?.lastName}'s details`}
       >
-        <div className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
+        <SheetContent>
+            <SheetHeader className="pb-6 border-b border-gray-200">
+            <SheetTitle>Edit Driver</SheetTitle>
+            <SheetDescription>
+                Edit {selectedDriver?.firstName} {selectedDriver?.lastName}'s details
+            </SheetDescription>
+            </SheetHeader>
+        <div className="space-y-4 mt-6">
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -771,7 +767,7 @@ export function DriversTab({
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
                 setShowEditSheet(false);
@@ -800,6 +796,7 @@ export function DriversTab({
             </button>
           </div>
         </div>
+        </SheetContent>
       </Sheet>
 
       {/* Delete Confirmation Dialog */}
