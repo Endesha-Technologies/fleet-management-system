@@ -85,6 +85,32 @@ export function RotateTyresDrawer({ open, onOpenChange, truck }: RotateTyresDraw
     setTyres(newTyres);
   };
 
+  const handleConfirm = () => {
+    // Validation
+    if (tyres.some(t => !t.newPosition)) {
+      // In a real app, use a toast notification here
+      alert('Please ensure all tyres have a new position assigned.');
+      return;
+    }
+
+    // Mock Submission
+    console.log('Submitting Rotation:', {
+      truckId: truck.id,
+      date: rotationDate,
+      odometer,
+      engineHours,
+      scheme,
+      rotations: tyres.map(t => ({
+        serial: t.serial,
+        from: t.position,
+        to: t.newPosition
+      })),
+      notes
+    });
+
+    onOpenChange(false);
+  };
+
   if (!open) return null;
 
   return (
@@ -160,19 +186,24 @@ export function RotateTyresDrawer({ open, onOpenChange, truck }: RotateTyresDraw
                     <th className="px-4 py-3 text-left font-medium text-gray-700">Current Position</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-700">Tyre Serial</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-700">Current Tread</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Mount Odo</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Last Rot. Odo</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-700">Total Km on Tyre</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-700">New Position</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tyres.map((tyre, idx) => {
-                    const totalKm = (parseInt(odometer) || 0) - tyre.mountOdometer;
+                    const startOdo = tyre.lastRotationOdometer > 0 ? tyre.lastRotationOdometer : tyre.mountOdometer;
+                    const totalKm = (parseInt(odometer) || 0) - startOdo;
                     return (
                       <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
                         <td className="px-4 py-3 font-medium text-gray-900">{tyre.position}</td>
                         <td className="px-4 py-3 font-mono text-blue-600">{tyre.serial}</td>
                         <td className="px-4 py-3 text-gray-700">{tyre.currentTread} mm</td>
-                        <td className="px-4 py-3 text-gray-700">{totalKm > 0 ? totalKm.toLocaleString() : '-'} km</td>
+                        <td className="px-4 py-3 text-gray-700">{tyre.mountOdometer.toLocaleString()}</td>
+                        <td className="px-4 py-3 text-gray-700">{tyre.lastRotationOdometer > 0 ? tyre.lastRotationOdometer.toLocaleString() : '-'}</td>
+                        <td className="px-4 py-3 text-gray-700 font-medium">{totalKm > 0 ? totalKm.toLocaleString() : '-'} km</td>
                         <td className="px-4 py-3">
                           {scheme === 'Custom' ? (
                             <select 
@@ -213,7 +244,12 @@ export function RotateTyresDrawer({ open, onOpenChange, truck }: RotateTyresDraw
         {/* Footer */}
         <div className="border-t border-gray-200 p-6 flex justify-end gap-3">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">Confirm Rotation</Button>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleConfirm}
+          >
+            Confirm Rotation
+          </Button>
         </div>
       </div>
     </>

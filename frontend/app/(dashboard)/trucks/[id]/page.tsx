@@ -19,6 +19,7 @@ import { TruckTrips } from '@/components/features/trucks/details/TruckTrips';
 import { TruckFuel } from '@/components/features/trucks/details/TruckFuel';
 import { TruckTyres } from '@/components/features/trucks/details/TruckTyres';
 import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
+import { RotateTyresDrawer } from '@/components/features/trucks/details/RotateTyresDrawer';
 
 // We need to implement Tabs properly or import from shadcn
 // Assuming standard shadcn tabs structure here, but need to check if it's available.
@@ -107,6 +108,7 @@ export default function TruckDetailsPage() {
   const truck = MOCK_TRUCKS.find(t => t.id === id) || MOCK_TRUCKS[0]; // Fallback for dev
   
   const [showEditDrawer, setShowEditDrawer] = useState(false);
+  const [showRotateDrawer, setShowRotateDrawer] = useState(false);
 
   if (!truck) {
     return <div>Truck not found</div>;
@@ -140,15 +142,14 @@ export default function TruckDetailsPage() {
               <Map className="h-4 w-4 mr-2" />
               Start Trip
             </Button>
-            <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
-              <Wrench className="h-4 w-4 mr-2" />
-              Maintenance
-            </Button>
             <Button variant="outline" onClick={() => setShowEditDrawer(true)}>
               <Edit2 className="h-4 w-4 mr-2" />
               Edit Truck
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={() => setShowRotateDrawer(true)}
+            >
               <RefreshCw className="h-4 w-4 mr-2" />
               Rotate Tyres
             </Button>
@@ -216,6 +217,12 @@ export default function TruckDetailsPage() {
         onOpenChange={setShowEditDrawer}
         initialTruck={truck}
         onAddComplete={() => setShowEditDrawer(false)}
+      />
+
+      <RotateTyresDrawer
+        open={showRotateDrawer}
+        onOpenChange={setShowRotateDrawer}
+        truck={truck}
       />
     </div>
   );

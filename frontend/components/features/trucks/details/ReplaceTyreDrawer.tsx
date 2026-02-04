@@ -24,6 +24,7 @@ interface ReplacementItem {
 export function ReplaceTyreDrawer({ open, onOpenChange, truck }: ReplaceTyreDrawerProps) {
   const [replaceDate, setReplaceDate] = useState(new Date().toISOString().split('T')[0]);
   const [odometer, setOdometer] = useState(truck.currentOdometer?.toString() || '');
+  const [engineHours, setEngineHours] = useState(truck.engineHours?.toString() || '');
   const [showPostDialog, setShowPostDialog] = useState(false);
 
   // Mock data
@@ -82,6 +83,15 @@ export function ReplaceTyreDrawer({ open, onOpenChange, truck }: ReplaceTyreDraw
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 value={odometer}
                 onChange={e => setOdometer(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Engine Hours</label>
+              <input 
+                type="number" 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                value={engineHours}
+                onChange={e => setEngineHours(e.target.value)}
               />
             </div>
           </div>
@@ -152,7 +162,8 @@ export function ReplaceTyreDrawer({ open, onOpenChange, truck }: ReplaceTyreDraw
       <PostReplacementDialog 
         open={showPostDialog}
         onOpenChange={setShowPostDialog}
-        removedTyres={replacements}
+        removedTyres={replacements.filter(r => r.replaceWith)}
+        truckOdometer={odometer}
         onComplete={() => {
           setShowPostDialog(false);
           onOpenChange(false);

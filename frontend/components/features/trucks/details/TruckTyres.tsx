@@ -73,9 +73,9 @@ export function TruckTyres({ truck }: TruckTyresProps) {
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="px-4 py-3 text-left font-medium text-gray-700">Position</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-700">Serial No.</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700">Tyre Serial</th>
               <th className="px-4 py-3 text-left font-medium text-gray-700">Km Since Start</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-700">Tread (mm)</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700">Tread Now</th>
               <th className="px-4 py-3 text-left font-medium text-gray-700">Condition</th>
               <th className="px-4 py-3 text-left font-medium text-gray-700">Last Rotation</th>
               <th className="px-4 py-3 text-left font-medium text-gray-700">Status</th>
