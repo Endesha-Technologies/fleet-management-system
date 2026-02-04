@@ -11,7 +11,7 @@ export function TruckOverview({ truck }: TruckOverviewProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Truck Information */}
       <div className="space-y-6">
-        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
           <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
             <FileText className="h-5 w-5 text-blue-600" />
             Truck Information
@@ -32,7 +32,7 @@ export function TruckOverview({ truck }: TruckOverviewProps) {
         </div>
 
         {/* Compliance Info */}
-        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
           <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
             <Shield className="h-5 w-5 text-green-600" />
             Compliance Status
@@ -65,7 +65,7 @@ export function TruckOverview({ truck }: TruckOverviewProps) {
 
       {/* Alerts */}
       <div>
-        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
+        <div className="bg-white rounded-lg p-6 border border-gray-200 h-full shadow-sm">
           <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-red-600" />
             Active Alerts

@@ -63,7 +63,7 @@ export function TruckTrips({ truckId }: TruckTripsProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div className="flex justify-between items-center bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
         <h3 className="font-medium text-gray-900">Trip History</h3>
         <div className="text-sm text-gray-500">
           Total Distance: <span className="font-medium text-gray-900">1,485 km</span> | 

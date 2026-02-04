@@ -30,7 +30,7 @@ export function TruckTyres({ truck }: TruckTyresProps) {
 
   if (!hasTyres) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50 border border-gray-200 rounded-lg border-dashed">
+      <div className="flex flex-col items-center justify-center py-16 px-4 bg-white border border-gray-200 rounded-lg border-dashed shadow-sm">
         <div className="h-16 w-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
           <Wrench className="h-8 w-8" />
         </div>

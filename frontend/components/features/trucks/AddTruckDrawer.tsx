@@ -1,8 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
 import { Truck } from '@/types/truck';
 import { BasicIdentityStep } from './steps/BasicIdentityStep';
 import { RegistrationComplianceStep } from './steps/RegistrationComplianceStep';
@@ -120,30 +126,18 @@ export function AddTruckDrawer({
     onOpenChange(false);
   };
 
-  if (!open) return null;
-
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/50 z-40 transition-opacity"
-        onClick={handleClose}
-      />
-
-      {/* Drawer */}
-      <div className="fixed right-0 top-0 bottom-0 w-full max-w-2xl bg-white shadow-xl z-50 overflow-y-auto flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
-          <h2 className="text-2xl font-bold text-gray-900">
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="w-full sm:max-w-2xl p-0 flex flex-col h-full border-l border-gray-200">
+        <SheetHeader className="px-6 py-6 border-b border-gray-200 flex-shrink-0 space-y-1">
+          <SheetTitle className="text-2xl font-bold text-gray-900">
             {initialTruck ? 'Edit Truck' : 'Add Truck'}
-          </h2>
-          <button
-            onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+          </SheetTitle>
+          <SheetDescription className="text-gray-500">
+            {initialTruck ? 'Update the details of this truck.' : 'Add a new truck to your fleet.'}
+          </SheetDescription>
+        </SheetHeader>
 
         {/* Progress Indicator */}
         <div className="px-6 py-4 border-b border-gray-200 flex-shrink-0">
@@ -214,7 +208,8 @@ export function AddTruckDrawer({
             )}
           </div>
         </div>
-      </div>
+      </SheetContent>
+      </Sheet>
 
       {/* Assign Later Dialog */}
       <AssignLaterDialog

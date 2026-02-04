@@ -13,6 +13,7 @@ import {
   Droplet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MOCK_TRUCKS } from '@/constants/trucks';
 import { TruckOverview } from '@/components/features/trucks/details/TruckOverview';
 import { TruckTrips } from '@/components/features/trucks/details/TruckTrips';
@@ -20,86 +21,6 @@ import { TruckFuel } from '@/components/features/trucks/details/TruckFuel';
 import { TruckTyres } from '@/components/features/trucks/details/TruckTyres';
 import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
 import { RotateTyresDrawer } from '@/components/features/trucks/details/RotateTyresDrawer';
-
-// We need to implement Tabs properly or import from shadcn
-// Assuming standard shadcn tabs structure here, but need to check if it's available.
-// If not, I'll use a simple state-based tab system for now.
-
-interface SimpleTabsProps {
-  children: React.ReactNode;
-  defaultValue: string;
-  className?: string;
-}
-
-function SimpleTabs({ children, defaultValue, className }: SimpleTabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultValue);
-  
-  return (
-    <div className={className}>
-      {React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return React.cloneElement(child, { activeTab, setActiveTab } as any);
-        }
-        return child;
-      })}
-    </div>
-  );
-}
-
-interface SimpleTabsListProps {
-  children: React.ReactNode;
-  activeTab?: string;
-  setActiveTab?: (value: string) => void;
-  className?: string;
-}
-
-function SimpleTabsList({ children, activeTab, setActiveTab, className }: SimpleTabsListProps) {
-  return (
-    <div className={`flex space-x-1 rounded-lg bg-gray-100 p-1 ${className}`}>
-      {React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return React.cloneElement(child, { activeTab, setActiveTab } as any);
-        }
-        return child;
-      })}
-    </div>
-  );
-}
-
-interface SimpleTabsTriggerProps {
-  value: string;
-  children: React.ReactNode;
-  activeTab?: string;
-  setActiveTab?: (value: string) => void;
-}
-
-function SimpleTabsTrigger({ value, children, activeTab, setActiveTab }: SimpleTabsTriggerProps) {
-  const isActive = activeTab === value;
-  return (
-    <button
-      onClick={() => setActiveTab && setActiveTab(value)}
-      className={`
-        inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
-        ${isActive ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'}
-      `}
-    >
-      {children}
-    </button>
-  );
-}
-
-interface SimpleTabsContentProps {
-  value: string;
-  children: React.ReactNode;
-  activeTab?: string;
-}
-
-function SimpleTabsContent({ value, children, activeTab }: SimpleTabsContentProps) {
-  if (value !== activeTab) return null;
-  return <div className="mt-4 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2">{children}</div>;
-}
 
 export default function TruckDetailsPage() {
   const params = useParams();
@@ -190,27 +111,29 @@ export default function TruckDetailsPage() {
       </div>
 
       {/* Tabs */}
-      <SimpleTabs defaultValue="overview" className="">
-        <SimpleTabsList className="mb-6 w-full sm:w-auto overflow-x-auto">
-          <SimpleTabsTrigger value="overview">Overview</SimpleTabsTrigger>
-            <SimpleTabsTrigger value="trips">Trips</SimpleTabsTrigger>
-            <SimpleTabsTrigger value="fuel">Fuel</SimpleTabsTrigger>
-            <SimpleTabsTrigger value="tyres">Tyres</SimpleTabsTrigger>
-          </SimpleTabsList>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full md:w-[600px] grid-cols-4 bg-gray-100 p-1 rounded-lg">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Overview</TabsTrigger>
+          <TabsTrigger value="trips" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Trips</TabsTrigger>
+          <TabsTrigger value="fuel" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Fuel</TabsTrigger>
+          <TabsTrigger value="tyres" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Tyres</TabsTrigger>
+        </TabsList>
 
-          <SimpleTabsContent value="overview">
+        <div className="mt-6">
+          <TabsContent value="overview">
             <TruckOverview truck={truck} />
-          </SimpleTabsContent>
-          <SimpleTabsContent value="trips">
+          </TabsContent>
+          <TabsContent value="trips">
             <TruckTrips truckId={truck.id} />
-          </SimpleTabsContent>
-          <SimpleTabsContent value="fuel">
+          </TabsContent>
+          <TabsContent value="fuel">
             <TruckFuel truckId={truck.id} />
-          </SimpleTabsContent>
-          <SimpleTabsContent value="tyres">
+          </TabsContent>
+          <TabsContent value="tyres">
             <TruckTyres truck={truck} />
-          </SimpleTabsContent>
-        </SimpleTabs>
+          </TabsContent>
+        </div>
+      </Tabs>
 
       <AddTruckDrawer
         open={showEditDrawer}

@@ -40,15 +40,15 @@ export function TruckFuel({ truckId }: TruckFuelProps) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
+        <div className="bg-white p-4 rounded-lg border border-orange-100 shadow-sm">
           <p className="text-sm text-orange-600 font-medium">Avg Consumption</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">32.5 <span className="text-sm font-normal text-gray-500">L/100km</span></p>
         </div>
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
           <p className="text-sm text-blue-600 font-medium">Total Fuel Cost (MTD)</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">KES 59,500</p>
         </div>
-        <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+        <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
           <p className="text-sm text-green-600 font-medium">Last Refuel</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">1 Feb 2026</p>
         </div>
