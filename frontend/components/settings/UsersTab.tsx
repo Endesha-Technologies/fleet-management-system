@@ -24,16 +24,24 @@ interface User {
   roles?: Array<{ id: string; name: string }>;
 }
 
-export function UsersTab() {
+export function UsersTab({
+  showAddSheet: externalShowAddSheet,
+  setShowAddSheet: externalSetShowAddSheet,
+  setIsSubmitting: externalSetIsSubmitting,
+}: {
+  showAddSheet?: boolean;
+  setShowAddSheet?: (show: boolean) => void;
+  setIsSubmitting?: (submitting: boolean) => void;
+} = {}) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAddSheet, setShowAddSheet] = useState(false);
+  const [showAddSheet, setShowAddSheetLocal] = useState(externalShowAddSheet || false);
   const [showEditSheet, setShowEditSheet] = useState(false);
   const [showPasswordSheet, setShowPasswordSheet] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmittingLocal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -50,6 +58,12 @@ export function UsersTab() {
     confirmPassword: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (externalShowAddSheet !== undefined) {
+      setShowAddSheetLocal(externalShowAddSheet);
+    }
+  }, [externalShowAddSheet]);
 
   useEffect(() => {
     fetchUsers();
@@ -140,7 +154,8 @@ export function UsersTab() {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.createUser({
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -152,7 +167,8 @@ export function UsersTab() {
 
       if (response.user) {
         setUsers([...users, response.user]);
-        setShowAddSheet(false);
+        setShowAddSheetLocal(false);
+        externalSetShowAddSheet?.(false);
         setSuccess('User created successfully');
         resetForm();
         setTimeout(() => setSuccess(null), 3000);
@@ -161,7 +177,8 @@ export function UsersTab() {
       const errorMessage = (error as Error).message || 'Failed to create user';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -177,7 +194,8 @@ export function UsersTab() {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.updateUser(selectedUser.id, {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -198,7 +216,8 @@ export function UsersTab() {
       const errorMessage = (error as Error).message || 'Failed to update user';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -224,7 +243,8 @@ export function UsersTab() {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       await apiClient.changePassword(selectedUser.id, {
         newPassword: passwordData.newPassword,
         confirmPassword: passwordData.confirmPassword,
@@ -238,7 +258,8 @@ export function UsersTab() {
       const errorMessage = (error as Error).message || 'Failed to change password';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -247,7 +268,8 @@ export function UsersTab() {
 
     try {
       setError(null);
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       
       await apiClient.deactivateUser(selectedUser.id);
       setUsers(users.map(u =>
@@ -261,7 +283,8 @@ export function UsersTab() {
       const errorMessage = (error as Error).message || 'Failed to deactivate user';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -326,33 +349,6 @@ export function UsersTab() {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Users</h2>
-          <p className="text-gray-600 text-sm mt-1">
-            Manage system users and their roles
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setError(null);
-            setSuccess(null);
-            resetForm();
-            setShowAddSheet(true);
-          }}
-          disabled={isSubmitting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
-        >
-          {isSubmitting ? (
-            <Loader className="w-4 h-4 animate-spin" />
-          ) : (
-            <Plus className="w-4 h-4" />
-          )}
-          Add User
-        </button>
-      </div>
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -366,61 +362,49 @@ export function UsersTab() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="hidden md:block w-full overflow-auto rounded-lg bg-white shadow-sm">
+        <table className="w-full text-sm text-left">
+          <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Full Name
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Phone
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Actions
-              </th>
+              <th className="px-4 py-3">Full Name</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Phone</th>
+              <th className="px-4 py-3">Role</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center">
+                <td colSpan={6} className="px-4 py-12 text-center">
                   <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 </td>
               </tr>
             ) : users.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-12 text-center text-gray-500">
                   No users found
                 </td>
               </tr>
             ) : (
               users.map(user => (
-                <tr key={user.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-4 py-3 font-medium text-gray-900">
                     {user.firstName} {user.lastName}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-gray-600">{user.email}</td>
+                  <td className="px-4 py-3 text-gray-600">
                     {user.phoneNumber || '-'}
                   </td>
-                  <td className="px-6 py-4 text-sm">
+                  <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium">
                       {user.roles?.[0]?.name || 'No Role'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">
+                  <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         user.isActive
                           ? 'bg-green-50 text-green-700'
                           : 'bg-red-50 text-red-700'
@@ -429,8 +413,8 @@ export function UsersTab() {
                       {user.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">
-                    <div className="flex items-center gap-2">
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => openEditSheet(user)}
                         disabled={isSubmitting}
@@ -472,7 +456,8 @@ export function UsersTab() {
             resetForm();
             setError(null);
           }
-          setShowAddSheet(open);
+          setShowAddSheetLocal(open);
+          externalSetShowAddSheet?.(open);
         }}
         title="Add New User"
         description="Create a new user account"

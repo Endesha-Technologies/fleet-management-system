@@ -37,18 +37,26 @@ interface Role {
   rolePermissions?: Array<{ id: string; permission: Permission }>;
 }
 
-export function RolesTab() {
+export function RolesTab({
+  showAddSheet: externalShowAddSheet,
+  setShowAddSheet: externalSetShowAddSheet,
+  setIsSubmitting: externalSetIsSubmitting,
+}: {
+  showAddSheet?: boolean;
+  setShowAddSheet?: (show: boolean) => void;
+  setIsSubmitting?: (submitting: boolean) => void;
+} = {}) {
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<PermissionGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAddSheet, setShowAddSheet] = useState(false);
+  const [showAddSheet, setShowAddSheetLocal] = useState(externalShowAddSheet || false);
   const [showEditSheet, setShowEditSheet] = useState(false);
   const [showViewDialog, setShowViewDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmittingLocal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -56,6 +64,12 @@ export function RolesTab() {
     description: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (externalShowAddSheet !== undefined) {
+      setShowAddSheetLocal(externalShowAddSheet);
+    }
+  }, [externalShowAddSheet]);
 
   useEffect(() => {
     fetchData();
@@ -133,7 +147,8 @@ export function RolesTab() {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.createRole({
         name: formData.name.trim(),
         description: formData.description.trim(),
@@ -142,7 +157,8 @@ export function RolesTab() {
 
       if (response.role) {
         setRoles([...roles, response.role]);
-        setShowAddSheet(false);
+        setShowAddSheetLocal(false);
+        externalSetShowAddSheet?.(false);
         setSuccess('Role created successfully');
         resetForm();
         setTimeout(() => setSuccess(null), 3000);
@@ -151,7 +167,8 @@ export function RolesTab() {
       const errorMessage = (error as Error).message || 'Failed to create role';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -167,7 +184,8 @@ export function RolesTab() {
         return;
       }
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.updateRole(selectedRole.id, {
         name: formData.name.trim(),
         description: formData.description.trim(),
@@ -186,7 +204,8 @@ export function RolesTab() {
       const errorMessage = (error as Error).message || 'Failed to update role';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -195,7 +214,8 @@ export function RolesTab() {
 
     try {
       setError(null);
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       
       await apiClient.deactivateRole(selectedRole.id);
       setRoles(roles.map(r =>
@@ -209,7 +229,8 @@ export function RolesTab() {
       const errorMessage = (error as Error).message || 'Failed to deactivate role';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -276,33 +297,6 @@ export function RolesTab() {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Roles & Permissions</h2>
-          <p className="text-gray-600 text-sm mt-1">
-            Manage system roles and their permissions
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setError(null);
-            setSuccess(null);
-            resetForm();
-            setShowAddSheet(true);
-          }}
-          disabled={isSubmitting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
-        >
-          {isSubmitting ? (
-            <Loader className="w-4 h-4 animate-spin" />
-          ) : (
-            <Plus className="w-4 h-4" />
-          )}
-          Add Role
-        </button>
-      </div>
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -316,57 +310,47 @@ export function RolesTab() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="hidden md:block w-full overflow-auto rounded-lg bg-white shadow-sm">
+        <table className="w-full text-sm text-left">
+          <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Role Name
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Permissions
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Actions
-              </th>
+              <th className="px-4 py-3">Role Name</th>
+              <th className="px-4 py-3">Description</th>
+              <th className="px-4 py-3">Permissions</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center">
+                <td colSpan={5} className="px-4 py-12 text-center">
                   <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 </td>
               </tr>
             ) : filteredRoles.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-gray-500">
                   No roles found
                 </td>
               </tr>
             ) : (
               filteredRoles.map(role => (
-                <tr key={role.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                <tr key={role.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-4 py-3 font-medium text-gray-900">
                     {role.name}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-gray-600">
                     {role.description || '-'}
                   </td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
                       {role.rolePermissions?.length || 0} permissions
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">
+                  <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         role.isActive
                           ? 'bg-green-50 text-green-700'
                           : 'bg-red-50 text-red-700'
@@ -375,8 +359,8 @@ export function RolesTab() {
                       {role.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">
-                    <div className="flex items-center gap-2">
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => openViewDialog(role)}
                         disabled={isSubmitting}
@@ -418,7 +402,8 @@ export function RolesTab() {
             resetForm();
             setError(null);
           }
-          setShowAddSheet(open);
+          setShowAddSheetLocal(open);
+          externalSetShowAddSheet?.(open);
         }}
         title="Add New Role"
         description="Create a new role with permissions"

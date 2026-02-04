@@ -25,15 +25,23 @@ interface Driver {
   licenseExpiry?: string;
 }
 
-export function DriversTab() {
+export function DriversTab({
+  showAddSheet: externalShowAddSheet,
+  setShowAddSheet: externalSetShowAddSheet,
+  setIsSubmitting: externalSetIsSubmitting,
+}: {
+  showAddSheet?: boolean;
+  setShowAddSheet?: (show: boolean) => void;
+  setIsSubmitting?: (submitting: boolean) => void;
+} = {}) {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAddSheet, setShowAddSheet] = useState(false);
+  const [showAddSheet, setShowAddSheetLocal] = useState(externalShowAddSheet || false);
   const [showEditSheet, setShowEditSheet] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmittingLocal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -45,6 +53,12 @@ export function DriversTab() {
     licenseExpiry: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (externalShowAddSheet !== undefined) {
+      setShowAddSheetLocal(externalShowAddSheet);
+    }
+  }, [externalShowAddSheet]);
 
   useEffect(() => {
     fetchDrivers();
@@ -121,7 +135,8 @@ export function DriversTab() {
       
       if (!validateForm()) return;
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.createDriver({
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -133,7 +148,8 @@ export function DriversTab() {
 
       if (response.driver) {
         setDrivers([...drivers, response.driver]);
-        setShowAddSheet(false);
+        setShowAddSheetLocal(false);
+        externalSetShowAddSheet?.(false);
         setSuccess('Driver added successfully');
         resetForm();
         setTimeout(() => setSuccess(null), 3000);
@@ -142,7 +158,8 @@ export function DriversTab() {
       const errorMessage = (error as Error).message || 'Failed to add driver';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -154,7 +171,8 @@ export function DriversTab() {
       
       if (!validateForm()) return;
 
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       const response = await apiClient.updateDriver(selectedDriver.id, {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -176,7 +194,8 @@ export function DriversTab() {
       const errorMessage = (error as Error).message || 'Failed to update driver';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -185,7 +204,8 @@ export function DriversTab() {
 
     try {
       setError(null);
-      setIsSubmitting(true);
+      setIsSubmittingLocal(true);
+      externalSetIsSubmitting?.(true);
       
       await apiClient.deactivateDriver(selectedDriver.id);
       setDrivers(drivers.map(d =>
@@ -199,7 +219,8 @@ export function DriversTab() {
       const errorMessage = (error as Error).message || 'Failed to deactivate driver';
       setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingLocal(false);
+      externalSetIsSubmitting?.(false);
     }
   };
 
@@ -265,33 +286,6 @@ export function DriversTab() {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Drivers & Turn Boys</h2>
-          <p className="text-gray-600 text-sm mt-1">
-            Manage drivers and support staff
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            setError(null);
-            setSuccess(null);
-            resetForm();
-            setShowAddSheet(true);
-          }}
-          disabled={isSubmitting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
-        >
-          {isSubmitting ? (
-            <Loader className="w-4 h-4 animate-spin" />
-          ) : (
-            <Plus className="w-4 h-4" />
-          )}
-          Add Driver
-        </button>
-      </div>
-
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -305,43 +299,29 @@ export function DriversTab() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="hidden md:block w-full overflow-auto rounded-lg bg-white shadow-sm">
+        <table className="w-full text-sm text-left">
+          <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Full Name
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Phone
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                License Number
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                License Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                Actions
-              </th>
+              <th className="px-4 py-3">Full Name</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Phone</th>
+              <th className="px-4 py-3">License Number</th>
+              <th className="px-4 py-3">License Status</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center">
+                <td colSpan={7} className="px-4 py-12 text-center">
                   <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 </td>
               </tr>
             ) : drivers.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-12 text-center text-gray-500">
                   No drivers found
                 </td>
               </tr>
@@ -350,20 +330,20 @@ export function DriversTab() {
                 const licenseStatus = getLicenseStatus(driver.licenseExpiry);
 
                 return (
-                  <tr key={driver.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                  <tr key={driver.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-4 py-3 font-medium text-gray-900">
                       {driver.firstName} {driver.lastName}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-3 text-gray-600">
                       {driver.email}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-3 text-gray-600">
                       {driver.phoneNumber || '-'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-3 text-gray-600">
                       {driver.licenseNumber || '-'}
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {driver.licenseExpiry && licenseStatus ? (
                           <>
@@ -373,7 +353,7 @@ export function DriversTab() {
                             {licenseStatus.icon === 'warning' && (
                               <AlertTriangle className="w-4 h-4 text-orange-600" />
                             )}
-                            <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${licenseStatus.color}`}>
+                            <span className={`inline-flex px-2.5 py-0.5 rounded text-xs font-medium ${licenseStatus.color}`}>
                               {licenseStatus.status}
                             </span>
                           </>
@@ -382,9 +362,9 @@ export function DriversTab() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           driver.isActive
                             ? 'bg-green-50 text-green-700'
                             : 'bg-red-50 text-red-700'
@@ -393,8 +373,8 @@ export function DriversTab() {
                         {driver.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditSheet(driver)}
                           disabled={isSubmitting}
@@ -429,7 +409,8 @@ export function DriversTab() {
             resetForm();
             setError(null);
           }
-          setShowAddSheet(open);
+          setShowAddSheetLocal(open);
+          externalSetShowAddSheet?.(open);
         }}
         title="Add New Driver"
         description="Register a new driver or turn boy"
