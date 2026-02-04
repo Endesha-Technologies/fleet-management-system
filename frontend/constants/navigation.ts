@@ -31,7 +31,7 @@ export const NAV_ITEMS = [
     icon: Fuel,
   },
   {
-    name: 'Inventory',
+    name: 'Asset Inventory',
     href: '/inventory',
     icon: Package,
   },

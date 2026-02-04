@@ -62,6 +62,12 @@ export class PartTransaction {
     @Column({ nullable: true })
     referenceNumber: string;
 
+    @Column({ nullable: true })
+    buyerName: string;
+
+    @Column({ nullable: true })
+    disposalReason: string;
+
     @Column({ type: "uuid" })
     performedBy: string;
 

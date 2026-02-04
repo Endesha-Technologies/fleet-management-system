@@ -76,8 +76,17 @@ export class Trip {
     @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
     odometerEnd: number;
 
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    engineHoursStart: number;
+
+    @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
+    engineHoursEnd: number;
+
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
     actualDistanceKm: number;
+
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+    actualEngineHours: number;
 
     @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
     averageSpeedKmh: number;

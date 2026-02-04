@@ -13,6 +13,9 @@ export class User {
     @Column({ select: false, nullable: false })
     passwordHash: string;
 
+    // Virtual property for convenience
+    password?: string;
+
     @Column({ nullable: false })
     firstName: string;
 
@@ -20,7 +23,16 @@ export class User {
     lastName: string;
 
     @Column({ nullable: true })
-    phoneNumber: string;
+    phoneNumber: string | null;
+
+    // Alias for convenience
+    get phone(): string | null {
+        return this.phoneNumber;
+    }
+
+    set phone(value: string | null) {
+        this.phoneNumber = value;
+    }
 
     @Column({ default: true })
     isActive: boolean;
@@ -36,6 +48,11 @@ export class User {
 
     @OneToMany(() => UserRole, userRole => userRole.user)
     userRoles: UserRole[];
+
+    // Virtual property for convenience
+    get roles(): UserRole[] {
+        return this.userRoles;
+    }
 
     @CreateDateColumn()
     createdAt: Date;

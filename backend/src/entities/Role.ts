@@ -18,7 +18,7 @@ export class Role {
     isSystem: boolean;
 
     @OneToMany(() => RolePermission, rolePermission => rolePermission.role)
-    permissions: RolePermission[];
+    rolePermissions: RolePermission[];
 
     @OneToMany(() => UserRole, userRole => userRole.role)
     userRoles: UserRole[];

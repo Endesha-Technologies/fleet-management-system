@@ -14,7 +14,7 @@ export class RolePermission {
     @Column({ type: "uuid" })
     permissionId: string;
 
-    @ManyToOne(() => Role, role => role.permissions)
+    @ManyToOne(() => Role, role => role.rolePermissions)
     @JoinColumn({ name: "roleId" })
     role: Role;
 
