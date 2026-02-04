@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Plus, Package, AlertTriangle, Wrench, Trash2, TrendingUp, DollarSign, Calendar, FileText, ArrowRight } from 'lucide-react';
+import { Plus, Package, AlertTriangle, Wrench, Trash2, TrendingUp, DollarSign, Calendar, FileText, ArrowRight, RefreshCw } from 'lucide-react';
 import { MOCK_TYRES } from '@/constants/tyres';
 
 export default function TyresPage() {
@@ -67,6 +67,12 @@ export default function TyresPage() {
             className="min-w-fit whitespace-nowrap snap-start px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
           >
             Inspections
+          </Link>
+          <Link
+            href="/dashboard/tyres/rotation"
+            className="min-w-fit whitespace-nowrap snap-start px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+          >
+            Tyre Rotation
           </Link>
           <Link
             href="/dashboard/tyres/disposal"
@@ -315,6 +321,13 @@ export default function TyresPage() {
               >
                 <Wrench className="h-4 w-4" />
                 Inspections
+              </Link>
+              <Link
+                href="/tyres/rotation"
+                className="flex items-center gap-3 w-full px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Tyre Rotation
               </Link>
               <Link
                 href="/tyres/disposal"

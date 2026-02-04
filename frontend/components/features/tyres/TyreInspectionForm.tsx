@@ -16,7 +16,7 @@ import {
   MIN_TREAD_DEPTH,
   RECOMMENDED_MIN_TREAD_DEPTH,
 } from '@/constants/inspections';
-import { AlertCircle, Camera, Trash2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 interface TyreInspectionFormProps {
   tyreId: string;
@@ -79,6 +79,7 @@ export function TyreInspectionForm({
       recommendedPressure,
       condition,
       damages: selectedDamages.map((type) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: type as any,
         severity: damageSeverity,
         description: damageDescription,
@@ -276,6 +277,7 @@ export function TyreInspectionForm({
           <Label>Recommended Action</Label>
           <select
             value={recommendedAction}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => setRecommendedAction(e.target.value as any)}
             className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg"
           >
@@ -290,6 +292,7 @@ export function TyreInspectionForm({
           <Label>Urgency</Label>
           <select
             value={urgency}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e) => setUrgency(e.target.value as any)}
             className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg"
           >

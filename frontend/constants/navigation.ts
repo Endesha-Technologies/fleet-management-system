@@ -1,6 +1,5 @@
 import { 
   LayoutDashboard, 
-  Users, 
   Map, 
   Truck, 
   Fuel,
@@ -15,6 +14,7 @@ export const NAV_ITEMS = [
     href: '/dashboard',
     icon: LayoutDashboard,
   },
+  
   {
     name: 'Routes',
     href: '/routes',
@@ -31,10 +31,16 @@ export const NAV_ITEMS = [
     icon: Fuel,
   },
   {
-    name: 'Inventory',
+    name: 'Asset Inventory',
     href: '/inventory',
     icon: Package,
   },
+  {
+    name: 'Truck ',
+    href: '/trucks',
+    icon: Truck,
+  },
+
   {
     name: 'Maintenance',
     href: '/maintenance',

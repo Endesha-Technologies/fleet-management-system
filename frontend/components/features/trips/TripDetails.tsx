@@ -3,7 +3,7 @@
 import React from 'react';
 import { Trip } from '@/types/trip';
 import { Button } from '@/components/ui/button';
-import { Printer, MapPin, Truck, User, Calendar, Clock, AlertCircle, Fuel, Gauge, FileText, Navigation } from 'lucide-react';
+import { Printer, MapPin, Truck, Clock, AlertCircle, Fuel, FileText } from 'lucide-react';
 
 interface TripDetailsProps {
   trip: Trip;

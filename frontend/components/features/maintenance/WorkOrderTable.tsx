@@ -2,7 +2,7 @@
 
 import { WorkOrder } from '@/types/maintenance';
 import { DataTable, DataTableColumn, DataTableBadge, DataTableCellLink } from '@/components/ui/data-table';
-import { Eye, Edit, Trash2, Wrench } from 'lucide-react';
+import { Eye, Edit, Wrench } from 'lucide-react';
 import Link from 'next/link';
 
 interface WorkOrderTableProps {

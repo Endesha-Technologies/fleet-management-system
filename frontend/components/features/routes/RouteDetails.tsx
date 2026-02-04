@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Route } from '@/types/route';
-import { MapPin, Calendar, Clock, Navigation, User, Truck } from 'lucide-react';
+import { MapPin, Calendar, Clock, Navigation } from 'lucide-react';
 
 interface RouteDetailsProps {
   route: Route;
