@@ -114,18 +114,14 @@ export default function TrucksPage() {
       </div>
 
       {/* Truck Table */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6">
-          <TruckTable
-            trucks={filteredTrucks}
-            onView={(truck) => router.push(`/trucks/${truck.id}`)}
-            onEdit={(truck) => {
-              setSelectedTruck(truck);
-              setShowAddDrawer(true);
-            }}
-          />
-        </div>
-      </div>
+      <TruckTable
+        trucks={filteredTrucks}
+        onView={(truck) => router.push(`/trucks/${truck.id}`)}
+        onEdit={(truck) => {
+          setSelectedTruck(truck);
+          setShowAddDrawer(true);
+        }}
+      />
 
       {/* Add Truck Drawer */}
       <AddTruckDrawer
