@@ -502,7 +502,8 @@ export function RolesTab({
           <div className="flex gap-3 pt-4 border-t">
             <button
               onClick={() => {
-                setShowAddSheet(false);
+                setShowAddSheetLocal(false);
+                externalSetShowAddSheet?.(false);
                 resetForm();
                 setError(null);
               }}
