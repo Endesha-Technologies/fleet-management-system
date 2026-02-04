@@ -151,7 +151,7 @@ export default function MaintenancePage() {
               {criticalAlerts.length > 0 ? (
                 criticalAlerts.map((alert) => (
                   <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg border border-red-200 bg-red-50">
-                    <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-red-900">{alert.message}</p>
                       <p className="text-xs text-red-600 mt-1" suppressHydrationWarning>
@@ -274,7 +274,7 @@ export default function MaintenancePage() {
               <div className="space-y-4">
                 {recentActivities.map((activity) => (
                   <div key={activity.id} className="flex gap-3">
-                    <div className="flex-shrink-0 mt-1">
+                    <div className="shrink-0 mt-1">
                       <div className={`h-2 w-2 rounded-full ${
                         activity.type === 'work-order-completed' ? 'bg-green-500' :
                         activity.type === 'breakdown-reported' ? 'bg-red-500' :

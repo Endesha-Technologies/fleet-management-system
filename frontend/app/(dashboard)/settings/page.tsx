@@ -31,10 +31,10 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-20">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
           <p className="text-gray-600 mt-2">
             Manage users, roles, permissions, and drivers
@@ -43,9 +43,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex gap-8" aria-label="Tabs">
+      <div className="bg-white border-b border-gray-200 sticky top-22 z-20">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex gap-8 overflow-x-auto" aria-label="Tabs">
             {tabs.map(tab => {
               const Icon = tab.icon;
               return (
@@ -67,8 +67,8 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Tab Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Tab Content - Full width with sheet overlay */}
+      <div className="max-w-full mx-auto">
         {tabs.map(tab => (
           <div key={tab.id} hidden={activeTab !== tab.id}>
             {tab.component}

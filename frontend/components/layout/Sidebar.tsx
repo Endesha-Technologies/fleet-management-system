@@ -62,17 +62,19 @@ export function Sidebar() {
       </nav>
       
       <div className="border-t border-slate-800 p-2 space-y-2">
-        <Button 
-          variant="ghost" 
-          className={cn(
-            "w-full text-slate-400 hover:bg-slate-800 hover:text-white",
-            isCollapsed ? "justify-center px-2" : "justify-start"
-          )}
-          title={isCollapsed ? "Settings" : undefined}
-        >
-          <Settings className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
-          {!isCollapsed && "Settings"}
-        </Button>
+        <Link href="/settings" className="block">
+          <Button 
+            variant="ghost" 
+            className={cn(
+              "w-full text-slate-400 hover:bg-slate-800 hover:text-white",
+              isCollapsed ? "justify-center px-2" : "justify-start"
+            )}
+            title={isCollapsed ? "Settings" : undefined}
+          >
+            <Settings className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
+            {!isCollapsed && "Settings"}
+          </Button>
+        </Link>
         <Button 
           variant="ghost" 
           className={cn(

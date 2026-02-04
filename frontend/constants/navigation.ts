@@ -7,7 +7,6 @@ import {
   Package, 
   Wrench, 
   Disc,
-  Settings
 } from 'lucide-react';
 
 export const NAV_ITEMS = [
@@ -45,10 +44,5 @@ export const NAV_ITEMS = [
     name: 'Tyres',
     href: '/tyres',
     icon: Disc,
-  },
-  {
-    name: 'Settings',
-    href: '/settings',
-    icon: Settings,
   },
 ];

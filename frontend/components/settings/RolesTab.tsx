@@ -259,25 +259,25 @@ export function RolesTab() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8 py-8">
       {/* Success Message */}
       {success && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-          <CheckCircle className="w-5 h-5 text-green-600" />
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 max-w-full">
+          <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
           <p className="text-green-800 text-sm">{success}</p>
         </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600" />
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 max-w-full">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
           <p className="text-red-800 text-sm">{error}</p>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Roles & Permissions</h2>
           <p className="text-gray-600 text-sm mt-1">
@@ -292,7 +292,7 @@ export function RolesTab() {
             setShowAddSheet(true);
           }}
           disabled={isSubmitting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
         >
           {isSubmitting ? (
             <Loader className="w-4 h-4 animate-spin" />
@@ -316,7 +316,7 @@ export function RolesTab() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg">
+      <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>

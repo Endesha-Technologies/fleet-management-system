@@ -35,48 +35,43 @@ export function Sheet({
   if (!open) return null;
 
   const sideClasses = {
-    right: 'right-0 top-0 h-screen w-full sm:w-[400px] md:w-96',
-    left: 'left-0 top-0 h-screen w-full sm:w-[400px] md:w-96',
-    top: 'top-0 left-0 w-full h-[60vh] sm:h-96',
-    bottom: 'bottom-0 left-0 w-full h-[60vh] sm:h-96',
+    right: 'right-0 top-0 h-screen w-full sm:w-[450px] lg:w-[500px]',
+    left: 'left-0 top-0 h-screen w-full sm:w-[450px] lg:w-[500px]',
+    top: 'top-0 left-0 w-full h-[70vh] sm:h-[80vh]',
+    bottom: 'bottom-0 left-0 w-full h-[70vh] sm:h-[80vh]',
   };
 
   return (
     <>
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity duration-300"
         onClick={() => onOpenChange(false)}
-        style={{ pointerEvents: 'auto' }}
       />
+      {/* Sheet Container */}
       <div
-        className={`fixed ${sideClasses[side]} z-50 bg-white shadow-2xl border border-gray-200 flex flex-col transform transition-all duration-300`}
-        onClick={(e) => e.stopPropagation()}
-        style={{ 
-          pointerEvents: 'auto',
-          animation: side === 'right' ? 'slideInRight 0.3s ease-out' : 
-                     side === 'left' ? 'slideInLeft 0.3s ease-out' :
-                     side === 'top' ? 'slideInUp 0.3s ease-out' :
-                     'slideInDown 0.3s ease-out'
-        }}
+        className={`fixed ${sideClasses[side]} z-50 bg-white shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ease-out`}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0 bg-white sticky top-0">
-          <div className="flex-1">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shrink-0 sticky top-0 z-10">
+          <div className="min-w-0 flex-1">
             {title && (
-              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+              <h2 className="text-lg font-semibold text-gray-900 truncate">{title}</h2>
             )}
             {description && (
-              <p className="text-sm text-gray-600 mt-1">{description}</p>
+              <p className="text-sm text-gray-600 mt-0.5 line-clamp-2">{description}</p>
             )}
           </div>
           <button
             onClick={() => onOpenChange(false)}
-            className="ml-4 p-2 rounded-md hover:bg-gray-100 transition flex-shrink-0 text-gray-500 hover:text-gray-700"
-            aria-label="Close dialog"
+            className="ml-4 p-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Close sheet"
             type="button"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
+        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-white">
           {children}
         </div>
