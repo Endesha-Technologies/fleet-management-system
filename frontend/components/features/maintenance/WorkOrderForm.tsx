@@ -296,7 +296,7 @@ export function WorkOrderForm() {
                         <div className="space-y-1 text-sm">
                             <p className="font-medium text-blue-900">Vehicle Information</p>
                             <p className="text-blue-700">Status: <span className="font-medium">{selectedVehicle.status}</span></p>
-                            <p className="text-blue-700">Last Recorded Odometer: <span className="font-medium">{selectedVehicle.currentOdometer.toLocaleString()} km</span></p>
+                            <p className="text-blue-700">Last Recorded Odometer: <span className="font-medium">{selectedVehicle.currentOdometer?.toLocaleString() || 'N/A'} km</span></p>
                         </div>
                     </div>
                 </div>

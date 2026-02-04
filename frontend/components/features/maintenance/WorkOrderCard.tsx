@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, User, Wrench, AlertCircle, ChevronRight, Clock } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns'; // I'll assume date-fns is available or do manual formatting if not. I'll stick to manual for now to be safe as I haven't checked package.json for date-fns.
 import Link from 'next/link';
 
 interface WorkOrderCardProps {
@@ -13,10 +12,10 @@ interface WorkOrderCardProps {
 }
 
 export function WorkOrderCard({ workOrder }: WorkOrderCardProps) {
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): 'success' | 'warning' | 'info' | 'destructive' | 'secondary' | 'default' => {
     switch (status) {
       case 'completed': return 'success';
-      case 'in-progress': return 'primary';
+      case 'in-progress': return 'info';
       case 'awaiting-parts': return 'warning';
       case 'critical': return 'destructive';
       case 'cancelled': return 'secondary';

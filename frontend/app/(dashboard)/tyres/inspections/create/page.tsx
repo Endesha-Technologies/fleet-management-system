@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { VEHICLES } from '@/constants/vehicles';
 import { TYRE_POSITIONS } from '@/constants/inspections';
 import { ArrowLeft, Save, CheckCircle, AlertCircle } from 'lucide-react';
 
-export default function ConductInspectionPage() {
+function ConductInspectionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const scheduleId = searchParams.get('scheduleId');
@@ -294,5 +294,19 @@ export default function ConductInspectionPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ConductInspectionPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-6 max-w-7xl mx-auto">
+        <Card className="p-12 text-center">
+          <p className="text-gray-500">Loading...</p>
+        </Card>
+      </div>
+    }>
+      <ConductInspectionContent />
+    </Suspense>
   );
 }
