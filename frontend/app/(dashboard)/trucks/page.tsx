@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input'; // Import Input component
 import { TruckTable } from '@/components/features/trucks/TruckTable';
 import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
 import { MOCK_TRUCKS } from '@/constants/trucks';
@@ -66,25 +67,39 @@ export default function TrucksPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Search Bar */}
-        <div className="md:col-span-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by plate number, make/model, or driver..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              value={filters.searchTerm}
-              onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
-            />
-          </div>
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search by plate number, make/model, or driver..."
+            className="pl-8"
+            value={filters.searchTerm}
+            onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
+          />
+        </div>
+
+        {/* Truck Type Filter */}
+        <div className="w-full md:w-48">
+          <select
+            className="w-full h-10 px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            value={filters.truckType}
+            onChange={(e) => setFilters({ ...filters, truckType: e.target.value })}
+          >
+            <option value="">All Types</option>
+            <option value="Isuzu">Isuzu</option>
+            <option value="Scania">Scania</option>
+            <option value="Mercedes">Mercedes-Benz</option>
+            <option value="Volvo">Volvo</option>
+            <option value="MAN">MAN</option>
+          </select>
         </div>
 
         {/* Status Filter */}
-        <div>
+        <div className="w-full md:w-48">
           <select
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full h-10 px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             value={filters.status || 'All'}
             onChange={(e) =>
               setFilters({ ...filters, status: e.target.value as TruckFilters['status'] })
@@ -95,55 +110,6 @@ export default function TrucksPage() {
             <option value="Maintenance">Maintenance</option>
             <option value="Inactive">Inactive</option>
           </select>
-        </div>
-      </div>
-
-      {/* Truck Type Filter */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Truck Type</label>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={filters.truckType === '' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: '' })}
-          >
-            All Types
-          </Button>
-          <Button
-            variant={filters.truckType === 'Isuzu' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: 'Isuzu' })}
-          >
-            Isuzu
-          </Button>
-          <Button
-            variant={filters.truckType === 'Scania' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: 'Scania' })}
-          >
-            Scania
-          </Button>
-          <Button
-            variant={filters.truckType === 'Mercedes' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: 'Mercedes' })}
-          >
-            Mercedes-Benz
-          </Button>
-          <Button
-            variant={filters.truckType === 'Volvo' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: 'Volvo' })}
-          >
-            Volvo
-          </Button>
-          <Button
-            variant={filters.truckType === 'MAN' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilters({ ...filters, truckType: 'MAN' })}
-          >
-            MAN
-          </Button>
         </div>
       </div>
 
