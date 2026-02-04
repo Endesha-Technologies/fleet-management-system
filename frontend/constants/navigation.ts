@@ -14,11 +14,7 @@ export const NAV_ITEMS = [
     href: '/dashboard',
     icon: LayoutDashboard,
   },
-  {
-    name: 'Truck Management',
-    href: '/trucks',
-    icon: Truck,
-  },
+  
   {
     name: 'Routes',
     href: '/routes',
@@ -39,6 +35,12 @@ export const NAV_ITEMS = [
     href: '/inventory',
     icon: Package,
   },
+  {
+    name: 'Truck ',
+    href: '/trucks',
+    icon: Truck,
+  },
+
   {
     name: 'Maintenance',
     href: '/maintenance',
