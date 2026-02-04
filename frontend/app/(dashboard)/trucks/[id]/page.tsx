@@ -10,10 +10,7 @@ import {
   RefreshCw,
   Gauge,
   Clock,
-  Droplet,
-  Activity,
-  Calendar,
-  AlertTriangle
+  Droplet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOCK_TRUCKS } from '@/constants/trucks';
@@ -83,7 +80,7 @@ function SimpleTabsTrigger({ value, children, activeTab, setActiveTab }: SimpleT
     <button
       onClick={() => setActiveTab && setActiveTab(value)}
       className={`
-        inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
+        inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
         ${isActive ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900'}
       `}
     >
@@ -189,34 +186,12 @@ export default function TruckDetailsPage() {
           subtext="-2.1% vs fleet avg"
           color="orange"
         />
-        <StatsCard 
-          icon={Activity} 
-          label="Tyre Health" 
-          value="85%" 
-          subtext="6 tyres in good condition"
-          color="indigo"
-        />
-        <StatsCard 
-          icon={Calendar} 
-          label="Last Service" 
-          value="12 Jan 2026" 
-          subtext="Next: 12 Mar 2026"
-          color="cyan"
-        />
-        <StatsCard 
-          icon={AlertTriangle} 
-          label="Open Issues" 
-          value={truck.alerts.toString()} 
-          subtext={truck.alerts > 0 ? "Requires attention" : "No active alerts"}
-          color={truck.alerts > 0 ? "red" : "gray"}
-        />
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <SimpleTabs defaultValue="overview" className="p-6">
-          <SimpleTabsList className="mb-6 w-full sm:w-auto overflow-x-auto">
-            <SimpleTabsTrigger value="overview">Overview</SimpleTabsTrigger>
+      <SimpleTabs defaultValue="overview" className="">
+        <SimpleTabsList className="mb-6 w-full sm:w-auto overflow-x-auto">
+          <SimpleTabsTrigger value="overview">Overview</SimpleTabsTrigger>
             <SimpleTabsTrigger value="trips">Trips</SimpleTabsTrigger>
             <SimpleTabsTrigger value="fuel">Fuel</SimpleTabsTrigger>
             <SimpleTabsTrigger value="tyres">Tyres</SimpleTabsTrigger>
@@ -235,7 +210,6 @@ export default function TruckDetailsPage() {
             <TruckTyres truck={truck} />
           </SimpleTabsContent>
         </SimpleTabs>
-      </div>
 
       <AddTruckDrawer
         open={showEditDrawer}
