@@ -1,0 +1,106 @@
+import { StockUnit, AssetMovement, AssetAssignment } from '@/types/asset';
+
+export const MOCK_STOCK_UNITS: StockUnit[] = [
+  {
+    id: 'UNIT-001',
+    assetId: 'AST-003', // Assuming this is a Tyre or serial tracked item
+    serialNumber: 'TY-2024-001',
+    condition: 'New',
+    status: 'In Stock',
+    location: 'Warehouse B',
+    purchaseDate: '2025-12-01',
+    kmUsed: 0,
+  },
+  {
+    id: 'UNIT-002',
+    assetId: 'AST-003',
+    serialNumber: 'TY-2024-002',
+    condition: 'Good',
+    status: 'Mounted',
+    location: 'TRK-001',
+    purchaseDate: '2025-10-15',
+    kmUsed: 15000,
+  },
+  {
+    id: 'UNIT-003',
+    assetId: 'AST-003',
+    serialNumber: 'TY-2024-003',
+    condition: 'Damaged',
+    status: 'Disposed',
+    location: 'Disposal Yard',
+    purchaseDate: '2025-01-20',
+    kmUsed: 45000,
+  },
+];
+
+export const MOCK_MOVEMENTS: AssetMovement[] = [
+  {
+    id: 'MOV-001',
+    date: '2026-02-01',
+    type: 'Purchase',
+    reference: 'PO-2026-005',
+    quantity: 10,
+    from: 'Supplier: AutoParts',
+    to: 'Warehouse A',
+    performedBy: 'John Storeman',
+    notes: 'Bulk purchase of brake pads',
+  },
+  {
+    id: 'MOV-002',
+    date: '2026-02-03',
+    type: 'Assignment',
+    reference: 'WO-105',
+    quantity: 2,
+    from: 'Warehouse A',
+    to: 'TRK-005',
+    performedBy: 'Mike Mechanic',
+    notes: 'Routine maintenance',
+  },
+  {
+    id: 'MOV-003',
+    date: '2026-01-15',
+    type: 'Sale',
+    reference: 'INV-SALE-002',
+    serialNumber: 'TY-2024-055',
+    from: 'Warehouse B',
+    to: 'External Client',
+    performedBy: 'Alice Sales',
+    notes: 'Sold to sub-contractor',
+  },
+];
+
+export const MOCK_ASSIGNMENTS: AssetAssignment[] = [
+  {
+    id: 'ASG-001',
+    assetId: 'AST-003',
+    serialNumber: 'TY-2024-002',
+    truckId: 'TRK-001',
+    truckPlate: 'UBA 123A',
+    position: 'Front Left',
+    mountDate: '2025-11-20',
+    mountOdometer: 150000,
+    status: 'Active',
+  },
+  {
+    id: 'ASG-002',
+    assetId: 'AST-005',
+    truckId: 'TRK-002',
+    truckPlate: 'UBB 456B',
+    mountDate: '2025-12-05',
+    mountOdometer: 85000,
+    status: 'Active',
+  },
+  {
+    id: 'ASG-003',
+    assetId: 'AST-003',
+    serialNumber: 'TY-2024-003',
+    truckId: 'TRK-001',
+    truckPlate: 'UBA 123A',
+    position: 'Rear Right Inner',
+    mountDate: '2025-02-10',
+    mountOdometer: 120000,
+    dismountDate: '2025-08-15',
+    dismountOdometer: 165000,
+    status: 'History',
+  },
+];

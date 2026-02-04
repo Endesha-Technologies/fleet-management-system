@@ -1,207 +1,227 @@
 'use client';
 
-import { use } from 'react';
-import { notFound, useRouter } from 'next/navigation';
-import { MOCK_INVENTORY_ITEMS } from '@/constants/inventory';
+import React, { useState } from 'react';
+import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Package, Truck, Calendar, MapPin, User, DollarSign, ArrowRight, ShoppingCart, Trash2, Wrench } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  ArrowLeft, 
+  ShoppingCart, 
+  Truck, 
+  DollarSign, 
+  Trash2, 
+  MinusCircle,
+  Package,
+  History
+} from 'lucide-react';
 import Link from 'next/link';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
+// Mock Data
+import { MOCK_ASSETS } from '@/constants/assets';
+import { 
+  MOCK_STOCK_UNITS, 
+  MOCK_MOVEMENTS, 
+  MOCK_ASSIGNMENTS 
+} from '@/constants/asset_details';
 
-export default function InventoryDetailPage({ params }: PageProps) {
-  const { id } = use(params);
-  const router = useRouter();
-  const item = MOCK_INVENTORY_ITEMS.find((i) => i.id === id);
+// Components
+import OverviewTab from '@/components/features/assets/tabs/OverviewTab';
+import StockUnitsTab from '@/components/features/assets/tabs/StockUnitsTab';
+import MovementsTab from '@/components/features/assets/tabs/MovementsTab';
+import AssignmentsTab from '@/components/features/assets/tabs/AssignmentsTab';
 
-  if (!item) {
-    notFound();
+// Drawers
+import PurchaseStockDrawer from '@/components/features/assets/PurchaseStockDrawer';
+import AssignAssetDrawer from '@/components/features/assets/AssignAssetDrawer';
+import RemoveAssetDrawer from '@/components/features/assets/RemoveAssetDrawer';
+import SellAssetDrawer from '@/components/features/assets/SellAssetDrawer';
+import DisposeAssetDrawer from '@/components/features/assets/DisposeAssetDrawer';
+
+export default function AssetDetailsPage() {
+  const params = useParams();
+  const id = params.id as string;
+  
+  // Find Asset
+  const asset = MOCK_ASSETS.find((a) => a.id === id);
+
+  // Filter Details for this Asset
+  const stockUnits = MOCK_STOCK_UNITS.filter((u) => u.assetId === id);
+  const movements = MOCK_MOVEMENTS; // In real app, filter by assetId
+  const assignments = MOCK_ASSIGNMENTS.filter((a) => a.assetId === id);
+
+  // Drawer States
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const [isRemoveOpen, setIsRemoveOpen] = useState(false);
+  const [isSellOpen, setIsSellOpen] = useState(false);
+  const [isDisposeOpen, setIsDisposeOpen] = useState(false);
+
+  if (!asset) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[50vh]">
+        <h2 className="text-2xl font-semibold text-gray-900">Asset Not Found</h2>
+        <p className="text-gray-500 mt-2">The asset you are looking for does not exist.</p>
+        <Link href="/inventory">
+          <Button variant="outline" className="mt-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Inventory
+          </Button>
+        </Link>
+      </div>
+    );
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'In Storage': return 'bg-blue-100 text-blue-800';
-      case 'Sold': return 'bg-green-100 text-green-800';
-      case 'Disposed': return 'bg-red-100 text-red-800';
-      case 'Used in Maintenance': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getConditionColor = (condition: string) => {
-    switch (condition) {
-      case 'New': return 'text-green-600';
-      case 'Good': return 'text-blue-600';
-      case 'Fair': return 'text-yellow-600';
-      case 'Poor': return 'text-orange-600';
-      case 'Damaged': return 'text-red-600';
-      default: return 'text-gray-600';
-    }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return `UGX ${amount.toLocaleString()}`;
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-            <button
-              onClick={() => router.back()}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold truncate">{item.partName}</h1>
-              <p className="text-xs sm:text-sm text-gray-600">{item.partNumber}</p>
-            </div>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+             <Link href="/inventory" className="text-gray-500 hover:text-gray-700 transition-colors">
+                <ArrowLeft className="w-5 h-5" />
+             </Link>
+             <h1 className="text-2xl font-bold text-gray-900">{asset.name}</h1>
           </div>
-          {item.status === 'In Storage' && (
-            <Link href={`/inventory/${id}/move`}>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white shrink-0">
-                <span className="hidden sm:inline">Move Part</span>
-                <ArrowRight className="w-4 h-4 sm:ml-2" />
-              </Button>
-            </Link>
-          )}
+          <div className="flex items-center gap-2 ml-7">
+             <Badge variant="outline" className="text-xs">{asset.sku}</Badge>
+             <Badge className={
+                 asset.inStock > asset.reorderLevel 
+                 ? "bg-green-100 text-green-800 hover:bg-green-200 border-green-200" 
+                 : "bg-red-100 text-red-800 hover:bg-red-200 border-red-200"
+             }>
+                 {asset.stockStatus}
+             </Badge>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+           <Button 
+                className="bg-blue-600 hover:bg-blue-700 text-white" 
+                onClick={() => setIsPurchaseOpen(true)}
+           >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Purchase Stock
+           </Button>
+           <Button 
+                variant="outline" 
+                className="text-blue-600 border-gray-200 hover:bg-blue-50"
+                onClick={() => setIsAssignOpen(true)}
+           >
+              <Truck className="w-4 h-4 mr-2" />
+              Assign to Truck
+           </Button>
+           <Button 
+                variant="outline" 
+                className="text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsRemoveOpen(true)}
+           >
+               <MinusCircle className="w-4 h-4 mr-2" />
+               Remove from Truck
+           </Button>
+           <Button 
+                variant="outline" 
+                className="text-gray-700 border-gray-200 hover:bg-gray-50"
+                onClick={() => setIsSellOpen(true)}
+           >
+               <DollarSign className="w-4 h-4 mr-2" />
+               Sell
+           </Button>
+           <Button 
+               variant="outline" 
+               className="text-gray-500 border-gray-200 hover:text-red-700 hover:bg-red-50 hover:border-red-200"
+               onClick={() => setIsDisposeOpen(true)}
+           >
+               <Trash2 className="w-4 h-4 mr-2" />
+               Dispose
+           </Button>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 space-y-6">
-          {/* Status Badge */}
-          <div className="flex items-center gap-3">
-            <span className={`inline-flex text-sm px-3 py-1.5 rounded-full font-medium ${getStatusColor(item.status)}`}>
-              {item.status}
-            </span>
-            <span className={`text-lg font-semibold ${getConditionColor(item.condition)}`}>
-              {item.condition} Condition
-            </span>
-          </div>
-
-          {/* Part Information */}
-          <div className="space-y-4 pb-6 border-b border-gray-100">
-            <h2 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-              <Package className="h-5 w-5 text-blue-600" />
-              Part Information
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500 block mb-1">Part Name</span>
-                <span className="font-medium text-gray-900">{item.partName}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">Part Number</span>
-                <span className="font-medium text-gray-900">{item.partNumber}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">Category</span>
-                <span className="font-medium text-gray-900">{item.category}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">Quantity</span>
-                <span className="font-medium text-gray-900">{item.quantity}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="space-y-4 pb-6 border-b border-gray-100">
-            <h2 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-blue-600" />
-              Pricing
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <span className="text-gray-500 text-sm block mb-1">Unit Price</span>
-                <span className="text-xl font-bold text-gray-900">{formatCurrency(item.unitPrice)}</span>
-              </div>
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <span className="text-blue-700 text-sm block mb-1">Total Value</span>
-                <span className="text-xl font-bold text-blue-900">{formatCurrency(item.totalValue)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Removal Details */}
-          <div className="space-y-4 pb-6 border-b border-gray-100">
-            <h2 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-              <Truck className="h-5 w-5 text-blue-600" />
-              Removal Details
-            </h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-3">
-                <Truck className="h-4 w-4 text-gray-400 mt-0.5" />
-                <div>
-                  <span className="text-gray-500 block">Removed From</span>
-                  <span className="font-medium text-gray-900">{item.removedFromVehicle}</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
-                <div>
-                  <span className="text-gray-500 block">Removal Date</span>
-                  <span className="font-medium text-gray-900">{formatDate(item.removalDate)}</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Package className="h-4 w-4 text-gray-400 mt-0.5" />
-                <div className="flex-1">
-                  <span className="text-gray-500 block">Reason</span>
-                  <span className="font-medium text-gray-900">{item.removalReason}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Storage & Personnel */}
-          <div className="space-y-4">
-            <h2 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-blue-600" />
-              Storage & Personnel
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
-                <div>
-                  <span className="text-gray-500 block">Storage Location</span>
-                  <span className="font-medium text-gray-900">{item.storageLocation}</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <User className="h-4 w-4 text-gray-400 mt-0.5" />
-                <div>
-                  <span className="text-gray-500 block">Added By</span>
-                  <span className="font-medium text-gray-900">{item.addedBy}</span>
-                </div>
-              </div>
-            </div>
-            {item.notes && (
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
-                <span className="text-amber-900 text-sm font-medium block mb-2">Notes</span>
-                <p className="text-amber-800 text-sm">{item.notes}</p>
-              </div>
-            )}
-          </div>
+      {/* Summary Stat Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Units</p>
+             <p className="text-2xl font-bold text-gray-900 mt-1">{asset.inStock + asset.assigned}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">In Stock</p>
+             <p className={`text-2xl font-bold mt-1 ${asset.inStock <= asset.reorderLevel ? 'text-red-600' : 'text-gray-900'}`}>
+                 {asset.inStock}
+             </p>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Assigned</p>
+             <p className="text-2xl font-bold text-blue-600 mt-1">{asset.assigned}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Disposed</p>
+             <p className="text-2xl font-bold text-gray-400 mt-1">2</p> {/* Mock value */}
         </div>
       </div>
+
+      {/* Tabs Navigation */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full md:w-[600px] grid-cols-4 bg-gray-100 p-1 rounded-lg">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Overview</TabsTrigger>
+          <TabsTrigger value="units" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Stock Units</TabsTrigger>
+          <TabsTrigger value="movements" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Movements</TabsTrigger>
+          <TabsTrigger value="assignments" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm">Assignments</TabsTrigger>
+        </TabsList>
+        
+        <div className="mt-6">
+            <TabsContent value="overview">
+                <OverviewTab asset={asset} />
+            </TabsContent>
+            
+            <TabsContent value="units">
+                <StockUnitsTab asset={asset} stockUnits={stockUnits} />
+            </TabsContent>
+            
+            <TabsContent value="movements">
+                <MovementsTab movements={movements} />
+            </TabsContent>
+            
+            <TabsContent value="assignments">
+                <AssignmentsTab assignments={assignments} />
+            </TabsContent>
+        </div>
+      </Tabs>
+
+      {/* Drawers */}
+      <PurchaseStockDrawer 
+        open={isPurchaseOpen} 
+        onOpenChange={setIsPurchaseOpen} 
+        initialAssetId={asset.id} 
+      />
+      
+      <AssignAssetDrawer
+         open={isAssignOpen}
+         onOpenChange={setIsAssignOpen}
+         asset={asset}
+      />
+      
+      <RemoveAssetDrawer
+         open={isRemoveOpen}
+         onOpenChange={setIsRemoveOpen}
+         asset={asset}
+      />
+
+      <SellAssetDrawer
+        isOpen={isSellOpen}
+        onClose={() => setIsSellOpen(false)}
+        asset={asset}
+        stockUnits={stockUnits}
+      />
+
+      <DisposeAssetDrawer
+        isOpen={isDisposeOpen}
+        onClose={() => setIsDisposeOpen(false)}
+        asset={asset}
+        stockUnits={stockUnits}
+      />
+
     </div>
   );
 }
