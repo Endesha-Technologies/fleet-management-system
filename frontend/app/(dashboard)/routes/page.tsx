@@ -1,22 +1,74 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RouteTable } from '@/components/features/routes/RouteTable';
 import { RouteCard } from '@/components/features/routes/RouteCard';
+import { CreateRouteDrawer } from '@/components/features/routes/CreateRouteDrawer';
+import { RouteDetailsDrawer } from '@/components/features/routes/RouteDetailsDrawer';
+import { EditRouteDrawer } from '@/components/features/routes/EditRouteDrawer';
+import { DeleteRouteDialog } from '@/components/features/routes/DeleteRouteDialog';
 import { MOCK_ROUTES } from '@/constants/routes';
+import { Route } from '@/types/route';
 
 export default function RoutesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateDrawer, setShowCreateDrawer] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [showDetailsDrawer, setShowDetailsDrawer] = useState(false);
+  const [showEditDrawer, setShowEditDrawer] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const filteredRoutes = MOCK_ROUTES.filter((route) =>
     route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.startLocation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.endLocation.toLowerCase().includes(searchQuery.toLowerCase())
+    route.origin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    route.destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleViewRoute = (route: Route) => {
+    setSelectedRoute(route);
+    setShowDetailsDrawer(true);
+  };
+
+  const handleEditRoute = (route: Route) => {
+    setShowDetailsDrawer(false);
+    setSelectedRoute(route);
+    setShowEditDrawer(true);
+  };
+
+  const handleDeleteRoute = (route: Route) => {
+    setShowDetailsDrawer(false);
+    setSelectedRoute(route);
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = (route: Route) => {
+    console.log('Deleting route:', route);
+    // TODO: Integrate with backend API to delete
+    setShowDeleteDialog(false);
+    setSelectedRoute(null);
+  };
+
+  const handleSaveRoute = (routeData: {
+    name: string;
+    origin: string;
+    destination: string;
+    distance: string;
+    duration: string;
+    deviationThreshold: string;
+  }) => {
+    console.log('Route saved:', routeData);
+    // TODO: Integrate with backend API
+  };
+
+  const handleUpdateRoute = (updatedRoute: Route) => {
+    console.log('Route updated:', updatedRoute);
+    // TODO: Integrate with backend API to update
+    setShowEditDrawer(false);
+    setSelectedRoute(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -27,16 +79,17 @@ export default function RoutesPage() {
             Manage and optimize your fleet routes.
           </p>
         </div>
-        <Link href="/routes/create" scroll={false}>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="mr-2 h-4 w-4" />
-            Create Route
-          </Button>
-        </Link>
+        <Button 
+          onClick={() => setShowCreateDrawer(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create Route
+        </Button>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex items-center">
+        <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
@@ -48,13 +101,52 @@ export default function RoutesPage() {
         </div>
       </div>
 
-      <RouteTable routes={filteredRoutes} />
+      <RouteTable 
+        routes={filteredRoutes} 
+        onViewRoute={handleViewRoute}
+        onEditRoute={handleEditRoute}
+        onDeleteRoute={handleDeleteRoute}
+      />
       
       <div className="md:hidden">
         {filteredRoutes.map((route) => (
-          <RouteCard key={route.id} route={route} />
+          <RouteCard 
+            key={route.id} 
+            route={route} 
+            onViewRoute={handleViewRoute}
+            onEditRoute={handleEditRoute}
+            onDeleteRoute={handleDeleteRoute}
+          />
         ))}
       </div>
+
+      <CreateRouteDrawer
+        open={showCreateDrawer}
+        onOpenChange={setShowCreateDrawer}
+        onSave={handleSaveRoute}
+      />
+
+      <RouteDetailsDrawer
+        route={selectedRoute}
+        open={showDetailsDrawer}
+        onOpenChange={setShowDetailsDrawer}
+        onEdit={handleEditRoute}
+        onDelete={handleDeleteRoute}
+      />
+
+      <EditRouteDrawer
+        route={selectedRoute}
+        open={showEditDrawer}
+        onOpenChange={setShowEditDrawer}
+        onSave={handleUpdateRoute}
+      />
+
+      <DeleteRouteDialog
+        route={selectedRoute}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

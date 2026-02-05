@@ -51,33 +51,23 @@ export function RouteForm({ initialData, isEditing = false }: RouteFormProps) {
             required 
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="date">Date</Label>
-          <Input 
-            id="date" 
-            type="date" 
-            defaultValue={initialData?.date}
-            required 
-          />
-        </div>
 
         <div className="space-y-2">
-          <Label htmlFor="start">Start Location</Label>
+          <Label htmlFor="origin">Origin</Label>
           <Input 
-            id="start" 
-            placeholder="Enter start location" 
-            defaultValue={initialData?.startLocation}
+            id="origin" 
+            placeholder="Enter origin location" 
+            defaultValue={initialData?.origin.name}
             required 
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="end">End Location</Label>
+          <Label htmlFor="destination">Destination</Label>
           <Input 
-            id="end" 
+            id="destination" 
             placeholder="Enter destination" 
-            defaultValue={initialData?.endLocation}
+            defaultValue={initialData?.destination.name}
             required 
           />
         </div>
@@ -97,6 +87,16 @@ export function RouteForm({ initialData, isEditing = false }: RouteFormProps) {
             id="duration" 
             placeholder="e.g. 45 mins" 
             defaultValue={initialData?.estimatedDuration}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="deviationThreshold">Deviation Threshold (meters)</Label>
+          <Input 
+            id="deviationThreshold" 
+            type="number"
+            placeholder="e.g. 500" 
+            defaultValue={initialData?.deviationThreshold}
           />
         </div>
       </div>

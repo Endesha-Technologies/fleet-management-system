@@ -6,21 +6,20 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     tripId: '1',
     vehiclePlate: 'UAH 123K',
     driverName: 'Patrick Okello',
-    latitude: 0.3476,
-    longitude: 32.5825,
+    latitude: -0.2500,
+    longitude: 31.2000,
     speed: 65,
-    heading: 180, // South
+    heading: 220, // Southwest towards Mbarara
     lastUpdate: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 minutes ago
     fuelLevel: 85,
     routeName: 'Kampala → Mbarara',
     startLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
     endLocation: { lat: -0.6069, lng: 30.6632, name: 'Mbarara' },
     routeWaypoints: [
-      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
+      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() }, // Start
       { lat: 0.1500, lng: 32.4000, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString() },
       { lat: 0.0000, lng: 31.8000, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString() },
-      { lat: -0.2500, lng: 31.2000, timestamp: new Date(Date.now() - 0.5 * 60 * 60 * 1000).toISOString() },
-      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString() }, // Current position
+      { lat: -0.2500, lng: 31.2000, timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString() }, // Current position
     ],
     startTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
     eta: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(), // 3 hours from now
@@ -45,14 +44,14 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     latitude: 1.3733,
     longitude: 32.2903,
     speed: 72,
-    heading: 0, // North
+    heading: 0, // North towards Gulu
     lastUpdate: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5 minutes ago
     fuelLevel: 45,
     routeName: 'Kampala → Gulu',
     startLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
     endLocation: { lat: 2.7747, lng: 32.2989, name: 'Gulu' },
     routeWaypoints: [
-      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString() },
+      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString() }, // Start
       { lat: 0.7000, lng: 32.4500, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString() },
       { lat: 1.0000, lng: 32.3700, timestamp: new Date(Date.now() - 0.5 * 60 * 60 * 1000).toISOString() },
       { lat: 1.3733, lng: 32.2903, timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString() }, // Current
@@ -77,28 +76,27 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     tripId: '3',
     vehiclePlate: 'UBD 789P',
     driverName: 'Moses Kizza',
-    latitude: 0.4241,
-    longitude: 33.2039,
+    latitude: 0.3800,
+    longitude: 32.8000,
     speed: 0,
-    heading: 90, // East
+    heading: 270, // West towards Kampala
     lastUpdate: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 minutes ago
     fuelLevel: 20,
     routeName: 'Jinja → Kampala',
     startLocation: { lat: 0.4241, lng: 33.2039, name: 'Jinja' },
     endLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
     routeWaypoints: [
-      { lat: 0.4241, lng: 33.2039, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString() },
+      { lat: 0.4241, lng: 33.2039, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString() }, // Start
       { lat: 0.4000, lng: 33.0000, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
-      { lat: 0.3800, lng: 32.8000, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString() },
-      { lat: 0.4241, lng: 33.2039, timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString() }, // Current (stopped)
+      { lat: 0.3800, lng: 32.8000, timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString() }, // Current (stopped)
     ],
     startTime: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
     eta: new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString(),
     driverPhone: '+256 784 567 890',
     status: 'Delayed',
-    currentLocation: 'Stopped at Jinja',
-    distanceTraveled: 84,
-    distanceRemaining: 82,
+    currentLocation: 'Stopped near Mukono',
+    distanceTraveled: 42,
+    distanceRemaining: 40,
     averageSpeed: 28,
     driverHours: 3.0,
     cargoWeight: 15.5,

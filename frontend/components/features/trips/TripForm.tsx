@@ -72,7 +72,7 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
               <option value="">-- Select a route --</option>
               {MOCK_ROUTES.map(route => (
                 <option key={route.id} value={route.id}>
-                  {route.name} ({route.startLocation} → {route.endLocation})
+                  {route.name} ({route.origin.name} → {route.destination.name})
                 </option>
               ))}
             </select>
@@ -92,11 +92,11 @@ export function TripForm({ initialData, isEditing = false }: TripFormProps) {
               </div>
               <div>
                 <span className="text-blue-700 font-medium">From:</span>
-                <span className="ml-2 text-blue-900">{route.startLocation}</span>
+                <span className="ml-2 text-blue-900">{route.origin.name}</span>
               </div>
               <div>
                 <span className="text-blue-700 font-medium">To:</span>
-                <span className="ml-2 text-blue-900">{route.endLocation}</span>
+                <span className="ml-2 text-blue-900">{route.destination.name}</span>
               </div>
             </div>
           )}

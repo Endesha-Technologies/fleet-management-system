@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { Route } from '@/types/route';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,9 +6,12 @@ import { Edit, Trash2, MapPin, Clock, Navigation, Eye } from 'lucide-react';
 
 interface RouteCardProps {
   route: Route;
+  onViewRoute?: (route: Route) => void;
+  onEditRoute?: (route: Route) => void;
+  onDeleteRoute?: (route: Route) => void;
 }
 
-export function RouteCard({ route }: RouteCardProps) {
+export function RouteCard({ route, onViewRoute, onEditRoute, onDeleteRoute }: RouteCardProps) {
   return (
     <Card className="md:hidden mb-4 border-none shadow-sm">
       <CardHeader className="pb-2">
@@ -29,15 +31,15 @@ export function RouteCard({ route }: RouteCardProps) {
           <div className="flex items-start gap-2 text-sm">
             <MapPin className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">Start</p>
-              <p className="font-medium">{route.startLocation}</p>
+              <p className="text-xs text-gray-500">Origin</p>
+              <p className="font-medium">{route.origin.name}</p>
             </div>
           </div>
           <div className="flex items-start gap-2 text-sm">
             <MapPin className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
             <div>
-              <p className="text-xs text-gray-500">End</p>
-              <p className="font-medium">{route.endLocation}</p>
+              <p className="text-xs text-gray-500">Destination</p>
+              <p className="font-medium">{route.destination.name}</p>
             </div>
           </div>
         </div>
@@ -54,21 +56,28 @@ export function RouteCard({ route }: RouteCardProps) {
         </div>
 
         <div className="flex gap-2 pt-2">
-          <Button variant="outline" className="flex-1 h-9 text-sm" asChild>
-            <Link href={`/routes/${route.id}`} scroll={false}>
-              <Eye className="h-4 w-4 mr-2" />
-              View
-            </Link>
+          <Button 
+            variant="outline" 
+            className="flex-1 h-9 text-sm"
+            onClick={() => onViewRoute?.(route)}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            View
           </Button>
-          <Button variant="outline" className="flex-1 h-9 text-sm" asChild>
-            <Link href={`/routes/${route.id}/edit`} scroll={false}>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
-            </Link>
+          <Button 
+            variant="outline" 
+            className="flex-1 h-9 text-sm"
+            onClick={() => onEditRoute?.(route)}
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
           </Button>
-          <Button variant="outline" className="flex-1 h-9 text-sm text-red-600 hover:text-red-700 hover:bg-red-50">
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete
+          <Button 
+            variant="outline" 
+            className="h-9 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-3"
+            onClick={() => onDeleteRoute?.(route)}
+          >
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </CardContent>

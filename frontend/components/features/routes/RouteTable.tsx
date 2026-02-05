@@ -1,22 +1,24 @@
 import React from 'react';
-import Link from 'next/link';
 import { Route } from '@/types/route';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, MapPin, Eye } from 'lucide-react';
 
 interface RouteTableProps {
   routes: Route[];
+  onViewRoute?: (route: Route) => void;
+  onEditRoute?: (route: Route) => void;
+  onDeleteRoute?: (route: Route) => void;
 }
 
-export function RouteTable({ routes }: RouteTableProps) {
+export function RouteTable({ routes, onViewRoute, onEditRoute, onDeleteRoute }: RouteTableProps) {
   return (
     <div className="hidden md:block w-full overflow-auto rounded-lg bg-white shadow-sm">
       <table className="w-full text-sm text-left">
         <thead className="bg-gray-50 text-gray-700 font-medium border-b border-gray-100">
           <tr>
             <th className="px-4 py-3">Route Name</th>
-            <th className="px-4 py-3">Start Location</th>
-            <th className="px-4 py-3">End Location</th>
+            <th className="px-4 py-3">Origin</th>
+            <th className="px-4 py-3">Destination</th>
             <th className="px-4 py-3">Distance</th>
             <th className="px-4 py-3">Duration</th>
             <th className="px-4 py-3">Status</th>
@@ -30,13 +32,13 @@ export function RouteTable({ routes }: RouteTableProps) {
               <td className="px-4 py-3 text-gray-600">
                 <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-green-500" />
-                  {route.startLocation}
+                  {route.origin.name}
                 </div>
               </td>
               <td className="px-4 py-3 text-gray-600">
                 <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-red-500" />
-                  {route.endLocation}
+                  {route.destination.name}
                 </div>
               </td>
               <td className="px-4 py-3 text-gray-600">{route.distance}</td>
@@ -52,17 +54,28 @@ export function RouteTable({ routes }: RouteTableProps) {
               </td>
               <td className="px-4 py-3 text-right">
                 <div className="flex items-center justify-end gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-blue-600" asChild>
-                    <Link href={`/routes/${route.id}`} scroll={false}>
-                      <Eye className="h-4 w-4" />
-                    </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-gray-500 hover:text-blue-600"
+                    onClick={() => onViewRoute?.(route)}
+                  >
+                    <Eye className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-blue-600" asChild>
-                    <Link href={`/routes/${route.id}/edit`} scroll={false}>
-                      <Edit className="h-4 w-4" />
-                    </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-gray-500 hover:text-blue-600"
+                    onClick={() => onEditRoute?.(route)}
+                  >
+                    <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-red-600">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-gray-500 hover:text-red-600"
+                    onClick={() => onDeleteRoute?.(route)}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
