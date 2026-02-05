@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Plus, TrendingUp, Clock, CheckCircle, AlertCircle, Navigation } from 'lucide-react';
 import { TripTable } from '@/components/features/trips/TripTable';
+import { AssignRouteDrawer } from '@/components/features/trips/AssignRouteDrawer';
 import { MOCK_TRIPS } from '@/constants/trips';
+import { Trip } from '@/types/trip';
 
 export default function TripsPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'scheduled' | 'in-progress' | 'completed'>('all');
+  const [assignRouteDrawerOpen, setAssignRouteDrawerOpen] = useState(false);
+  const [selectedTripForRoute, setSelectedTripForRoute] = useState<Trip | null>(null);
 
   const filteredTrips = MOCK_TRIPS.filter(trip => {
     if (activeTab === 'all') return true;
@@ -25,6 +29,17 @@ export default function TripsPage() {
     cancelled: MOCK_TRIPS.filter(t => t.status === 'Cancelled').length,
   };
 
+  const handleAssignRoute = (trip: Trip) => {
+    setSelectedTripForRoute(trip);
+    setAssignRouteDrawerOpen(true);
+  };
+
+  const handleRouteAssigned = (tripId: string, data: Parameters<typeof AssignRouteDrawer>[0]['onAssign'] extends (id: string, data: infer D) => void ? D : never) => {
+    console.log('Route assigned to trip:', tripId, data);
+    // In production: API call to update the trip with route and crew information
+    alert(`Route assigned to Trip #${tripId}\nDriver: ${data.driverName}\nTurn Boy: ${data.turnBoyName || 'None'}\nDistance: ${data.tripRoute.distance} km`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -34,16 +49,21 @@ export default function TripsPage() {
           <p className="text-sm text-gray-500 mt-1">Assign, track, and manage all fleet trips</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
-          <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50" asChild>
+         
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+            onClick={() => {
+              setSelectedTripForRoute(null);
+              setAssignRouteDrawerOpen(true);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Assign New Trip
+          </Button>
+           <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50" asChild>
             <Link href="/trips/tracking">
               <Navigation className="h-4 w-4 mr-2" />
               Track Trips
-            </Link>
-          </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" asChild>
-            <Link href="/trips/create" scroll={false} prefetch={true}>
-              <Plus className="h-4 w-4 mr-2" />
-              Assign New Trip
             </Link>
           </Button>
         </div>
@@ -149,9 +169,20 @@ export default function TripsPage() {
 
         {/* Trips Table */}
         <div className="p-4 md:p-6">
-          <TripTable trips={filteredTrips} />
+          <TripTable trips={filteredTrips} onAssignRoute={handleAssignRoute} />
         </div>
       </div>
+
+      {/* Assign Route Drawer */}
+      <AssignRouteDrawer
+        open={assignRouteDrawerOpen}
+        onClose={() => {
+          setAssignRouteDrawerOpen(false);
+          setSelectedTripForRoute(null);
+        }}
+        trip={selectedTripForRoute}
+        onAssign={handleRouteAssigned}
+      />
     </div>
   );
 }

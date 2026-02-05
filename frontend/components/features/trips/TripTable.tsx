@@ -3,16 +3,17 @@
 import React, { useState } from 'react';
 import { Trip } from '@/types/trip';
 import { Button } from '@/components/ui/button';
-import { Edit, Eye, Printer, PlayCircle, StopCircle, MapPin } from 'lucide-react';
+import { Edit, Eye, Printer, PlayCircle, StopCircle, MapPin, Route } from 'lucide-react';
 import Link from 'next/link';
 import { StartTripModal } from './StartTripModal';
 import { EndTripModal } from './EndTripModal';
 
 interface TripTableProps {
   trips: Trip[];
+  onAssignRoute?: (trip: Trip) => void;
 }
 
-export function TripTable({ trips }: TripTableProps) {
+export function TripTable({ trips, onAssignRoute }: TripTableProps) {
   const [startModalOpen, setStartModalOpen] = useState(false);
   const [endModalOpen, setEndModalOpen] = useState(false);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
@@ -122,6 +123,19 @@ export function TripTable({ trips }: TripTableProps) {
 
             {/* Actions */}
             <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-3">
+              {/* Assign Route Button - Only for Scheduled trips */}
+              {trip.status === 'Scheduled' && onAssignRoute && (
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-700 border-blue-300 hover:bg-blue-50"
+                  onClick={() => onAssignRoute(trip)}
+                >
+                  <Route className="h-3 w-3 mr-1" />
+                  Assign Route
+                </Button>
+              )}
+              
               {/* Start Trip Button - Only for Scheduled trips */}
               {trip.status === 'Scheduled' && (
                 <Button 
@@ -264,6 +278,19 @@ export function TripTable({ trips }: TripTableProps) {
                 </td>
                 <td className="px-4 py-4 text-right">
                   <div className="flex items-center justify-end gap-1">
+                    {/* Assign Route Button - Only for Scheduled trips */}
+                    {trip.status === 'Scheduled' && onAssignRoute && (
+                      <Button 
+                        variant="ghost"
+                        size="sm"
+                        className="text-blue-700 hover:bg-blue-50 cursor-pointer"
+                        onClick={() => onAssignRoute(trip)}
+                      >
+                        <Route className="h-3 w-3 mr-1" />
+                        Route
+                      </Button>
+                    )}
+                    
                     {/* Start Trip Button - Only for Scheduled trips */}
                     {trip.status === 'Scheduled' && (
                       <Button 

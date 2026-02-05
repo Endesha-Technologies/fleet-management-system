@@ -6,3 +6,10 @@ export interface Driver {
   licenseNumber: string;
   status: 'Active' | 'Inactive' | 'On Leave';
 }
+
+export interface TurnBoy {
+  id: string;
+  name: string;
+  phone: string;
+  status: 'Active' | 'Inactive' | 'On Leave';
+}

@@ -1,4 +1,4 @@
-import { Driver } from '@/types/driver';
+import { Driver, TurnBoy } from '@/types/driver';
 
 export const MOCK_DRIVERS: Driver[] = [
   {
@@ -47,6 +47,39 @@ export const MOCK_DRIVERS: Driver[] = [
     phone: '+254 766 890 123',
     email: 'peter.omondi@fleet.com',
     licenseNumber: 'DL-006789',
+    status: 'On Leave',
+  },
+];
+
+export const MOCK_TURN_BOYS: TurnBoy[] = [
+  {
+    id: 'tb1',
+    name: 'James Okoth',
+    phone: '+256 772 111 222',
+    status: 'Active',
+  },
+  {
+    id: 'tb2',
+    name: 'Samuel Wanjiku',
+    phone: '+256 772 222 333',
+    status: 'Active',
+  },
+  {
+    id: 'tb3',
+    name: 'Brian Otieno',
+    phone: '+256 772 333 444',
+    status: 'Active',
+  },
+  {
+    id: 'tb4',
+    name: 'Charles Mutua',
+    phone: '+256 772 444 555',
+    status: 'Active',
+  },
+  {
+    id: 'tb5',
+    name: 'Dennis Kiprop',
+    phone: '+256 772 555 666',
     status: 'On Leave',
   },
 ];
