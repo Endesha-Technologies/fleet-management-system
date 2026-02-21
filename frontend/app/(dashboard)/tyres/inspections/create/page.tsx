@@ -4,10 +4,9 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { TyreInspectionForm } from '@/components/features/tyres';
-import type { TyreInspectionDetail } from '@/types/inspection';
+import { FormSelect, FormDateInput, FormNumberInput, FormInput, FormTextarea } from '@/components/ui/form';
+import { TyreInspectionForm } from '../../_components';
+import type { TyreInspectionDetail } from '../../_types';
 import { VEHICLES } from '@/constants/vehicles';
 import { TYRE_POSITIONS } from '@/constants/inspections';
 import { ArrowLeft, Save, CheckCircle, AlertCircle } from 'lucide-react';
@@ -154,73 +153,53 @@ function ConductInspectionContent() {
             <h2 className="text-lg font-semibold mb-4">Inspection Details</h2>
             
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="vehicle">Vehicle *</Label>
-                <select
-                  id="vehicle"
-                  value={selectedVehicle}
-                  onChange={(e) => setSelectedVehicle(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  required
-                >
-                  <option value="">Select Vehicle</option>
-                  {VEHICLES.map((vehicle: any) => (
-                    <option key={vehicle.id} value={vehicle.id}>
-                      {vehicle.registrationNumber} - {vehicle.make} {vehicle.model}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <FormSelect
+                label="Vehicle"
+                required
+                id="vehicle"
+                value={selectedVehicle}
+                onChange={(e) => setSelectedVehicle(e.target.value)}
+                options={VEHICLES.map((vehicle: any) => ({
+                  value: vehicle.id,
+                  label: `${vehicle.registrationNumber} - ${vehicle.make} ${vehicle.model}`,
+                }))}
+                placeholder="Select Vehicle"
+              />
 
-              <div>
-                <Label htmlFor="inspectionDate">Inspection Date *</Label>
-                <Input
-                  id="inspectionDate"
-                  type="date"
-                  value={inspectionDate}
-                  onChange={(e) => setInspectionDate(e.target.value)}
-                  className="mt-1"
-                  required
-                />
-              </div>
+              <FormDateInput
+                label="Inspection Date"
+                required
+                id="inspectionDate"
+                value={inspectionDate}
+                onChange={(e) => setInspectionDate(e.target.value)}
+              />
 
-              <div>
-                <Label htmlFor="odometer">Current Odometer (km) *</Label>
-                <Input
-                  id="odometer"
-                  type="number"
-                  value={currentOdometer}
-                  onChange={(e) => setCurrentOdometer(e.target.value)}
-                  placeholder="e.g., 45000"
-                  className="mt-1"
-                  required
-                />
-              </div>
+              <FormNumberInput
+                label="Current Odometer (km)"
+                required
+                id="odometer"
+                value={currentOdometer}
+                onChange={(e) => setCurrentOdometer(e.target.value)}
+                placeholder="e.g., 45000"
+              />
 
-              <div>
-                <Label htmlFor="inspector">Inspector Name *</Label>
-                <Input
-                  id="inspector"
-                  type="text"
-                  value={inspectorName}
-                  onChange={(e) => setInspectorName(e.target.value)}
-                  placeholder="Enter your name"
-                  className="mt-1"
-                  required
-                />
-              </div>
+              <FormInput
+                label="Inspector Name"
+                required
+                id="inspector"
+                value={inspectorName}
+                onChange={(e) => setInspectorName(e.target.value)}
+                placeholder="Enter your name"
+              />
 
-              <div>
-                <Label htmlFor="notes">Overall Notes</Label>
-                <textarea
-                  id="notes"
-                  value={overallNotes}
-                  onChange={(e) => setOverallNotes(e.target.value)}
-                  rows={4}
-                  className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  placeholder="General observations about the inspection..."
-                />
-              </div>
+              <FormTextarea
+                label="Overall Notes"
+                id="notes"
+                value={overallNotes}
+                onChange={(e) => setOverallNotes(e.target.value)}
+                rows={4}
+                placeholder="General observations about the inspection..."
+              />
             </div>
           </Card>
 

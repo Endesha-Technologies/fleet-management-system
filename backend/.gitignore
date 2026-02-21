@@ -1,9 +1,0 @@
-.env
-dist
-coverage
-.DS_Store
-npm-debug.log
-yarn-error.log
-.vscode
-.idea   
-.env

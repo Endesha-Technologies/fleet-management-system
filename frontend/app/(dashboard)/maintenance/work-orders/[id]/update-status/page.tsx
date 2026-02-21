@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { mockWorkOrders } from '@/constants/maintenance';
-import { WorkOrderStatus, WorkOrderPriority } from '@/types/maintenance';
+import type { WorkOrderStatus } from '@/types/maintenance';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,30 +11,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Save, Camera, Mic } from 'lucide-react';
 import Link from 'next/link';
+import { FormSelect, FormTextarea, FormNumberInput, FormCheckbox } from '@/components/ui/form';
 
-function NativeSelect({ value, onValueChange, children, ...props }: any) {
-  return (
-    <div className="relative">
-      <select
-        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        value={value}
-        onChange={(e) => onValueChange(e.target.value)}
-        {...props}
-      >
-        {children}
-      </select>
-    </div>
-  );
-}
-
-function SimpleTextarea(props: any) {
-  return (
-    <textarea
-      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      {...props}
-    />
-  );
-}
+const statusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'in-progress', label: 'In Progress' },
+  { value: 'awaiting-parts', label: 'Awaiting Parts' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
 
 export default function UpdateStatusPage() {
   const params = useParams();
@@ -138,16 +123,13 @@ export default function UpdateStatusPage() {
             
             {/* Status Update */}
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="status">New Status *</Label>
-                <NativeSelect id="status" value={status} onValueChange={setStatus} required>
-                  <option value="pending">Pending</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="awaiting-parts">Awaiting Parts</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </NativeSelect>
-              </div>
+              <FormSelect
+                label="New Status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as WorkOrderStatus)}
+                options={statusOptions}
+                required
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="progress">Progress (%)</Label>
@@ -171,57 +153,44 @@ export default function UpdateStatusPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="timeSpent">Time Spent (hours)</Label>
-                <Input
-                  id="timeSpent"
-                  type="number"
-                  step="0.5"
-                  min="0"
-                  placeholder="e.g. 2.5"
-                  value={timeSpent}
-                  onChange={(e) => setTimeSpent(e.target.value)}
-                />
-              </div>
+              <FormNumberInput
+                label="Time Spent (hours)"
+                step="0.5"
+                min="0"
+                placeholder="e.g. 2.5"
+                value={timeSpent}
+                onChange={(e) => setTimeSpent(e.target.value)}
+              />
             </div>
 
             {/* Progress Information */}
             <div className="space-y-4 pt-4 border-t">
               <h3 className="font-semibold">Progress Information</h3>
               
-              <div className="space-y-2">
-                <Label htmlFor="workCompleted">Work Completed *</Label>
-                <SimpleTextarea
-                  id="workCompleted"
-                  placeholder="Describe what work has been completed..."
-                  value={workCompleted}
-                  onChange={(e: any) => setWorkCompleted(e.target.value)}
-                  rows={3}
-                  required
-                />
-              </div>
+              <FormTextarea
+                label="Work Completed"
+                placeholder="Describe what work has been completed..."
+                value={workCompleted}
+                onChange={(e) => setWorkCompleted(e.target.value)}
+                rows={3}
+                required
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="issuesEncountered">Issues Encountered</Label>
-                <SimpleTextarea
-                  id="issuesEncountered"
-                  placeholder="Describe any issues or challenges..."
-                  value={issuesEncountered}
-                  onChange={(e: any) => setIssuesEncountered(e.target.value)}
-                  rows={2}
-                />
-              </div>
+              <FormTextarea
+                label="Issues Encountered"
+                placeholder="Describe any issues or challenges..."
+                value={issuesEncountered}
+                onChange={(e) => setIssuesEncountered(e.target.value)}
+                rows={2}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="nextSteps">Next Steps</Label>
-                <SimpleTextarea
-                  id="nextSteps"
-                  placeholder="What needs to be done next..."
-                  value={nextSteps}
-                  onChange={(e: any) => setNextSteps(e.target.value)}
-                  rows={2}
-                />
-              </div>
+              <FormTextarea
+                label="Next Steps"
+                placeholder="What needs to be done next..."
+                value={nextSteps}
+                onChange={(e) => setNextSteps(e.target.value)}
+                rows={2}
+              />
             </div>
 
             {/* Photos & Documentation */}
@@ -265,18 +234,11 @@ export default function UpdateStatusPage() {
             <div className="space-y-4 pt-4 border-t">
               <h3 className="font-semibold">Notifications</h3>
               
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="notifyManager"
-                  checked={notifyManager}
-                  onChange={(e) => setNotifyManager(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
-                />
-                <Label htmlFor="notifyManager" className="font-normal cursor-pointer">
-                  Notify Fleet Manager
-                </Label>
-              </div>
+              <FormCheckbox
+                label="Notify Fleet Manager"
+                checked={notifyManager}
+                onCheckedChange={(checked) => setNotifyManager(checked === true)}
+              />
             </div>
 
           </CardContent>

@@ -1,12 +1,7 @@
 import React from 'react';
+import type { TripsLayoutProps } from './_types';
 
-export default function TripsLayout({
-  children,
-  modal,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+export default function TripsLayout({ children, modal }: TripsLayoutProps) {
   return (
     <>
       {children}

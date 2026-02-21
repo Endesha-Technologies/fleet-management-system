@@ -1,0 +1,990 @@
+{
+  "get_truck_tyre_positions": {
+    "url": "/tyres/trucks/:truckId/positions",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "registrationNumber": "UGA 123C"
+        },
+        "summary": {
+          "totalPositions": 10,
+          "occupiedPositions": 0,
+          "emptyPositions": 10
+        },
+        "axles": [
+          {
+            "id": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+            "axleName": "Front Steer",
+            "axleType": "STEER",
+            "axleIndex": 0,
+            "positionsPerSide": 1,
+            "tyreSize": "295/80R22.5",
+            "positions": [
+              {
+                "id": "57c25430-d3e9-4342-8c62-3ad4d7bb9c76",
+                "positionCode": "0-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+                "positionCode": "0-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              }
+            ]
+          },
+          {
+            "id": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+            "axleName": "Rear Drive 1",
+            "axleType": "DRIVE",
+            "axleIndex": 1,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "positions": [
+              {
+                "id": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+                "positionCode": "1-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "41362371-f250-450a-9600-a26e46a0f10d",
+                "positionCode": "1-L2",
+                "side": "LEFT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "d162df11-f484-4604-aa1f-16f412eba525",
+                "positionCode": "1-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+                "positionCode": "1-R2",
+                "side": "RIGHT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyre": null
+              }
+            ]
+          },
+          {
+            "id": "23642206-6fde-431f-a888-416fb9f1d82e",
+            "axleName": "Rear Drive 2",
+            "axleType": "DRIVE",
+            "axleIndex": 2,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "positions": [
+              {
+                "id": "10fce4e8-30de-4c48-8429-61d11b969600",
+                "positionCode": "2-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+                "positionCode": "2-L2",
+                "side": "LEFT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "274911a0-6427-4a0c-8e31-a9ba19ae88a9",
+                "positionCode": "2-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyre": null
+              },
+              {
+                "id": "540b5071-96dd-4187-8d8c-c8d9829e9366",
+                "positionCode": "2-R2",
+                "side": "RIGHT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyre": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "mount_tyres": {
+    "url": "/tyres/mount",
+    "method": "POST",
+    "request_body": {
+      "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+      "odometerReading": 125000,
+      "mounts": [
+        {
+          "assetId": "ab36d44f-ed22-4e38-a09b-9d11f1ed58f3",
+          "positionId": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+          "treadDepthMm": 14,
+          "tyreMileage": 32000,
+          "condition": "good",
+          "notes": "Rear Drive 1 - Left Outer (1-L1)"
+        },
+        {
+          "assetId": "e8c759fc-306f-42a9-a8ec-067ce47bc31c",
+          "positionId": "41362371-f250-450a-9600-a26e46a0f10d",
+          "treadDepthMm": 13.5,
+          "tyreMileage": 34000,
+          "condition": "good",
+          "notes": "Rear Drive 1 - Left Inner (1-L2)"
+        },
+        {
+          "assetId": "f6bbb9e0-53fa-4f82-b137-ee4d50201775",
+          "positionId": "d162df11-f484-4604-aa1f-16f412eba525",
+          "treadDepthMm": 12,
+          "tyreMileage": 40000,
+          "condition": "fair",
+          "notes": "Rear Drive 1 - Right Outer (1-R1)"
+        },
+        {
+          "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+          "positionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+          "treadDepthMm": 12.5,
+          "tyreMileage": 38000,
+          "condition": "fair",
+          "notes": "Rear Drive 1 - Right Inner (1-R2)"
+        },
+        {
+          "assetId": "cf51e24c-beff-4c1b-9e22-81cac5a7468e",
+          "positionId": "10fce4e8-30de-4c48-8429-61d11b969600",
+          "treadDepthMm": 15,
+          "tyreMileage": 25000,
+          "condition": "good",
+          "notes": "Rear Drive 2 - Left Outer (2-L1)"
+        },
+        {
+          "assetId": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+          "positionId": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+          "treadDepthMm": 14.5,
+          "tyreMileage": 28000,
+          "condition": "good",
+          "notes": "Rear Drive 2 - Left Inner (2-L2)"
+        },
+        {
+          "assetId": "b13260f0-961d-49e9-bfdd-a1749fa92fab",
+          "positionId": "274911a0-6427-4a0c-8e31-a9ba19ae88a9",
+          "treadDepthMm": 11,
+          "tyreMileage": 45000,
+          "condition": "fair",
+          "notes": "Rear Drive 2 - Right Outer (2-R1)"
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "7 tyre(s) mounted successfully",
+      "data": {
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "mountCount": 7,
+        "mounts": [
+          {
+            "position": {
+              "id": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-L1",
+              "side": "LEFT",
+              "slot": "OUTER",
+              "status": "OCCUPIED",
+              "currentTyreId": "ab36d44f-ed22-4e38-a09b-9d11f1ed58f3",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.871Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "ab36d44f-ed22-4e38-a09b-9d11f1ed58f3",
+                "serialNumber": "TYR-2026-001",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "e9f34793-78f6-42e8-8f9f-ede0d154ba50",
+              "tyrePositionId": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+              "assetId": "ab36d44f-ed22-4e38-a09b-9d11f1ed58f3",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 14,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: good | Rear Drive 1 - Left Outer (1-L1)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.881Z"
+            }
+          },
+          {
+            "position": {
+              "id": "41362371-f250-450a-9600-a26e46a0f10d",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-L2",
+              "side": "LEFT",
+              "slot": "INNER",
+              "status": "OCCUPIED",
+              "currentTyreId": "e8c759fc-306f-42a9-a8ec-067ce47bc31c",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.893Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "e8c759fc-306f-42a9-a8ec-067ce47bc31c",
+                "serialNumber": "TYR-2026-002",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "f41e45c8-f19c-4749-9851-c183c375eda7",
+              "tyrePositionId": "41362371-f250-450a-9600-a26e46a0f10d",
+              "assetId": "e8c759fc-306f-42a9-a8ec-067ce47bc31c",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 13.5,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: good | Rear Drive 1 - Left Inner (1-L2)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.897Z"
+            }
+          },
+          {
+            "position": {
+              "id": "d162df11-f484-4604-aa1f-16f412eba525",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-R1",
+              "side": "RIGHT",
+              "slot": "OUTER",
+              "status": "OCCUPIED",
+              "currentTyreId": "f6bbb9e0-53fa-4f82-b137-ee4d50201775",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.902Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "f6bbb9e0-53fa-4f82-b137-ee4d50201775",
+                "serialNumber": "TYR-2026-003",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "8a696412-254e-485d-81d5-d30ac1c69262",
+              "tyrePositionId": "d162df11-f484-4604-aa1f-16f412eba525",
+              "assetId": "f6bbb9e0-53fa-4f82-b137-ee4d50201775",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 12,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: fair | Rear Drive 1 - Right Outer (1-R1)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.905Z"
+            }
+          },
+          {
+            "position": {
+              "id": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-R2",
+              "side": "RIGHT",
+              "slot": "INNER",
+              "status": "OCCUPIED",
+              "currentTyreId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.910Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+                "serialNumber": "TYR-2026-004",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "85534d95-688e-4e50-bd9d-5ca5a8d9a1be",
+              "tyrePositionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+              "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 12.5,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: fair | Rear Drive 1 - Right Inner (1-R2)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.914Z"
+            }
+          },
+          {
+            "position": {
+              "id": "10fce4e8-30de-4c48-8429-61d11b969600",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+              "positionCode": "2-L1",
+              "side": "LEFT",
+              "slot": "OUTER",
+              "status": "OCCUPIED",
+              "currentTyreId": "cf51e24c-beff-4c1b-9e22-81cac5a7468e",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.918Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 2",
+                "axleIndex": 2,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "cf51e24c-beff-4c1b-9e22-81cac5a7468e",
+                "serialNumber": "TYR-2026-005",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "8ab44f24-3e5a-4b63-b8ab-0d3e3487b6d9",
+              "tyrePositionId": "10fce4e8-30de-4c48-8429-61d11b969600",
+              "assetId": "cf51e24c-beff-4c1b-9e22-81cac5a7468e",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 15,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: good | Rear Drive 2 - Left Outer (2-L1)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.921Z"
+            }
+          },
+          {
+            "position": {
+              "id": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+              "positionCode": "2-L2",
+              "side": "LEFT",
+              "slot": "INNER",
+              "status": "OCCUPIED",
+              "currentTyreId": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.926Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 2",
+                "axleIndex": 2,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+                "serialNumber": "TYR-2026-006",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "0f259107-908f-4607-8dac-c72df77d3e9c",
+              "tyrePositionId": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+              "assetId": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 14.5,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: good | Rear Drive 2 - Left Inner (2-L2)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.930Z"
+            }
+          },
+          {
+            "position": {
+              "id": "274911a0-6427-4a0c-8e31-a9ba19ae88a9",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+              "positionCode": "2-R1",
+              "side": "RIGHT",
+              "slot": "OUTER",
+              "status": "OCCUPIED",
+              "currentTyreId": "b13260f0-961d-49e9-bfdd-a1749fa92fab",
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T00:39:42.934Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 2",
+                "axleIndex": 2,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": {
+                "id": "b13260f0-961d-49e9-bfdd-a1749fa92fab",
+                "serialNumber": "TYR-2026-007",
+                "name": "Continental HDR2 Drive Tyre",
+                "tyreBrand": "Continental",
+                "tyreModel": "HDR2",
+                "tyreSize": "315/80R22.5",
+                "tyreType": "DRIVE",
+                "tyreTreadDepth": null,
+                "tyreTotalMileage": 0,
+                "status": "IN_INVENTORY"
+              }
+            },
+            "history": {
+              "id": "c3875c43-875b-41bf-80e8-4cd635da7c65",
+              "tyrePositionId": "274911a0-6427-4a0c-8e31-a9ba19ae88a9",
+              "assetId": "b13260f0-961d-49e9-bfdd-a1749fa92fab",
+              "event": "MOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 11,
+              "mileageAccrued": null,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: fair | Rear Drive 2 - Right Outer (2-R1)",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T00:39:42.938Z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "dismount_tyres": {
+    "url": "/tyres/dismount",
+    "method": "POST",
+    "request_body": {
+      "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+      "odometerReading": 125000,
+      "dismounts": [
+        {
+          "positionId": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+          "treadDepthMm": 6.5,
+          "condition": "fair",
+          "storageLocation": "Warehouse A - Rack 3",
+          "reason": "Scheduled rotation replacement",
+          "notes": "Minor uneven wear on inner edge"
+        },
+        {
+          "positionId": "41362371-f250-450a-9600-a26e46a0f10d",
+          "treadDepthMm": 3.2,
+          "condition": "poor",
+          "storageLocation": "Warehouse A - Rack 5",
+          "reason": "Worn below threshold",
+          "notes": "Needs retreading"
+        },
+        {
+          "positionId": "d162df11-f484-4604-aa1f-16f412eba525",
+          "treadDepthMm": 8.0,
+          "tyreMileage": 45000,
+          "condition": "good",
+          "storageLocation": "Warehouse B",
+          "reason": "Truck decommissioning"
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "3 tyre(s) dismounted successfully",
+      "data": {
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "dismountCount": 3,
+        "dismounts": [
+          {
+            "position": {
+              "id": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-L1",
+              "side": "LEFT",
+              "slot": "OUTER",
+              "status": "EMPTY",
+              "currentTyreId": null,
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T01:09:18.726Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": null
+            },
+            "history": {
+              "id": "f848b288-259e-4539-b80e-d187a86e146e",
+              "tyrePositionId": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+              "assetId": "ab36d44f-ed22-4e38-a09b-9d11f1ed58f3",
+              "event": "DISMOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 6.5,
+              "mileageAccrued": null,
+              "tyreMileageAtEvent": 32000,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: fair | Scheduled rotation replacement | Minor uneven wear on inner edge",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T01:09:18.729Z"
+            },
+            "mileageAccrued": 0
+          },
+          {
+            "position": {
+              "id": "41362371-f250-450a-9600-a26e46a0f10d",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-L2",
+              "side": "LEFT",
+              "slot": "INNER",
+              "status": "EMPTY",
+              "currentTyreId": null,
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T01:09:18.741Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": null
+            },
+            "history": {
+              "id": "71246b8b-af75-482e-b570-1131dbdc6ebd",
+              "tyrePositionId": "41362371-f250-450a-9600-a26e46a0f10d",
+              "assetId": "e8c759fc-306f-42a9-a8ec-067ce47bc31c",
+              "event": "DISMOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 3.2,
+              "mileageAccrued": null,
+              "tyreMileageAtEvent": 34000,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: poor | Worn below threshold | Needs retreading",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T01:09:18.743Z"
+            },
+            "mileageAccrued": 0
+          },
+          {
+            "position": {
+              "id": "d162df11-f484-4604-aa1f-16f412eba525",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+              "positionCode": "1-R1",
+              "side": "RIGHT",
+              "slot": "OUTER",
+              "status": "EMPTY",
+              "currentTyreId": null,
+              "createdAt": "2026-02-18T00:16:05.753Z",
+              "updatedAt": "2026-02-18T01:09:18.749Z",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleIndex": 1,
+                "axleType": "DRIVE"
+              },
+              "currentTyre": null
+            },
+            "history": {
+              "id": "3edca098-2a01-4fde-8c33-b5706bc6e564",
+              "tyrePositionId": "d162df11-f484-4604-aa1f-16f412eba525",
+              "assetId": "f6bbb9e0-53fa-4f82-b137-ee4d50201775",
+              "event": "DISMOUNTED",
+              "odometerReading": 125000,
+              "treadDepthMm": 8,
+              "mileageAccrued": null,
+              "tyreMileageAtEvent": 45000,
+              "rotationMethod": null,
+              "inspectionId": null,
+              "notes": "Condition: good | Truck decommissioning",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T01:09:18.756Z"
+            },
+            "mileageAccrued": 0
+          }
+        ]
+      }
+    }
+  },
+  "inspect_tyre": {
+    "url": "/tyres/:id/inspect",
+    "method": "POST",
+    "request_body": {
+      "inspectorName": "John Mukasa",
+      "treadDepth": 8.5,
+      "pressure": 110,
+      "visualCondition": "good",
+      "passed": true,
+      "notes": "Tyre in good condition, no visible damage or uneven wear"
+    },
+    "response": {
+      "success": true,
+      "message": "Inspection recorded",
+      "data": {
+        "id": "4e9dc83d-0fe6-46e3-be9d-c3ff8b86815b",
+        "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+        "inspectedAt": "2026-02-18T01:38:19.359Z",
+        "inspectorName": "John Mukasa",
+        "treadDepth": 8.5,
+        "pressure": 110,
+        "visualCondition": "good",
+        "passed": true,
+        "notes": "Tyre in good condition, no visible damage or uneven wear"
+      }
+    }
+  },
+  "tyre_history": {
+    "url": "/tyres/:id/history",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "tyre": {
+          "id": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+          "serialNumber": "TYR-2026-004",
+          "name": "Continental HDR2 Drive Tyre",
+          "brand": "Continental",
+          "model": "HDR2",
+          "size": "315/80R22.5",
+          "type": "DRIVE",
+          "treadDepth": 8.5,
+          "totalMileage": 38000,
+          "status": "INSTALLED"
+        },
+        "currentPosition": {
+          "id": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "axleConfigId": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+          "positionCode": "0-R1",
+          "side": "RIGHT",
+          "slot": "OUTER",
+          "status": "OCCUPIED",
+          "currentTyreId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+          "createdAt": "2026-02-18T00:16:05.753Z",
+          "updatedAt": "2026-02-18T01:32:28.722Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C"
+          },
+          "axleConfig": {
+            "axleName": "Front Steer",
+            "axleIndex": 0,
+            "axleType": "STEER"
+          },
+          "currentTyre": {
+            "id": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "serialNumber": "TYR-2026-004",
+            "name": "Continental HDR2 Drive Tyre",
+            "tyreBrand": "Continental",
+            "tyreModel": "HDR2",
+            "tyreSize": "315/80R22.5",
+            "tyreType": "DRIVE",
+            "tyreTreadDepth": 8.5,
+            "tyreTotalMileage": 38000,
+            "status": "INSTALLED"
+          }
+        },
+        "history": [
+          {
+            "id": "07134302-c406-4699-8b8e-eff0f5245ec5",
+            "tyrePositionId": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+            "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "event": "INSPECTED",
+            "odometerReading": null,
+            "treadDepthMm": 8.5,
+            "mileageAccrued": null,
+            "tyreMileageAtEvent": 38000,
+            "rotationMethod": null,
+            "inspectionId": "4e9dc83d-0fe6-46e3-be9d-c3ff8b86815b",
+            "notes": "Tyre in good condition, no visible damage or uneven wear",
+            "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-18T01:38:19.369Z",
+            "tyrePosition": {
+              "id": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+              "positionCode": "0-R1",
+              "side": "RIGHT",
+              "slot": "OUTER",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Front Steer",
+                "axleType": "STEER"
+              }
+            },
+            "performer": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator"
+            }
+          },
+          {
+            "id": "f46feb9f-03a2-4c2c-ab0b-f4726d9b0212",
+            "tyrePositionId": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+            "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "event": "ROTATED",
+            "odometerReading": 45200,
+            "treadDepthMm": null,
+            "mileageAccrued": null,
+            "tyreMileageAtEvent": 38000,
+            "rotationMethod": "CUSTOM",
+            "inspectionId": null,
+            "notes": "Swap front-left outer with rear-drive-1 left outer",
+            "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-18T01:32:28.723Z",
+            "tyrePosition": {
+              "id": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+              "positionCode": "0-R1",
+              "side": "RIGHT",
+              "slot": "OUTER",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Front Steer",
+                "axleType": "STEER"
+              }
+            },
+            "performer": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator"
+            }
+          },
+          {
+            "id": "85534d95-688e-4e50-bd9d-5ca5a8d9a1be",
+            "tyrePositionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+            "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "event": "MOUNTED",
+            "odometerReading": 125000,
+            "treadDepthMm": 12.5,
+            "mileageAccrued": null,
+            "tyreMileageAtEvent": null,
+            "rotationMethod": null,
+            "inspectionId": null,
+            "notes": "Condition: fair | Rear Drive 1 - Right Inner (1-R2)",
+            "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-18T00:39:42.914Z",
+            "tyrePosition": {
+              "id": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+              "positionCode": "1-R2",
+              "side": "RIGHT",
+              "slot": "INNER",
+              "truck": {
+                "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "registrationNumber": "UGA 123C"
+              },
+              "axleConfig": {
+                "axleName": "Rear Drive 1",
+                "axleType": "DRIVE"
+              }
+            },
+            "performer": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tyre_mileage": {
+    "url": "/tyres/:id/mileage",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "tyre": {
+          "id": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+          "serialNumber": "TYR-2026-006",
+          "brand": "Continental",
+          "model": "HDR2",
+          "size": "315/80R22.5",
+          "type": "DRIVE"
+        },
+        "totalMileage": 28000,
+        "maxMileage": null,
+        "remainingMileage": null,
+        "currentStint": {
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "truckRegistration": "UGA 123C",
+          "positionCode": "0-L1",
+          "mileageSinceMount": 0
+        },
+        "mileageByTruck": [],
+        "mileageByPosition": []
+      }
+    }
+  },
+  "get_position_history": {
+    "url": "/tyres/positions/:positionId/history",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "position": {
+          "id": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+          "positionCode": "1-R2",
+          "side": "RIGHT",
+          "slot": "INNER",
+          "status": "EMPTY",
+          "currentTyreId": null,
+          "createdAt": "2026-02-18T00:16:05.753Z",
+          "updatedAt": "2026-02-18T01:32:28.719Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C"
+          },
+          "axleConfig": {
+            "axleName": "Rear Drive 1",
+            "axleType": "DRIVE"
+          }
+        },
+        "history": [
+          {
+            "id": "85534d95-688e-4e50-bd9d-5ca5a8d9a1be",
+            "tyrePositionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+            "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "event": "MOUNTED",
+            "odometerReading": 125000,
+            "treadDepthMm": 12.5,
+            "mileageAccrued": null,
+            "tyreMileageAtEvent": null,
+            "rotationMethod": null,
+            "inspectionId": null,
+            "notes": "Condition: fair | Rear Drive 1 - Right Inner (1-R2)",
+            "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-18T00:39:42.914Z",
+            "asset": {
+              "id": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+              "serialNumber": "TYR-2026-004",
+              "name": "Continental HDR2 Drive Tyre",
+              "tyreBrand": "Continental",
+              "tyreModel": "HDR2"
+            },
+            "performer": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

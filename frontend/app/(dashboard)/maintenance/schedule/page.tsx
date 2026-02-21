@@ -20,9 +20,7 @@ import {
 } from 'lucide-react';
 import { mockMaintenanceSchedules } from '@/constants/schedules';
 import type { MaintenanceSchedule, MaintenanceScheduleStatus } from '@/types/maintenance';
-
-type ViewMode = 'calendar' | 'list';
-type CalendarView = 'month' | 'week' | 'day';
+import type { ViewMode, CalendarView } from '../_types';
 
 export default function MaintenanceSchedulePage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');

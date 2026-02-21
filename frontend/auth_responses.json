@@ -1,0 +1,56 @@
+{
+  "base_url": " http://localhost:3000/api/v1",
+  "login": {
+    "url": "/auth/login",
+    "method": "POST",
+    "request_body": {
+      "email": "user@example.com",
+      "password": "password123"
+    },
+    "response": {
+      "success": true,
+      "message": "Login successful",
+      "data": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNTg5YjdhYS05MjRiLTQ0MDAtOTMwZC01YjMxNzMwM2MyZDMiLCJlbWFpbCI6ImFkbWluQGZsZWV0LmNvbSIsInR5cGUiOiJTWVNURU0iLCJpYXQiOjE3NzEzNDQ1NDksImV4cCI6MTc3MTM0NTQ0OX0.FM4XiI2JgrbaPNgf0EfoYQ6bNFZ7OQaArQ_VxjbtgwE",
+        "refreshToken": "c33935ba336aaa4dda65adba99dfeb0943de0027e6cc3430386151996cb1228a779ccd2c1e2a405b",
+        "user": {
+          "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+          "email": "admin@fleet.com",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "type": "SYSTEM",
+          "roles": ["super_admin"],
+          "permissions": ["*:*"]
+        }
+      }
+    }
+  },
+  "refresh_token": {
+    "url": "/auth/refresh",
+    "method": "POST",
+    "request_body": {
+      "refreshToken": "{{refreshToken}}"
+    },
+    "response": {
+      "success": true,
+      "message": "Token refreshed",
+      "data": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNTg5YjdhYS05MjRiLTQ0MDAtOTMwZC01YjMxNzMwM2MyZDMiLCJlbWFpbCI6ImFkbWluQGZsZWV0LmNvbSIsInR5cGUiOiJTWVNURU0iLCJpYXQiOjE3NzEzNDUwMjcsImV4cCI6MTc3MTM0NTkyN30.NdrrrP_3Ai-ZPhqBTTSTaDJROaI9tWELozZfX0LVp-w",
+        "refreshToken": "177ff1fdd4bc4f1d3200ee764f1dce47247ab2545075556b4ddf83dcb1bd3a5948f16cb914153c7a"
+      }
+    }
+  },
+  "logout": {
+    "url": "/auth/logout",
+    "method": "POST",
+    "request_body": {
+      "refreshToken": "{{refreshToken}}"
+    },
+    "response": {
+      "success": true,
+      "message": "Logged out successfully",
+      "data": null
+    }
+  }
+  
+}

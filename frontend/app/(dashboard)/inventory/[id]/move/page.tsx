@@ -5,21 +5,24 @@ import { notFound, useRouter } from 'next/navigation';
 import { MOCK_INVENTORY_ITEMS } from '@/constants/inventory';
 import { MOCK_VEHICLES } from '@/constants/vehicles';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { ArrowLeft, ShoppingCart, Trash2, Wrench } from 'lucide-react';
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+  FormNumberInput,
+  FormDateInput,
+  FormSection,
+} from '@/components/ui/form';
+import type { InventoryPageProps, MoveTransactionType, MoveFormData } from '../../_types';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default function MoveInventoryPage({ params }: PageProps) {
+export default function MoveInventoryPage({ params }: InventoryPageProps) {
   const { id } = use(params);
   const router = useRouter();
   const item = MOCK_INVENTORY_ITEMS.find((i) => i.id === id);
 
-  const [transactionType, setTransactionType] = useState<'sold' | 'disposed' | 'used'>('sold');
-  const [formData, setFormData] = useState({
+  const [transactionType, setTransactionType] = useState<MoveTransactionType>('sold');
+  const [formData, setFormData] = useState<MoveFormData>({
     quantity: '1',
     saleAmount: '',
     buyer: '',
@@ -109,7 +112,7 @@ export default function MoveInventoryPage({ params }: PageProps) {
 
             {/* Transaction Type Selection */}
             <div className="space-y-3">
-              <Label className="text-sm sm:text-base">Transaction Type *</Label>
+              <label className="text-sm sm:text-base font-medium">Transaction Type *</label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   type="button"
@@ -156,188 +159,139 @@ export default function MoveInventoryPage({ params }: PageProps) {
             </div>
 
             {/* Common Fields */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Transaction Details</h3>
-              
+            <FormSection title="Transaction Details">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="quantity" className="text-xs sm:text-sm">Quantity *</Label>
-                  <Input
-                    id="quantity"
-                    name="quantity"
-                    type="number"
-                    min="1"
-                    max={item.quantity}
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormNumberInput
+                  label="Quantity"
+                  name="quantity"
+                  min={1}
+                  max={item.quantity}
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="transactionDate" className="text-xs sm:text-sm">Transaction Date *</Label>
-                  <Input
-                    id="transactionDate"
-                    name="transactionDate"
-                    type="datetime-local"
-                    value={formData.transactionDate}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormDateInput
+                  label="Transaction Date"
+                  name="transactionDate"
+                  includeTime
+                  value={formData.transactionDate}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Sale Specific Fields */}
             {transactionType === 'sold' && (
-              <div className="space-y-4 pb-4 border-b border-gray-100">
-                <h3 className="font-semibold text-sm sm:text-base text-green-900">Sale Information</h3>
-                
+              <FormSection title="Sale Information">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="saleAmount" className="text-xs sm:text-sm">Sale Amount (UGX) *</Label>
-                    <Input
-                      id="saleAmount"
-                      name="saleAmount"
-                      type="number"
-                      min="0"
-                      value={formData.saleAmount}
-                      onChange={handleChange}
-                      placeholder={`Est. ${formatCurrency(item.unitPrice * 0.8)}`}
-                      className="h-9 sm:h-10 text-xs sm:text-sm"
-                      required
-                    />
-                  </div>
+                  <FormNumberInput
+                    label="Sale Amount (UGX)"
+                    name="saleAmount"
+                    min={0}
+                    value={formData.saleAmount}
+                    onChange={handleChange}
+                    placeholder={`Est. ${formatCurrency(item.unitPrice * 0.8)}`}
+                    required
+                  />
 
-                  <div>
-                    <Label htmlFor="buyer" className="text-xs sm:text-sm">Buyer Name/Shop *</Label>
-                    <Input
-                      id="buyer"
-                      name="buyer"
-                      value={formData.buyer}
-                      onChange={handleChange}
-                      placeholder="e.g., ABC Mechanic Shop"
-                      className="h-9 sm:h-10 text-xs sm:text-sm"
-                      required
-                    />
-                  </div>
+                  <FormInput
+                    label="Buyer Name/Shop"
+                    name="buyer"
+                    value={formData.buyer}
+                    onChange={handleChange}
+                    placeholder="e.g., ABC Mechanic Shop"
+                    required
+                  />
                 </div>
-              </div>
+              </FormSection>
             )}
 
             {/* Disposal Specific Fields */}
             {transactionType === 'disposed' && (
-              <div className="space-y-4 pb-4 border-b border-gray-100">
-                <h3 className="font-semibold text-sm sm:text-base text-red-900">Disposal Information</h3>
-                
+              <FormSection title="Disposal Information">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="disposalMethod" className="text-xs sm:text-sm">Disposal Method *</Label>
-                    <select
-                      id="disposalMethod"
-                      name="disposalMethod"
-                      value={formData.disposalMethod}
-                      onChange={handleChange}
-                      className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      required
-                    >
-                      <option value="Recycled">Recycled</option>
-                      <option value="Scrapped">Scrapped</option>
-                      <option value="Donated">Donated</option>
-                      <option value="Returned to Supplier">Returned to Supplier</option>
-                    </select>
-                  </div>
+                  <FormSelect
+                    label="Disposal Method"
+                    name="disposalMethod"
+                    value={formData.disposalMethod}
+                    onChange={handleChange}
+                    options={[
+                      { value: 'Recycled', label: 'Recycled' },
+                      { value: 'Scrapped', label: 'Scrapped' },
+                      { value: 'Donated', label: 'Donated' },
+                      { value: 'Returned to Supplier', label: 'Returned to Supplier' },
+                    ]}
+                    required
+                  />
 
                   <div className="sm:col-span-2">
-                    <Label htmlFor="disposalReason" className="text-xs sm:text-sm">Disposal Reason *</Label>
-                    <Input
-                      id="disposalReason"
+                    <FormInput
+                      label="Disposal Reason"
                       name="disposalReason"
                       value={formData.disposalReason}
                       onChange={handleChange}
                       placeholder="e.g., Damaged beyond repair"
-                      className="h-9 sm:h-10 text-xs sm:text-sm"
                       required
                     />
                   </div>
                 </div>
-              </div>
+              </FormSection>
             )}
 
             {/* Use in Maintenance Specific Fields */}
             {transactionType === 'used' && (
-              <div className="space-y-4 pb-4 border-b border-gray-100">
-                <h3 className="font-semibold text-sm sm:text-base text-purple-900">Maintenance Information</h3>
-                
+              <FormSection title="Maintenance Information">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="vehicleId" className="text-xs sm:text-sm">Vehicle *</Label>
-                    <select
-                      id="vehicleId"
-                      name="vehicleId"
-                      value={formData.vehicleId}
-                      onChange={handleChange}
-                      className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      required
-                    >
-                      <option value="">Select vehicle...</option>
-                      {MOCK_VEHICLES.map(vehicle => (
-                        <option key={vehicle.id} value={vehicle.id}>
-                          {vehicle.plateNumber} - {vehicle.make} {vehicle.model}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <FormSelect
+                    label="Vehicle"
+                    name="vehicleId"
+                    value={formData.vehicleId}
+                    onChange={handleChange}
+                    options={[
+                      { value: '', label: 'Select vehicle...' },
+                      ...MOCK_VEHICLES.map(vehicle => ({
+                        value: vehicle.id,
+                        label: `${vehicle.plateNumber} - ${vehicle.make} ${vehicle.model}`,
+                      })),
+                    ]}
+                    required
+                  />
 
-                  <div>
-                    <Label htmlFor="maintenanceId" className="text-xs sm:text-sm">Maintenance ID</Label>
-                    <Input
-                      id="maintenanceId"
-                      name="maintenanceId"
-                      value={formData.maintenanceId}
-                      onChange={handleChange}
-                      placeholder="e.g., MNT-2024-001"
-                      className="h-9 sm:h-10 text-xs sm:text-sm"
-                    />
-                  </div>
+                  <FormInput
+                    label="Maintenance ID"
+                    name="maintenanceId"
+                    value={formData.maintenanceId}
+                    onChange={handleChange}
+                    placeholder="e.g., MNT-2024-001"
+                  />
                 </div>
-              </div>
+              </FormSection>
             )}
 
             {/* Personnel & Notes */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Additional Information</h3>
-              
+            <FormSection title="Additional Information">
               <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <Label htmlFor="performedBy" className="text-xs sm:text-sm">Performed By *</Label>
-                  <Input
-                    id="performedBy"
-                    name="performedBy"
-                    value={formData.performedBy}
-                    onChange={handleChange}
-                    placeholder="e.g., Sarah Sales"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormInput
+                  label="Performed By"
+                  name="performedBy"
+                  value={formData.performedBy}
+                  onChange={handleChange}
+                  placeholder="e.g., Sarah Sales"
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="notes" className="text-xs sm:text-sm">Notes</Label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    rows={3}
-                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    placeholder="Additional details about this transaction..."
-                  />
-                </div>
+                <FormTextarea
+                  label="Notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Additional details about this transaction..."
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Action Buttons */}
             <div className="flex flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200">

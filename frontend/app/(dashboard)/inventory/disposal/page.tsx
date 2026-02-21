@@ -4,14 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MOCK_INVENTORY_ITEMS } from '@/constants/inventory';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { ArrowLeft, Trash2, Package, AlertTriangle } from 'lucide-react';
-import type { DisposalMethod } from '@/types/inventory';
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+  FormNumberInput,
+  FormDateInput,
+  FormSection,
+} from '@/components/ui/form';
+import type { DisposalFormData, DisposalMethod } from '../_types';
 
 export default function RecordDisposalPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<DisposalFormData>({
     inventoryItemId: '',
     quantity: '1',
     disposalMethod: 'Recycled' as DisposalMethod,
@@ -87,30 +93,27 @@ export default function RecordDisposalPage() {
             </div>
 
             {/* Part Selection */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
+            <FormSection title="Part Information">
+              <div className="flex items-center gap-2 -mt-2 mb-2">
                 <Package className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold text-sm sm:text-base text-gray-900">Part Information</h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <Label htmlFor="inventoryItemId" className="text-xs sm:text-sm">Select Part to Dispose *</Label>
-                  <select
-                    id="inventoryItemId"
+                  <FormSelect
+                    label="Select Part to Dispose"
                     name="inventoryItemId"
                     value={formData.inventoryItemId}
                     onChange={handleChange}
-                    className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    options={[
+                      { value: '', label: 'Choose a part...' },
+                      ...availableItems.map(item => ({
+                        value: item.id,
+                        label: `${item.partName} (${item.partNumber}) - Available: ${item.quantity} - ${formatCurrency(item.unitPrice)}/unit`,
+                      })),
+                    ]}
                     required
-                  >
-                    <option value="">Choose a part...</option>
-                    {availableItems.map(item => (
-                      <option key={item.id} value={item.id}>
-                        {item.partName} ({item.partNumber}) - Available: {item.quantity} - {formatCurrency(item.unitPrice)}/unit
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
                 {selectedItem && (
@@ -136,101 +139,77 @@ export default function RecordDisposalPage() {
                   </div>
                 )}
 
-                <div>
-                  <Label htmlFor="quantity" className="text-xs sm:text-sm">Quantity *</Label>
-                  <Input
-                    id="quantity"
-                    name="quantity"
-                    type="number"
-                    min="1"
-                    max={selectedItem?.quantity || 1}
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                    disabled={!selectedItem}
-                  />
-                </div>
+                <FormNumberInput
+                  label="Quantity"
+                  name="quantity"
+                  min={1}
+                  max={selectedItem?.quantity || 1}
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  required
+                  disabled={!selectedItem}
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Disposal Details */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
+            <FormSection title="Disposal Details">
+              <div className="flex items-center gap-2 -mt-2 mb-2">
                 <Trash2 className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold text-sm sm:text-base text-gray-900">Disposal Details</h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="disposalMethod" className="text-xs sm:text-sm">Disposal Method *</Label>
-                  <select
-                    id="disposalMethod"
-                    name="disposalMethod"
-                    value={formData.disposalMethod}
-                    onChange={handleChange}
-                    className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    required
-                  >
-                    <option value="Recycled">Recycled</option>
-                    <option value="Scrapped">Scrapped</option>
-                    <option value="Donated">Donated</option>
-                    <option value="Returned to Supplier">Returned to Supplier</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Disposal Method"
+                  name="disposalMethod"
+                  value={formData.disposalMethod}
+                  onChange={handleChange}
+                  options={[
+                    { value: 'Recycled', label: 'Recycled' },
+                    { value: 'Scrapped', label: 'Scrapped' },
+                    { value: 'Donated', label: 'Donated' },
+                    { value: 'Returned to Supplier', label: 'Returned to Supplier' },
+                  ]}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="transactionDate" className="text-xs sm:text-sm">Disposal Date & Time *</Label>
-                  <Input
-                    id="transactionDate"
-                    name="transactionDate"
-                    type="datetime-local"
-                    value={formData.transactionDate}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormDateInput
+                  label="Disposal Date & Time"
+                  name="transactionDate"
+                  includeTime
+                  value={formData.transactionDate}
+                  onChange={handleChange}
+                  required
+                />
 
                 <div className="sm:col-span-2">
-                  <Label htmlFor="disposalReason" className="text-xs sm:text-sm">Disposal Reason *</Label>
-                  <Input
-                    id="disposalReason"
+                  <FormInput
+                    label="Disposal Reason"
                     name="disposalReason"
                     value={formData.disposalReason}
                     onChange={handleChange}
                     placeholder="e.g., Damaged beyond repair, Obsolete, Safety concern"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
                     required
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="disposedTo" className="text-xs sm:text-sm">Disposed To</Label>
-                  <Input
-                    id="disposedTo"
-                    name="disposedTo"
-                    value={formData.disposedTo}
-                    onChange={handleChange}
-                    placeholder="e.g., Green Recycling Ltd"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                  />
-                </div>
+                <FormInput
+                  label="Disposed To"
+                  name="disposedTo"
+                  value={formData.disposedTo}
+                  onChange={handleChange}
+                  placeholder="e.g., Green Recycling Ltd"
+                />
 
-                <div>
-                  <Label htmlFor="disposalCost" className="text-xs sm:text-sm">Disposal Cost (UGX)</Label>
-                  <Input
-                    id="disposalCost"
-                    name="disposalCost"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.disposalCost}
-                    onChange={handleChange}
-                    placeholder="Cost for disposal service"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                  />
-                </div>
+                <FormNumberInput
+                  label="Disposal Cost (UGX)"
+                  name="disposalCost"
+                  min={0}
+                  step={0.01}
+                  value={formData.disposalCost}
+                  onChange={handleChange}
+                  placeholder="Cost for disposal service"
+                />
 
                 {totalLoss !== null && (
                   <div className="sm:col-span-2 bg-amber-50 border border-amber-200 p-4 rounded-lg">
@@ -249,58 +228,42 @@ export default function RecordDisposalPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </FormSection>
 
             {/* Authorization */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Authorization</h3>
-              
+            <FormSection title="Authorization">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="performedBy" className="text-xs sm:text-sm">Performed By *</Label>
-                  <Input
-                    id="performedBy"
-                    name="performedBy"
-                    value={formData.performedBy}
-                    onChange={handleChange}
-                    placeholder="e.g., John Warehouse"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="approvedBy" className="text-xs sm:text-sm">Approved By *</Label>
-                  <Input
-                    id="approvedBy"
-                    name="approvedBy"
-                    value={formData.approvedBy}
-                    onChange={handleChange}
-                    placeholder="e.g., Manager Name"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Additional Information */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Additional Information</h3>
-              
-              <div>
-                <Label htmlFor="notes" className="text-xs sm:text-sm">Notes</Label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  value={formData.notes}
+                <FormInput
+                  label="Performed By"
+                  name="performedBy"
+                  value={formData.performedBy}
                   onChange={handleChange}
-                  rows={3}
-                  className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  placeholder="Additional details about this disposal..."
+                  placeholder="e.g., John Warehouse"
+                  required
+                />
+
+                <FormInput
+                  label="Approved By"
+                  name="approvedBy"
+                  value={formData.approvedBy}
+                  onChange={handleChange}
+                  placeholder="e.g., Manager Name"
+                  required
                 />
               </div>
-            </div>
+            </FormSection>
+
+            {/* Additional Information */}
+            <FormSection title="Additional Information">
+              <FormTextarea
+                label="Notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Additional details about this disposal..."
+              />
+            </FormSection>
 
             {/* Action Buttons */}
             <div className="flex flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200">

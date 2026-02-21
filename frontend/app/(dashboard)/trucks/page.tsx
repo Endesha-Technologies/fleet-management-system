@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { TruckTable } from '@/components/features/trucks/TruckTable';
-import { AddTruckDrawer } from '@/components/features/trucks/AddTruckDrawer';
+import { TruckTable } from './_components/TruckTable';
+import { AddTruckDrawer } from './_components/AddTruckDrawer';
 import { MOCK_TRUCKS } from '@/constants/trucks';
-import { Truck } from '@/types/truck';
 import { useRouter } from 'next/navigation';
+import type { Truck } from './_types';
 
 export default function TrucksPage() {
   const router = useRouter();

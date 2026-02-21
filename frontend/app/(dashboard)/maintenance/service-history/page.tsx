@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { FormSelect } from '@/components/ui/form';
 import { mockServiceHistory } from '@/constants/service-history';
 import type { ServiceHistoryRecord } from '@/types/maintenance';
 
@@ -177,71 +178,67 @@ export default function ServiceHistoryPage() {
 
           {/* Filter selects */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-            <select
+            <FormSelect
               value={selectedVehicle}
               onChange={(e) => setSelectedVehicle(e.target.value)}
-              className="px-3 py-2 border rounded-lg text-sm"
-            >
-              <option value="all">All Vehicles</option>
-              {vehicles.map((vehicleId) => {
-                const record = mockServiceHistory.find((r) => r.vehicleId === vehicleId);
-                return (
-                  <option key={vehicleId} value={vehicleId}>
-                    {record?.vehiclePlate} - {record?.vehicleModel}
-                  </option>
-                );
-              })}
-            </select>
+              options={[
+                { value: 'all', label: 'All Vehicles' },
+                ...vehicles.map((vehicleId) => {
+                  const record = mockServiceHistory.find((r) => r.vehicleId === vehicleId);
+                  return {
+                    value: vehicleId,
+                    label: `${record?.vehiclePlate} - ${record?.vehicleModel}`,
+                  };
+                }),
+              ]}
+            />
 
-            <select
+            <FormSelect
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border rounded-lg text-sm"
-            >
-              <option value="all">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: 'all', label: 'All Categories' },
+                ...categories.map((category) => ({
+                  value: category,
+                  label: category.charAt(0).toUpperCase() + category.slice(1),
+                })),
+              ]}
+            />
 
-            <select
+            <FormSelect
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="px-3 py-2 border rounded-lg text-sm"
-            >
-              <option value="all">All Types</option>
-              {serviceTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: 'all', label: 'All Types' },
+                ...serviceTypes.map((type) => ({
+                  value: type,
+                  label: type.charAt(0).toUpperCase() + type.slice(1),
+                })),
+              ]}
+            />
 
-            <select
+            <FormSelect
               value={selectedTechnician}
               onChange={(e) => setSelectedTechnician(e.target.value)}
-              className="px-3 py-2 border rounded-lg text-sm"
-            >
-              <option value="all">All Technicians</option>
-              {technicians.map((technician) => (
-                <option key={technician} value={technician}>
-                  {technician}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: 'all', label: 'All Technicians' },
+                ...technicians.map((technician) => ({
+                  value: technician,
+                  label: technician,
+                })),
+              ]}
+            />
 
-            <select
+            <FormSelect
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="px-3 py-2 border rounded-lg text-sm"
-            >
-              <option value="all">All Time</option>
-              <option value="7days">Last 7 Days</option>
-              <option value="30days">Last 30 Days</option>
-              <option value="90days">Last 90 Days</option>
-            </select>
+              options={[
+                { value: 'all', label: 'All Time' },
+                { value: '7days', label: 'Last 7 Days' },
+                { value: '30days', label: 'Last 30 Days' },
+                { value: '90days', label: 'Last 90 Days' },
+              ]}
+            />
           </div>
 
           {/* Active filters count */}

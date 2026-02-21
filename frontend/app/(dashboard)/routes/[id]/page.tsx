@@ -1,12 +1,9 @@
 import { notFound } from 'next/navigation';
 import { MOCK_ROUTES } from '@/constants/routes';
-import { RouteDetails } from '@/components/features/routes/RouteDetails';
+import { RouteDetails } from '../_components/RouteDetails';
+import type { RoutePageProps } from '../_types';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function RouteDetailsPage({ params }: PageProps) {
+export default async function RouteDetailsPage({ params }: RoutePageProps) {
   const { id } = await params;
   const route = MOCK_ROUTES.find((r) => r.id === id);
 

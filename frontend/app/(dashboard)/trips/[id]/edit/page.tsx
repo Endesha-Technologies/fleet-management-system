@@ -2,14 +2,11 @@
 
 import { notFound } from 'next/navigation'
 import { MOCK_TRIPS } from '@/constants/trips'
-import { TripForm } from '@/components/features/trips/TripForm'
+import { TripForm } from '../../_components'
 import { use } from 'react'
+import type { TripPageProps } from '../../_types'
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default function EditTripPage({ params }: PageProps) {
+export default function EditTripPage({ params }: TripPageProps) {
   const { id } = use(params)
   const trip = MOCK_TRIPS.find((t) => t.id === id)
 

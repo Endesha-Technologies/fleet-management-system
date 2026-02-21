@@ -1,4 +1,4 @@
-import { WorkOrderForm } from '@/components/features/maintenance';
+import { WorkOrderForm } from '../../_components';
 
 export default function CreateWorkOrderPage() {
   return (

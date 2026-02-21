@@ -9,12 +9,14 @@ import {
   Trash2,
   Download,
 } from 'lucide-react';
-import AssetTable from '@/components/features/assets/AssetTable';
-import LowStockBanner from '@/components/features/assets/LowStockBanner';
-import AddAssetDrawer from '@/components/features/assets/AddAssetDrawer';
-import PurchaseStockDrawer from '@/components/features/assets/PurchaseStockDrawer';
-import SellAssetDrawer from '@/components/features/assets/SellAssetDrawer';
-import DisposeAssetDrawer from '@/components/features/assets/DisposeAssetDrawer';
+import {
+  AssetTable,
+  LowStockBanner,
+  AddAssetDrawer,
+  PurchaseStockDrawer,
+  SellAssetDrawer,
+  DisposeAssetDrawer,
+} from './_components';
 import { MOCK_ASSETS, MOCK_LOW_STOCK_ALERTS } from '@/constants/assets';
 import { MOCK_STOCK_UNITS } from '@/constants/asset_details';
 

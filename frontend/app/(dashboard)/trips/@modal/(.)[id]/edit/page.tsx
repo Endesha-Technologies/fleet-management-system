@@ -1,13 +1,10 @@
 import { notFound } from 'next/navigation';
 import { MOCK_TRIPS } from '@/constants/trips';
 import { Modal } from '@/components/ui/modal';
-import { TripForm } from '@/components/features/trips/TripForm';
+import { TripForm } from '../../../_components';
+import type { TripPageProps } from '../../../_types';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function EditTripModal({ params }: PageProps) {
+export default async function EditTripModal({ params }: TripPageProps) {
   const { id } = await params;
   const trip = MOCK_TRIPS.find((t) => t.id === id);
 

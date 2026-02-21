@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { WorkOrder, WorkOrderStatus, WorkOrderPriority } from '@/types/maintenance';
 import { mockWorkOrders } from '@/constants/maintenance';
-import { WorkOrderTable, WorkOrderCard, WorkOrderFilters } from '@/components/features/maintenance';
+import { WorkOrderTable, WorkOrderCard, WorkOrderFilters } from '../_components';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';

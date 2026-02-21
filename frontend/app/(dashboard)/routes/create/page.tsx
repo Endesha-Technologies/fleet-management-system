@@ -1,4 +1,4 @@
-import { RouteForm } from '@/components/features/routes/RouteForm';
+import { RouteForm } from '../_components/RouteForm';
 
 export default function CreateRoutePage() {
   return (

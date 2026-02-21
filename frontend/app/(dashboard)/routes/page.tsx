@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { RouteTable } from '@/components/features/routes/RouteTable';
-import { RouteCard } from '@/components/features/routes/RouteCard';
-import { CreateRouteDrawer } from '@/components/features/routes/CreateRouteDrawer';
-import { RouteDetailsDrawer } from '@/components/features/routes/RouteDetailsDrawer';
-import { EditRouteDrawer } from '@/components/features/routes/EditRouteDrawer';
-import { DeleteRouteDialog } from '@/components/features/routes/DeleteRouteDialog';
+import { RouteTable } from './_components/RouteTable';
+import { RouteCard } from './_components/RouteCard';
+import { CreateRouteDrawer } from './_components/CreateRouteDrawer';
+import { RouteDetailsDrawer } from './_components/RouteDetailsDrawer';
+import { EditRouteDrawer } from './_components/EditRouteDrawer';
+import { DeleteRouteDialog } from './_components/DeleteRouteDialog';
 import { MOCK_ROUTES } from '@/constants/routes';
-import { Route } from '@/types/route';
+import type { Route, RouteFormData } from './_types';
 
 export default function RoutesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,14 +51,7 @@ export default function RoutesPage() {
     setSelectedRoute(null);
   };
 
-  const handleSaveRoute = (routeData: {
-    name: string;
-    origin: string;
-    destination: string;
-    distance: string;
-    duration: string;
-    deviationThreshold: string;
-  }) => {
+  const handleSaveRoute = (routeData: RouteFormData) => {
     console.log('Route saved:', routeData);
     // TODO: Integrate with backend API
   };

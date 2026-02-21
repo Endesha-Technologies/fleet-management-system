@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MOCK_INVENTORY_TRANSACTIONS } from '@/constants/inventory';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ArrowLeft, Search, Download, Calendar, Package, TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { FormInput, FormSelect, FormDateInput } from '@/components/ui/form';
 
 export default function InventoryHistoryPage() {
   const router = useRouter();
@@ -133,46 +133,40 @@ export default function InventoryHistoryPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
+                <FormInput
                   type="text"
                   placeholder="Search parts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-9 sm:h-10 text-xs sm:text-sm"
+                  className="pl-10"
                 />
               </div>
             </div>
 
-            <div>
-              <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <option value="all">All Types</option>
-                <option value="Added">Added</option>
-                <option value="Sold">Sold</option>
-                <option value="Disposed">Disposed</option>
-                <option value="Used">Used</option>
-              </select>
-            </div>
+            <FormSelect
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              options={[
+                { value: 'all', label: 'All Types' },
+                { value: 'Added', label: 'Added' },
+                { value: 'Sold', label: 'Sold' },
+                { value: 'Disposed', label: 'Disposed' },
+                { value: 'Used', label: 'Used' },
+              ]}
+            />
 
             <div className="sm:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-2">
-                <Input
-                  type="date"
+                <FormDateInput
                   placeholder="From"
                   value={dateRange.from}
                   onChange={(e) => setDateRange(prev => ({ ...prev, from: e.target.value }))}
-                  className="h-9 sm:h-10 text-xs sm:text-sm"
                 />
-                <Input
-                  type="date"
+                <FormDateInput
                   placeholder="To"
                   value={dateRange.to}
                   onChange={(e) => setDateRange(prev => ({ ...prev, to: e.target.value }))}
-                  className="h-9 sm:h-10 text-xs sm:text-sm"
                 />
               </div>
             </div>

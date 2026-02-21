@@ -1,0 +1,2287 @@
+{
+  "get_all_permissions": {
+    "url": "/roles/permissions",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": [
+        {
+          "id": "276c6821-5961-443e-8176-718379584688",
+          "resource": "*",
+          "action": "*",
+          "description": "Full system access",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+          "resource": "assets",
+          "action": "create",
+          "description": "Create an asset",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+          "resource": "assets",
+          "action": "dispose",
+          "description": "Dispose an asset",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "066d8949-dd7d-489a-890d-89b9a388d05b",
+          "resource": "assets",
+          "action": "install",
+          "description": "Install an asset on a truck",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+          "resource": "assets",
+          "action": "list",
+          "description": "List all assets",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "2967422a-ca67-4145-9d0c-f3e801efcef5",
+          "resource": "assets",
+          "action": "purchase",
+          "description": "Record asset purchase",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "319ce542-3f33-4646-916d-a8b331f723eb",
+          "resource": "assets",
+          "action": "remove",
+          "description": "Remove an asset from a truck",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "c19ef62d-ada7-4bfc-9d08-ccb2575efffc",
+          "resource": "assets",
+          "action": "update",
+          "description": "Update an asset",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+          "resource": "assets",
+          "action": "view",
+          "description": "View asset details",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "ea56d2e2-cf6f-4164-af1a-8d2f8548a654",
+          "resource": "audit",
+          "action": "list",
+          "description": "View audit logs",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+          "resource": "fuel",
+          "action": "create",
+          "description": "Log fuel entry",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "a4b89b22-7104-46b6-86c7-1ad034d0d67d",
+          "resource": "fuel",
+          "action": "delete",
+          "description": "Delete fuel log",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+          "resource": "fuel",
+          "action": "list",
+          "description": "List fuel logs",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "00559e6b-9904-4b4b-bae2-fe5c3846ee92",
+          "resource": "fuel",
+          "action": "update",
+          "description": "Update fuel log",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+          "resource": "fuel",
+          "action": "view",
+          "description": "View fuel log details",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "ec0c02a3-3d3a-4d19-bd20-75396424c0ce",
+          "resource": "roles",
+          "action": "create",
+          "description": "Create a role",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "834dccd3-f88f-46d8-b5d1-b3a419b91178",
+          "resource": "roles",
+          "action": "delete",
+          "description": "Delete a role",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "c0714e11-6672-4e3e-87ed-3d4bb97ceae2",
+          "resource": "roles",
+          "action": "list",
+          "description": "List all roles",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "73473957-ea10-4ec0-8829-d12b2f3bfa3d",
+          "resource": "roles",
+          "action": "update",
+          "description": "Update a role",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "ef0f9cef-59f8-4e3a-8da3-78ca21b8f197",
+          "resource": "roles",
+          "action": "view",
+          "description": "View role details",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "738ca05c-d0fc-4b80-8d92-075aeefd75a6",
+          "resource": "routes",
+          "action": "create",
+          "description": "Create a route",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+          "resource": "routes",
+          "action": "list",
+          "description": "List all routes",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "4e0ea708-6016-4081-b8c6-d55dc6d3dbfe",
+          "resource": "routes",
+          "action": "update",
+          "description": "Update a route",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+          "resource": "routes",
+          "action": "view",
+          "description": "View route details",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "f1d0d178-89f9-4b5d-b0c9-ed942cfeb119",
+          "resource": "store",
+          "action": "create",
+          "description": "Create store compartment",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "e24b5f99-36a7-4e4e-8a73-637dd4917484",
+          "resource": "store",
+          "action": "list",
+          "description": "List store compartments",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "1fd42a2e-d7fa-4043-9925-71f0d5a28811",
+          "resource": "store",
+          "action": "place",
+          "description": "Place asset in store",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "002b137e-4ec0-4c9f-b6d6-fa3b5b849fea",
+          "resource": "store",
+          "action": "retrieve",
+          "description": "Retrieve asset from store",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "df204ff2-3c1d-47aa-9f62-c66b3d0796a5",
+          "resource": "suppliers",
+          "action": "create",
+          "description": "Create a supplier",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "379b1df9-c220-4446-b5c1-756ac221229b",
+          "resource": "suppliers",
+          "action": "list",
+          "description": "List all suppliers",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "883d0bb8-5fa6-4f50-aab6-01fc0b7258c6",
+          "resource": "suppliers",
+          "action": "update",
+          "description": "Update a supplier",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "0febe4e1-53d1-4b25-9a43-cc203bfc93de",
+          "resource": "trips",
+          "action": "cancel",
+          "description": "Cancel a trip",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+          "resource": "trips",
+          "action": "complete",
+          "description": "Complete a trip",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "cb0db001-321c-4511-a82b-e26ea5f92398",
+          "resource": "trips",
+          "action": "create",
+          "description": "Create a trip",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+          "resource": "trips",
+          "action": "list",
+          "description": "List all trips",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+          "resource": "trips",
+          "action": "start",
+          "description": "Start a trip",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "62964921-7059-46ec-827a-37d3c71653a1",
+          "resource": "trips",
+          "action": "update",
+          "description": "Update a trip",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+          "resource": "trips",
+          "action": "view",
+          "description": "View trip details",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "cb21351a-acfd-4f98-81aa-4fb73e0f2080",
+          "resource": "trucks",
+          "action": "create",
+          "description": "Create a truck",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "678fc9da-e44d-4c92-bec6-eb57f295963f",
+          "resource": "trucks",
+          "action": "delete",
+          "description": "Delete a truck",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+          "resource": "trucks",
+          "action": "list",
+          "description": "List all trucks",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "8cf88cd9-5839-4310-8d63-d7487f9f9dd6",
+          "resource": "trucks",
+          "action": "update",
+          "description": "Update a truck",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+          "resource": "trucks",
+          "action": "view",
+          "description": "View truck details",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "554d9be6-747e-4ac3-add8-97061ea81f17",
+          "resource": "tyres",
+          "action": "create",
+          "description": "Create a tyre",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "24187de3-8cb7-41cb-b3c0-fdc2a9d4ed78",
+          "resource": "tyres",
+          "action": "dispose",
+          "description": "Dispose a tyre",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "8c101cbc-4585-4879-b795-9f2ad21055c8",
+          "resource": "tyres",
+          "action": "inspect",
+          "description": "Inspect a tyre",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "30c94df2-087e-413c-9ba9-fa2ac5504061",
+          "resource": "tyres",
+          "action": "install",
+          "description": "Install a tyre on a truck",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "d044d4f3-c84f-4b45-9126-400f42f60460",
+          "resource": "tyres",
+          "action": "list",
+          "description": "List all tyres",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "5f30864d-ca91-4683-b5bb-587ae16b27f3",
+          "resource": "tyres",
+          "action": "remove",
+          "description": "Remove a tyre from a truck",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "98baa653-4047-4788-87e1-cd7a2afffbaa",
+          "resource": "tyres",
+          "action": "rotate",
+          "description": "Rotate tyres",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "75dd3f12-bbde-46d4-94dc-5891f2783f94",
+          "resource": "tyres",
+          "action": "update",
+          "description": "Update a tyre",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "df92c890-0703-46f3-b64b-5954fd185019",
+          "resource": "tyres",
+          "action": "view",
+          "description": "View tyre details",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        },
+        {
+          "id": "15d2274d-ab73-483e-ac83-309ee78c9a96",
+          "resource": "users",
+          "action": "create",
+          "description": "Create a new user",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "c638020e-97d0-49fb-b53e-864d86305612",
+          "resource": "users",
+          "action": "delete",
+          "description": "Delete a user",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "0e18e901-6005-4654-b397-ce7f61da1fa4",
+          "resource": "users",
+          "action": "list",
+          "description": "List all users",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "c6ba5e6b-32ad-418e-bc1c-28089e40640a",
+          "resource": "users",
+          "action": "update",
+          "description": "Update a user",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "ec714c72-1c2b-4432-95da-ee66a39ca575",
+          "resource": "users",
+          "action": "view",
+          "description": "View user details",
+          "createdAt": "2026-02-17T15:55:17.924Z"
+        },
+        {
+          "id": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+          "resource": "wialon",
+          "action": "view",
+          "description": "View Wialon tracking data",
+          "createdAt": "2026-02-17T15:55:17.925Z"
+        }
+      ]
+    }
+  },
+  "create_role": {
+    "url": "/roles",
+    "method": "POST",
+    "request_body": {
+      "name": "manager",
+      "description": "Manager role with limited permissions",
+      "permissionIds": [
+        "c19ef62d-ada7-4bfc-9d08-ccb2575efffc",
+        "e78fd551-6247-4b40-aecc-9d8954f8a630",
+        "ec0c02a3-3d3a-4d19-bd20-75396424c0ce"
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "Created successfully",
+      "data": {
+        "id": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+        "name": "Dispatcher",
+        "description": "Dispatch and Track Trips",
+        "isSystem": false,
+        "createdAt": "2026-02-17T16:38:35.253Z",
+        "updatedAt": "2026-02-17T16:38:35.253Z",
+        "permissions": [
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+            "permission": {
+              "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+              "resource": "assets",
+              "action": "create",
+              "description": "Create an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          },
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+            "permission": {
+              "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+              "resource": "assets",
+              "action": "dispose",
+              "description": "Dispose an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          },
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "066d8949-dd7d-489a-890d-89b9a388d05b",
+            "permission": {
+              "id": "066d8949-dd7d-489a-890d-89b9a388d05b",
+              "resource": "assets",
+              "action": "install",
+              "description": "Install an asset on a truck",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "get_roles": {
+    "url": "/roles",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": [
+        {
+          "id": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+          "name": "admin",
+          "description": "Administrator with comprehensive access",
+          "isSystem": true,
+          "createdAt": "2026-02-17T15:55:18.029Z",
+          "updatedAt": "2026-02-17T15:55:18.029Z",
+          "permissions": [
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "15d2274d-ab73-483e-ac83-309ee78c9a96",
+              "permission": {
+                "id": "15d2274d-ab73-483e-ac83-309ee78c9a96",
+                "resource": "users",
+                "action": "create",
+                "description": "Create a new user",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "0e18e901-6005-4654-b397-ce7f61da1fa4",
+              "permission": {
+                "id": "0e18e901-6005-4654-b397-ce7f61da1fa4",
+                "resource": "users",
+                "action": "list",
+                "description": "List all users",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ec714c72-1c2b-4432-95da-ee66a39ca575",
+              "permission": {
+                "id": "ec714c72-1c2b-4432-95da-ee66a39ca575",
+                "resource": "users",
+                "action": "view",
+                "description": "View user details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c6ba5e6b-32ad-418e-bc1c-28089e40640a",
+              "permission": {
+                "id": "c6ba5e6b-32ad-418e-bc1c-28089e40640a",
+                "resource": "users",
+                "action": "update",
+                "description": "Update a user",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c638020e-97d0-49fb-b53e-864d86305612",
+              "permission": {
+                "id": "c638020e-97d0-49fb-b53e-864d86305612",
+                "resource": "users",
+                "action": "delete",
+                "description": "Delete a user",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ec0c02a3-3d3a-4d19-bd20-75396424c0ce",
+              "permission": {
+                "id": "ec0c02a3-3d3a-4d19-bd20-75396424c0ce",
+                "resource": "roles",
+                "action": "create",
+                "description": "Create a role",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c0714e11-6672-4e3e-87ed-3d4bb97ceae2",
+              "permission": {
+                "id": "c0714e11-6672-4e3e-87ed-3d4bb97ceae2",
+                "resource": "roles",
+                "action": "list",
+                "description": "List all roles",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ef0f9cef-59f8-4e3a-8da3-78ca21b8f197",
+              "permission": {
+                "id": "ef0f9cef-59f8-4e3a-8da3-78ca21b8f197",
+                "resource": "roles",
+                "action": "view",
+                "description": "View role details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "73473957-ea10-4ec0-8829-d12b2f3bfa3d",
+              "permission": {
+                "id": "73473957-ea10-4ec0-8829-d12b2f3bfa3d",
+                "resource": "roles",
+                "action": "update",
+                "description": "Update a role",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "834dccd3-f88f-46d8-b5d1-b3a419b91178",
+              "permission": {
+                "id": "834dccd3-f88f-46d8-b5d1-b3a419b91178",
+                "resource": "roles",
+                "action": "delete",
+                "description": "Delete a role",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "cb21351a-acfd-4f98-81aa-4fb73e0f2080",
+              "permission": {
+                "id": "cb21351a-acfd-4f98-81aa-4fb73e0f2080",
+                "resource": "trucks",
+                "action": "create",
+                "description": "Create a truck",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+              "permission": {
+                "id": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+                "resource": "trucks",
+                "action": "list",
+                "description": "List all trucks",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+              "permission": {
+                "id": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+                "resource": "trucks",
+                "action": "view",
+                "description": "View truck details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "8cf88cd9-5839-4310-8d63-d7487f9f9dd6",
+              "permission": {
+                "id": "8cf88cd9-5839-4310-8d63-d7487f9f9dd6",
+                "resource": "trucks",
+                "action": "update",
+                "description": "Update a truck",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "678fc9da-e44d-4c92-bec6-eb57f295963f",
+              "permission": {
+                "id": "678fc9da-e44d-4c92-bec6-eb57f295963f",
+                "resource": "trucks",
+                "action": "delete",
+                "description": "Delete a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+              "permission": {
+                "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+                "resource": "assets",
+                "action": "create",
+                "description": "Create an asset",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+              "permission": {
+                "id": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+                "resource": "assets",
+                "action": "list",
+                "description": "List all assets",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+              "permission": {
+                "id": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+                "resource": "assets",
+                "action": "view",
+                "description": "View asset details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c19ef62d-ada7-4bfc-9d08-ccb2575efffc",
+              "permission": {
+                "id": "c19ef62d-ada7-4bfc-9d08-ccb2575efffc",
+                "resource": "assets",
+                "action": "update",
+                "description": "Update an asset",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "066d8949-dd7d-489a-890d-89b9a388d05b",
+              "permission": {
+                "id": "066d8949-dd7d-489a-890d-89b9a388d05b",
+                "resource": "assets",
+                "action": "install",
+                "description": "Install an asset on a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "319ce542-3f33-4646-916d-a8b331f723eb",
+              "permission": {
+                "id": "319ce542-3f33-4646-916d-a8b331f723eb",
+                "resource": "assets",
+                "action": "remove",
+                "description": "Remove an asset from a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+              "permission": {
+                "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+                "resource": "assets",
+                "action": "dispose",
+                "description": "Dispose an asset",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "2967422a-ca67-4145-9d0c-f3e801efcef5",
+              "permission": {
+                "id": "2967422a-ca67-4145-9d0c-f3e801efcef5",
+                "resource": "assets",
+                "action": "purchase",
+                "description": "Record asset purchase",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "f1d0d178-89f9-4b5d-b0c9-ed942cfeb119",
+              "permission": {
+                "id": "f1d0d178-89f9-4b5d-b0c9-ed942cfeb119",
+                "resource": "store",
+                "action": "create",
+                "description": "Create store compartment",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "e24b5f99-36a7-4e4e-8a73-637dd4917484",
+              "permission": {
+                "id": "e24b5f99-36a7-4e4e-8a73-637dd4917484",
+                "resource": "store",
+                "action": "list",
+                "description": "List store compartments",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "1fd42a2e-d7fa-4043-9925-71f0d5a28811",
+              "permission": {
+                "id": "1fd42a2e-d7fa-4043-9925-71f0d5a28811",
+                "resource": "store",
+                "action": "place",
+                "description": "Place asset in store",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "002b137e-4ec0-4c9f-b6d6-fa3b5b849fea",
+              "permission": {
+                "id": "002b137e-4ec0-4c9f-b6d6-fa3b5b849fea",
+                "resource": "store",
+                "action": "retrieve",
+                "description": "Retrieve asset from store",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "df204ff2-3c1d-47aa-9f62-c66b3d0796a5",
+              "permission": {
+                "id": "df204ff2-3c1d-47aa-9f62-c66b3d0796a5",
+                "resource": "suppliers",
+                "action": "create",
+                "description": "Create a supplier",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "379b1df9-c220-4446-b5c1-756ac221229b",
+              "permission": {
+                "id": "379b1df9-c220-4446-b5c1-756ac221229b",
+                "resource": "suppliers",
+                "action": "list",
+                "description": "List all suppliers",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "883d0bb8-5fa6-4f50-aab6-01fc0b7258c6",
+              "permission": {
+                "id": "883d0bb8-5fa6-4f50-aab6-01fc0b7258c6",
+                "resource": "suppliers",
+                "action": "update",
+                "description": "Update a supplier",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "554d9be6-747e-4ac3-add8-97061ea81f17",
+              "permission": {
+                "id": "554d9be6-747e-4ac3-add8-97061ea81f17",
+                "resource": "tyres",
+                "action": "create",
+                "description": "Create a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "d044d4f3-c84f-4b45-9126-400f42f60460",
+              "permission": {
+                "id": "d044d4f3-c84f-4b45-9126-400f42f60460",
+                "resource": "tyres",
+                "action": "list",
+                "description": "List all tyres",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "df92c890-0703-46f3-b64b-5954fd185019",
+              "permission": {
+                "id": "df92c890-0703-46f3-b64b-5954fd185019",
+                "resource": "tyres",
+                "action": "view",
+                "description": "View tyre details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "75dd3f12-bbde-46d4-94dc-5891f2783f94",
+              "permission": {
+                "id": "75dd3f12-bbde-46d4-94dc-5891f2783f94",
+                "resource": "tyres",
+                "action": "update",
+                "description": "Update a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "30c94df2-087e-413c-9ba9-fa2ac5504061",
+              "permission": {
+                "id": "30c94df2-087e-413c-9ba9-fa2ac5504061",
+                "resource": "tyres",
+                "action": "install",
+                "description": "Install a tyre on a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "5f30864d-ca91-4683-b5bb-587ae16b27f3",
+              "permission": {
+                "id": "5f30864d-ca91-4683-b5bb-587ae16b27f3",
+                "resource": "tyres",
+                "action": "remove",
+                "description": "Remove a tyre from a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "98baa653-4047-4788-87e1-cd7a2afffbaa",
+              "permission": {
+                "id": "98baa653-4047-4788-87e1-cd7a2afffbaa",
+                "resource": "tyres",
+                "action": "rotate",
+                "description": "Rotate tyres",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "8c101cbc-4585-4879-b795-9f2ad21055c8",
+              "permission": {
+                "id": "8c101cbc-4585-4879-b795-9f2ad21055c8",
+                "resource": "tyres",
+                "action": "inspect",
+                "description": "Inspect a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "24187de3-8cb7-41cb-b3c0-fdc2a9d4ed78",
+              "permission": {
+                "id": "24187de3-8cb7-41cb-b3c0-fdc2a9d4ed78",
+                "resource": "tyres",
+                "action": "dispose",
+                "description": "Dispose a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "738ca05c-d0fc-4b80-8d92-075aeefd75a6",
+              "permission": {
+                "id": "738ca05c-d0fc-4b80-8d92-075aeefd75a6",
+                "resource": "routes",
+                "action": "create",
+                "description": "Create a route",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+              "permission": {
+                "id": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+                "resource": "routes",
+                "action": "list",
+                "description": "List all routes",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+              "permission": {
+                "id": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+                "resource": "routes",
+                "action": "view",
+                "description": "View route details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "4e0ea708-6016-4081-b8c6-d55dc6d3dbfe",
+              "permission": {
+                "id": "4e0ea708-6016-4081-b8c6-d55dc6d3dbfe",
+                "resource": "routes",
+                "action": "update",
+                "description": "Update a route",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "cb0db001-321c-4511-a82b-e26ea5f92398",
+              "permission": {
+                "id": "cb0db001-321c-4511-a82b-e26ea5f92398",
+                "resource": "trips",
+                "action": "create",
+                "description": "Create a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+              "permission": {
+                "id": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+                "resource": "trips",
+                "action": "list",
+                "description": "List all trips",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+              "permission": {
+                "id": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+                "resource": "trips",
+                "action": "view",
+                "description": "View trip details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "62964921-7059-46ec-827a-37d3c71653a1",
+              "permission": {
+                "id": "62964921-7059-46ec-827a-37d3c71653a1",
+                "resource": "trips",
+                "action": "update",
+                "description": "Update a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+              "permission": {
+                "id": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+                "resource": "trips",
+                "action": "start",
+                "description": "Start a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+              "permission": {
+                "id": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+                "resource": "trips",
+                "action": "complete",
+                "description": "Complete a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "0febe4e1-53d1-4b25-9a43-cc203bfc93de",
+              "permission": {
+                "id": "0febe4e1-53d1-4b25-9a43-cc203bfc93de",
+                "resource": "trips",
+                "action": "cancel",
+                "description": "Cancel a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+              "permission": {
+                "id": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+                "resource": "fuel",
+                "action": "create",
+                "description": "Log fuel entry",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+              "permission": {
+                "id": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+                "resource": "fuel",
+                "action": "list",
+                "description": "List fuel logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+              "permission": {
+                "id": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+                "resource": "fuel",
+                "action": "view",
+                "description": "View fuel log details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "00559e6b-9904-4b4b-bae2-fe5c3846ee92",
+              "permission": {
+                "id": "00559e6b-9904-4b4b-bae2-fe5c3846ee92",
+                "resource": "fuel",
+                "action": "update",
+                "description": "Update fuel log",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "a4b89b22-7104-46b6-86c7-1ad034d0d67d",
+              "permission": {
+                "id": "a4b89b22-7104-46b6-86c7-1ad034d0d67d",
+                "resource": "fuel",
+                "action": "delete",
+                "description": "Delete fuel log",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "ea56d2e2-cf6f-4164-af1a-8d2f8548a654",
+              "permission": {
+                "id": "ea56d2e2-cf6f-4164-af1a-8d2f8548a654",
+                "resource": "audit",
+                "action": "list",
+                "description": "View audit logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c614894e-d07e-4eec-9beb-c5e38fac753a",
+              "permissionId": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+              "permission": {
+                "id": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+                "resource": "wialon",
+                "action": "view",
+                "description": "View Wialon tracking data",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 0
+          }
+        },
+        {
+          "id": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+          "name": "Dispatcher",
+          "description": "Dispatch and Track Trips",
+          "isSystem": false,
+          "createdAt": "2026-02-17T16:38:35.253Z",
+          "updatedAt": "2026-02-17T16:38:35.253Z",
+          "permissions": [
+            {
+              "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+              "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+              "permission": {
+                "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+                "resource": "assets",
+                "action": "create",
+                "description": "Create an asset",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+              "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+              "permission": {
+                "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+                "resource": "assets",
+                "action": "dispose",
+                "description": "Dispose an asset",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+              "permissionId": "066d8949-dd7d-489a-890d-89b9a388d05b",
+              "permission": {
+                "id": "066d8949-dd7d-489a-890d-89b9a388d05b",
+                "resource": "assets",
+                "action": "install",
+                "description": "Install an asset on a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 0
+          }
+        },
+        {
+          "id": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+          "name": "driver",
+          "description": "Truck driver with limited access",
+          "isSystem": true,
+          "createdAt": "2026-02-17T15:55:18.031Z",
+          "updatedAt": "2026-02-17T15:55:18.031Z",
+          "permissions": [
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+              "permission": {
+                "id": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+                "resource": "trucks",
+                "action": "list",
+                "description": "List all trucks",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+              "permission": {
+                "id": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+                "resource": "trucks",
+                "action": "view",
+                "description": "View truck details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+              "permission": {
+                "id": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+                "resource": "routes",
+                "action": "list",
+                "description": "List all routes",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+              "permission": {
+                "id": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+                "resource": "routes",
+                "action": "view",
+                "description": "View route details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+              "permission": {
+                "id": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+                "resource": "trips",
+                "action": "list",
+                "description": "List all trips",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+              "permission": {
+                "id": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+                "resource": "trips",
+                "action": "view",
+                "description": "View trip details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+              "permission": {
+                "id": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+                "resource": "trips",
+                "action": "start",
+                "description": "Start a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+              "permission": {
+                "id": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+                "resource": "trips",
+                "action": "complete",
+                "description": "Complete a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+              "permission": {
+                "id": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+                "resource": "fuel",
+                "action": "create",
+                "description": "Log fuel entry",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+              "permission": {
+                "id": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+                "resource": "fuel",
+                "action": "list",
+                "description": "List fuel logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "c13f0857-6fe1-482a-8a31-debfca5a658d",
+              "permissionId": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+              "permission": {
+                "id": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+                "resource": "fuel",
+                "action": "view",
+                "description": "View fuel log details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 0
+          }
+        },
+        {
+          "id": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+          "name": "fleet_manager",
+          "description": "Manages trucks, routes, trips, drivers",
+          "isSystem": true,
+          "createdAt": "2026-02-17T15:55:18.030Z",
+          "updatedAt": "2026-02-17T15:55:18.030Z",
+          "permissions": [
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "cb21351a-acfd-4f98-81aa-4fb73e0f2080",
+              "permission": {
+                "id": "cb21351a-acfd-4f98-81aa-4fb73e0f2080",
+                "resource": "trucks",
+                "action": "create",
+                "description": "Create a truck",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+              "permission": {
+                "id": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+                "resource": "trucks",
+                "action": "list",
+                "description": "List all trucks",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+              "permission": {
+                "id": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+                "resource": "trucks",
+                "action": "view",
+                "description": "View truck details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "8cf88cd9-5839-4310-8d63-d7487f9f9dd6",
+              "permission": {
+                "id": "8cf88cd9-5839-4310-8d63-d7487f9f9dd6",
+                "resource": "trucks",
+                "action": "update",
+                "description": "Update a truck",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "678fc9da-e44d-4c92-bec6-eb57f295963f",
+              "permission": {
+                "id": "678fc9da-e44d-4c92-bec6-eb57f295963f",
+                "resource": "trucks",
+                "action": "delete",
+                "description": "Delete a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+              "permission": {
+                "id": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+                "resource": "assets",
+                "action": "list",
+                "description": "List all assets",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+              "permission": {
+                "id": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+                "resource": "assets",
+                "action": "view",
+                "description": "View asset details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "554d9be6-747e-4ac3-add8-97061ea81f17",
+              "permission": {
+                "id": "554d9be6-747e-4ac3-add8-97061ea81f17",
+                "resource": "tyres",
+                "action": "create",
+                "description": "Create a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "d044d4f3-c84f-4b45-9126-400f42f60460",
+              "permission": {
+                "id": "d044d4f3-c84f-4b45-9126-400f42f60460",
+                "resource": "tyres",
+                "action": "list",
+                "description": "List all tyres",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "df92c890-0703-46f3-b64b-5954fd185019",
+              "permission": {
+                "id": "df92c890-0703-46f3-b64b-5954fd185019",
+                "resource": "tyres",
+                "action": "view",
+                "description": "View tyre details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "75dd3f12-bbde-46d4-94dc-5891f2783f94",
+              "permission": {
+                "id": "75dd3f12-bbde-46d4-94dc-5891f2783f94",
+                "resource": "tyres",
+                "action": "update",
+                "description": "Update a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "30c94df2-087e-413c-9ba9-fa2ac5504061",
+              "permission": {
+                "id": "30c94df2-087e-413c-9ba9-fa2ac5504061",
+                "resource": "tyres",
+                "action": "install",
+                "description": "Install a tyre on a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "5f30864d-ca91-4683-b5bb-587ae16b27f3",
+              "permission": {
+                "id": "5f30864d-ca91-4683-b5bb-587ae16b27f3",
+                "resource": "tyres",
+                "action": "remove",
+                "description": "Remove a tyre from a truck",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "98baa653-4047-4788-87e1-cd7a2afffbaa",
+              "permission": {
+                "id": "98baa653-4047-4788-87e1-cd7a2afffbaa",
+                "resource": "tyres",
+                "action": "rotate",
+                "description": "Rotate tyres",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "8c101cbc-4585-4879-b795-9f2ad21055c8",
+              "permission": {
+                "id": "8c101cbc-4585-4879-b795-9f2ad21055c8",
+                "resource": "tyres",
+                "action": "inspect",
+                "description": "Inspect a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "24187de3-8cb7-41cb-b3c0-fdc2a9d4ed78",
+              "permission": {
+                "id": "24187de3-8cb7-41cb-b3c0-fdc2a9d4ed78",
+                "resource": "tyres",
+                "action": "dispose",
+                "description": "Dispose a tyre",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "738ca05c-d0fc-4b80-8d92-075aeefd75a6",
+              "permission": {
+                "id": "738ca05c-d0fc-4b80-8d92-075aeefd75a6",
+                "resource": "routes",
+                "action": "create",
+                "description": "Create a route",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+              "permission": {
+                "id": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+                "resource": "routes",
+                "action": "list",
+                "description": "List all routes",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+              "permission": {
+                "id": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+                "resource": "routes",
+                "action": "view",
+                "description": "View route details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "4e0ea708-6016-4081-b8c6-d55dc6d3dbfe",
+              "permission": {
+                "id": "4e0ea708-6016-4081-b8c6-d55dc6d3dbfe",
+                "resource": "routes",
+                "action": "update",
+                "description": "Update a route",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "cb0db001-321c-4511-a82b-e26ea5f92398",
+              "permission": {
+                "id": "cb0db001-321c-4511-a82b-e26ea5f92398",
+                "resource": "trips",
+                "action": "create",
+                "description": "Create a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+              "permission": {
+                "id": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+                "resource": "trips",
+                "action": "list",
+                "description": "List all trips",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+              "permission": {
+                "id": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+                "resource": "trips",
+                "action": "view",
+                "description": "View trip details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "62964921-7059-46ec-827a-37d3c71653a1",
+              "permission": {
+                "id": "62964921-7059-46ec-827a-37d3c71653a1",
+                "resource": "trips",
+                "action": "update",
+                "description": "Update a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+              "permission": {
+                "id": "31743116-56c6-40ca-89c5-735b4d4ed2ce",
+                "resource": "trips",
+                "action": "start",
+                "description": "Start a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+              "permission": {
+                "id": "2e447dd7-7e8b-4934-bfb1-bef22bdba121",
+                "resource": "trips",
+                "action": "complete",
+                "description": "Complete a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "0febe4e1-53d1-4b25-9a43-cc203bfc93de",
+              "permission": {
+                "id": "0febe4e1-53d1-4b25-9a43-cc203bfc93de",
+                "resource": "trips",
+                "action": "cancel",
+                "description": "Cancel a trip",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+              "permission": {
+                "id": "f80dfc6a-6ed8-4e17-ab9a-fe440e3d829b",
+                "resource": "fuel",
+                "action": "create",
+                "description": "Log fuel entry",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+              "permission": {
+                "id": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+                "resource": "fuel",
+                "action": "list",
+                "description": "List fuel logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+              "permission": {
+                "id": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+                "resource": "fuel",
+                "action": "view",
+                "description": "View fuel log details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "00559e6b-9904-4b4b-bae2-fe5c3846ee92",
+              "permission": {
+                "id": "00559e6b-9904-4b4b-bae2-fe5c3846ee92",
+                "resource": "fuel",
+                "action": "update",
+                "description": "Update fuel log",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "a4b89b22-7104-46b6-86c7-1ad034d0d67d",
+              "permission": {
+                "id": "a4b89b22-7104-46b6-86c7-1ad034d0d67d",
+                "resource": "fuel",
+                "action": "delete",
+                "description": "Delete fuel log",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "ab8b8aef-87c7-4d63-b088-072a3cdd3b80",
+              "permissionId": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+              "permission": {
+                "id": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+                "resource": "wialon",
+                "action": "view",
+                "description": "View Wialon tracking data",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 0
+          }
+        },
+        {
+          "id": "689a1126-0bb9-4e97-ba65-5847434f9d8e",
+          "name": "super_admin",
+          "description": "Super Administrator with full system access",
+          "isSystem": true,
+          "createdAt": "2026-02-17T15:55:18.027Z",
+          "updatedAt": "2026-02-17T15:55:18.027Z",
+          "permissions": [
+            {
+              "roleId": "689a1126-0bb9-4e97-ba65-5847434f9d8e",
+              "permissionId": "276c6821-5961-443e-8176-718379584688",
+              "permission": {
+                "id": "276c6821-5961-443e-8176-718379584688",
+                "resource": "*",
+                "action": "*",
+                "description": "Full system access",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 1
+          }
+        },
+        {
+          "id": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+          "name": "viewer",
+          "description": "Read-only access to fleet data",
+          "isSystem": true,
+          "createdAt": "2026-02-17T15:55:18.032Z",
+          "updatedAt": "2026-02-17T15:55:18.032Z",
+          "permissions": [
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "0e18e901-6005-4654-b397-ce7f61da1fa4",
+              "permission": {
+                "id": "0e18e901-6005-4654-b397-ce7f61da1fa4",
+                "resource": "users",
+                "action": "list",
+                "description": "List all users",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "ec714c72-1c2b-4432-95da-ee66a39ca575",
+              "permission": {
+                "id": "ec714c72-1c2b-4432-95da-ee66a39ca575",
+                "resource": "users",
+                "action": "view",
+                "description": "View user details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "c0714e11-6672-4e3e-87ed-3d4bb97ceae2",
+              "permission": {
+                "id": "c0714e11-6672-4e3e-87ed-3d4bb97ceae2",
+                "resource": "roles",
+                "action": "list",
+                "description": "List all roles",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "ef0f9cef-59f8-4e3a-8da3-78ca21b8f197",
+              "permission": {
+                "id": "ef0f9cef-59f8-4e3a-8da3-78ca21b8f197",
+                "resource": "roles",
+                "action": "view",
+                "description": "View role details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+              "permission": {
+                "id": "b55be6ab-18ad-4124-aac4-a3b4ef6121db",
+                "resource": "trucks",
+                "action": "list",
+                "description": "List all trucks",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+              "permission": {
+                "id": "ce0e51ba-3ef8-43f7-aa6f-b67acb7fb67a",
+                "resource": "trucks",
+                "action": "view",
+                "description": "View truck details",
+                "createdAt": "2026-02-17T15:55:17.924Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+              "permission": {
+                "id": "c0834cfa-a706-473c-a909-2e1e2cc0fb81",
+                "resource": "assets",
+                "action": "list",
+                "description": "List all assets",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+              "permission": {
+                "id": "e092c572-0b2d-4c80-8bb0-7d14de1eed6c",
+                "resource": "assets",
+                "action": "view",
+                "description": "View asset details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "e24b5f99-36a7-4e4e-8a73-637dd4917484",
+              "permission": {
+                "id": "e24b5f99-36a7-4e4e-8a73-637dd4917484",
+                "resource": "store",
+                "action": "list",
+                "description": "List store compartments",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "379b1df9-c220-4446-b5c1-756ac221229b",
+              "permission": {
+                "id": "379b1df9-c220-4446-b5c1-756ac221229b",
+                "resource": "suppliers",
+                "action": "list",
+                "description": "List all suppliers",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "d044d4f3-c84f-4b45-9126-400f42f60460",
+              "permission": {
+                "id": "d044d4f3-c84f-4b45-9126-400f42f60460",
+                "resource": "tyres",
+                "action": "list",
+                "description": "List all tyres",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "df92c890-0703-46f3-b64b-5954fd185019",
+              "permission": {
+                "id": "df92c890-0703-46f3-b64b-5954fd185019",
+                "resource": "tyres",
+                "action": "view",
+                "description": "View tyre details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+              "permission": {
+                "id": "a99361c8-e46a-4a6c-833a-ea9e19d6b0c4",
+                "resource": "routes",
+                "action": "list",
+                "description": "List all routes",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+              "permission": {
+                "id": "c7768cc4-60df-48df-8cc5-18fab9c87452",
+                "resource": "routes",
+                "action": "view",
+                "description": "View route details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+              "permission": {
+                "id": "ac155a1d-a88a-4f13-928a-c69b4e622661",
+                "resource": "trips",
+                "action": "list",
+                "description": "List all trips",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+              "permission": {
+                "id": "f39bf2f9-cfdc-4c79-8413-13aa800eb048",
+                "resource": "trips",
+                "action": "view",
+                "description": "View trip details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+              "permission": {
+                "id": "e78fd551-6247-4b40-aecc-9d8954f8a630",
+                "resource": "fuel",
+                "action": "list",
+                "description": "List fuel logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+              "permission": {
+                "id": "235bbdb6-7199-4ccd-9cf6-ff1fed76aa2b",
+                "resource": "fuel",
+                "action": "view",
+                "description": "View fuel log details",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "ea56d2e2-cf6f-4164-af1a-8d2f8548a654",
+              "permission": {
+                "id": "ea56d2e2-cf6f-4164-af1a-8d2f8548a654",
+                "resource": "audit",
+                "action": "list",
+                "description": "View audit logs",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            },
+            {
+              "roleId": "110d2d3d-7caa-46d4-830e-3c73e338c593",
+              "permissionId": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+              "permission": {
+                "id": "42400ad2-2170-43b1-b9e0-942a57a2cf68",
+                "resource": "wialon",
+                "action": "view",
+                "description": "View Wialon tracking data",
+                "createdAt": "2026-02-17T15:55:17.925Z"
+              }
+            }
+          ],
+          "_count": {
+            "users": 0
+          }
+        }
+      ]
+    }
+  },
+  "update_role": {
+    "url": "/roles/:id",
+    "method": "put",
+    "requestBody": {
+      "name": "string",
+      "description": "string",
+      "permissions": ["permissionId1", "permissionId2"]
+    },
+    "responseBody": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+        "name": "Dispatcher",
+        "description": "Dispatch and Track Trips",
+        "isSystem": false,
+        "createdAt": "2026-02-17T16:38:35.253Z",
+        "updatedAt": "2026-02-17T16:45:42.907Z",
+        "permissions": [
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+            "permission": {
+              "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+              "resource": "assets",
+              "action": "create",
+              "description": "Create an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          },
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+            "permission": {
+              "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+              "resource": "assets",
+              "action": "dispose",
+              "description": "Dispose an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "get_role_by_id": {
+    "url": "/roles/:id",
+    "method": "get",
+    "responseBody": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+        "name": "Dispatcher",
+        "description": "Dispatch and Track Trips",
+        "isSystem": false,
+        "createdAt": "2026-02-17T16:38:35.253Z",
+        "updatedAt": "2026-02-17T16:45:42.907Z",
+        "permissions": [
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+            "permission": {
+              "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+              "resource": "assets",
+              "action": "create",
+              "description": "Create an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          },
+          {
+            "roleId": "91fd1420-d6ce-4b39-8fb7-24b89dcbfcfe",
+            "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+            "permission": {
+              "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+              "resource": "assets",
+              "action": "dispose",
+              "description": "Dispose an asset",
+              "createdAt": "2026-02-17T15:55:17.925Z"
+            }
+          }
+        ],
+        "users": []
+      }
+    }
+  },
+  "delete_role": {
+    "url": "/roles/:id",
+    "method": "delete",
+    "responseBody": {
+      "success": true,
+      "message": "Role deleted successfully",
+      "data": null
+    }
+  },
+  "create_user": {
+    "url": "/users",
+    "method": "post",
+    "requestBody": {
+      "email": "user@example.com",
+      "password": "password1",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phone": "+254700000000",
+      "type": "SYSTEM",
+      "roleIds": ["de29cc0b-4f81-4d2b-bdd2-c542300b50d1"],
+
+      "licenseNumber": "",
+      "licenseExpiry": "",
+      "licenseClass": "",
+      "dateOfBirth": "",
+      "emergencyContact": "",
+      "emergencyPhone": "",
+      "hireDate": "",
+      "notes": ""
+    },
+    "responseBody": {
+      "success": true,
+      "message": "User created successfully",
+      "data": {
+        "id": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+        "email": "user@example.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "phone": "+254700000000",
+        "type": "SYSTEM",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "createdAt": "2026-02-17T17:04:34.487Z",
+        "updatedAt": "2026-02-17T17:04:34.487Z",
+        "roles": [
+          {
+            "userId": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+            "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+            "assignedAt": "2026-02-17T17:04:34.487Z",
+            "role": {
+              "id": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+              "name": "Dispatcher",
+              "description": "Dispatch and Track Trips",
+              "isSystem": false,
+              "createdAt": "2026-02-17T16:57:16.563Z",
+              "updatedAt": "2026-02-17T16:57:16.563Z"
+            }
+          }
+        ],
+        "driverProfile": null
+      }
+    }
+  },
+  "get_all_users": {
+    "url": "/users",
+    "method": "get",
+    "responseBody": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "data": [
+          {
+            "id": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+            "email": "user@example.com",
+            "firstName": "John",
+            "lastName": "Doe",
+            "phone": "+254700000000",
+            "type": "SYSTEM",
+            "status": "ACTIVE",
+            "lastLoginAt": null,
+            "createdAt": "2026-02-17T17:04:34.487Z",
+            "updatedAt": "2026-02-17T17:04:34.487Z",
+            "roles": [
+              {
+                "userId": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+                "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+                "assignedAt": "2026-02-17T17:04:34.487Z",
+                "role": {
+                  "id": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+                  "name": "Dispatcher"
+                }
+              }
+            ],
+            "driverProfile": null
+          },
+          {
+            "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+            "email": "admin@fleet.com",
+            "firstName": "System",
+            "lastName": "Administrator",
+            "phone": "+254700000000",
+            "type": "SYSTEM",
+            "status": "ACTIVE",
+            "lastLoginAt": "2026-02-17T16:30:29.114Z",
+            "createdAt": "2026-02-17T15:55:18.392Z",
+            "updatedAt": "2026-02-17T16:30:29.115Z",
+            "roles": [
+              {
+                "userId": "d589b7aa-924b-4400-930d-5b317303c2d3",
+                "roleId": "689a1126-0bb9-4e97-ba65-5847434f9d8e",
+                "assignedAt": "2026-02-17T15:55:18.400Z",
+                "role": {
+                  "id": "689a1126-0bb9-4e97-ba65-5847434f9d8e",
+                  "name": "super_admin"
+                }
+              }
+            ],
+            "driverProfile": null
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "limit": 20,
+          "total": 2,
+          "totalPages": 1,
+          "hasNextPage": false,
+          "hasPrevPage": false
+        }
+      }
+    }
+  },
+  "get_user_by_id": {
+    "url": "/users/:id",
+    "method": "get",
+    "responseBody": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+        "email": "user@example.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "phone": "+254700000000",
+        "type": "SYSTEM",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "createdAt": "2026-02-17T17:04:34.487Z",
+        "updatedAt": "2026-02-17T17:04:34.487Z",
+        "roles": [
+          {
+            "userId": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+            "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+            "assignedAt": "2026-02-17T17:04:34.487Z",
+            "role": {
+              "id": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+              "name": "Dispatcher",
+              "description": "Dispatch and Track Trips",
+              "isSystem": false,
+              "createdAt": "2026-02-17T16:57:16.563Z",
+              "updatedAt": "2026-02-17T16:57:16.563Z",
+              "permissions": [
+                {
+                  "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+                  "permissionId": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+                  "permission": {
+                    "id": "b2c6fd1b-9ff3-4b4b-8ede-5002c02e972c",
+                    "resource": "assets",
+                    "action": "create",
+                    "description": "Create an asset",
+                    "createdAt": "2026-02-17T15:55:17.925Z"
+                  }
+                },
+                {
+                  "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+                  "permissionId": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+                  "permission": {
+                    "id": "f2f4ed24-6b72-4317-9d91-ad87892fb16b",
+                    "resource": "assets",
+                    "action": "dispose",
+                    "description": "Dispose an asset",
+                    "createdAt": "2026-02-17T15:55:17.925Z"
+                  }
+                },
+                {
+                  "roleId": "de29cc0b-4f81-4d2b-bdd2-c542300b50d1",
+                  "permissionId": "066d8949-dd7d-489a-890d-89b9a388d05b",
+                  "permission": {
+                    "id": "066d8949-dd7d-489a-890d-89b9a388d05b",
+                    "resource": "assets",
+                    "action": "install",
+                    "description": "Install an asset on a truck",
+                    "createdAt": "2026-02-17T15:55:17.925Z"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "driverProfile": null
+      }
+    }
+  },
+  "update_user": {
+    "url": "/users/:id",
+    "method": "put",
+    "requestBody": {
+      "email": "user@example.com",
+      "password": "password1",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phone": "+254700000999",
+      "type": "SYSTEM",
+      "roleIds": ["de29cc0b-4f81-4d2b-bdd2-c542300b50d1"],
+
+      "licenseNumber": "",
+      "licenseExpiry": "",
+      "licenseClass": "",
+      "dateOfBirth": "",
+      "emergencyContact": "",
+      "emergencyPhone": "",
+      "hireDate": "",
+      "notes": ""
+    },
+    "responseBody": {
+      "success": true,
+      "message": "User updated successfully",
+      "data": {
+        "id": "8c5129e1-6b92-4778-a08c-5d938388d7fe",
+        "email": "user@example.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "phone": "+254700000999",
+        "type": "SYSTEM",
+        "status": "ACTIVE",
+        "updatedAt": "2026-02-17T17:16:13.576Z",
+        "driverProfile": null
+      }
+    }
+  },
+  "delete_user": {
+    "url": "/users/:id",
+    "method": "delete",
+    "responseBody": {
+      "success": true,
+      "message": "User deleted successfully",
+      "data": null
+    }
+  },
+  "change_password": {
+    "url": "/users/:id/password",
+    "method": "put",
+    "requestBody": {
+      "newPassword": "newpassword1"
+    },
+    "responseBody": {
+      "success": true,
+      "message": "Password changed successfully",
+      "data": null
+    }
+  }
+}

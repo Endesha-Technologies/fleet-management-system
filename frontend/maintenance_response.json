@@ -1,0 +1,1095 @@
+{
+  "create_maintenance_rules": {
+    "url": "/maintenance/schedules",
+    "method": "POST",
+    "request_body": {
+      "schedules": [
+        {
+          "name": "Differential Oil Change",
+          "description": "Drain and replace differential oil in rear axles.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 100000,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "notes": ""
+        },
+        {
+          "name": "Steering System Inspection",
+          "description": "Check power steering fluid, inspect tie rods, drag link, and king pins.",
+          "taskType": "INSPECTION",
+          "intervalKm": 40000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "notes": ""
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "12 maintenance schedule(s) created",
+      "data": [
+        {
+          "id": "fbacdfe2-5ee9-4298-a1dc-c8beebbf9d65",
+          "name": "Engine Oil & Filter Change",
+          "description": "Replace engine oil and oil filter. Check for leaks.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 15000,
+          "intervalDays": 90,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "47442e87-3124-4b6e-ba53-ce5a4fd357eb",
+          "name": "Brake System Inspection",
+          "description": "Inspect brake pads, rotors, drums, lines, and fluid levels. Replace worn components.",
+          "taskType": "INSPECTION",
+          "intervalKm": 30000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 2.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "f5e767fb-52e2-4b76-b2c4-3f1c4c7c94a7",
+          "name": "Transmission Fluid Change",
+          "description": "Drain and replace transmission fluid. Inspect for metal particles.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 60000,
+          "intervalDays": null,
+          "estimatedDurationHours": 2,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "0a1456f9-d61e-43fd-82aa-7efa635a1ccb",
+          "name": "Coolant System Service",
+          "description": "Flush coolant system, replace coolant, inspect hoses and thermostat.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 50000,
+          "intervalDays": 365,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "name": "Air Filter Replacement",
+          "description": "Replace engine air filter and cabin air filter.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 20000,
+          "intervalDays": 120,
+          "estimatedDurationHours": 0.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "a5649bca-5114-40e5-bf8a-fa957b707a6b",
+          "name": "Fuel Filter Replacement",
+          "description": "Replace primary and secondary fuel filters. Bleed fuel system.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 25000,
+          "intervalDays": null,
+          "estimatedDurationHours": 1,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "0a6a8ec6-60ee-43cb-bec7-b2f6a52d5998",
+          "name": "Wheel Bearing Inspection",
+          "description": "Inspect and repack wheel bearings. Replace seals as needed.",
+          "taskType": "INSPECTION",
+          "intervalKm": 80000,
+          "intervalDays": 365,
+          "estimatedDurationHours": 3,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "f0d73d9d-bbd9-4daa-a76c-5522385bf64e",
+          "name": "Battery & Electrical Check",
+          "description": "Test battery voltage, alternator output, and inspect wiring harness.",
+          "taskType": "INSPECTION",
+          "intervalKm": null,
+          "intervalDays": 90,
+          "estimatedDurationHours": 1,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "a623b899-32a1-4085-a0dc-903cc09c0d3f",
+          "name": "Suspension Inspection",
+          "description": "Inspect leaf springs, shock absorbers, bushings, and air bags.",
+          "taskType": "INSPECTION",
+          "intervalKm": 40000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 2,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+          "name": "Annual Safety & Compliance Inspection",
+          "description": "Full DOT-compliant safety inspection covering all major systems.",
+          "taskType": "INSPECTION",
+          "intervalKm": null,
+          "intervalDays": 365,
+          "estimatedDurationHours": 4,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "Mandatory annual inspection per transport authority regulations",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "09e25870-82f3-43bb-a67a-ea838eb88b57",
+          "name": "Differential Oil Change",
+          "description": "Drain and replace differential oil in rear axles.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 100000,
+          "intervalDays": null,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        },
+        {
+          "id": "715c638b-6b09-4ada-a1c3-9ee33ccb2794",
+          "name": "Steering System Inspection",
+          "description": "Check power steering fluid, inspect tie rods, drag link, and king pins.",
+          "taskType": "INSPECTION",
+          "intervalKm": 40000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z"
+        }
+      ]
+    }
+  },
+  "get_maintenance_rules": {
+    "url": "/maintenance/schedules",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": [
+        {
+          "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "name": "Air Filter Replacement",
+          "description": "Replace engine air filter and cabin air filter.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 20000,
+          "intervalDays": 120,
+          "estimatedDurationHours": 0.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+          "name": "Annual Safety & Compliance Inspection",
+          "description": "Full DOT-compliant safety inspection covering all major systems.",
+          "taskType": "INSPECTION",
+          "intervalKm": null,
+          "intervalDays": 365,
+          "estimatedDurationHours": 4,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "Mandatory annual inspection per transport authority regulations",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "f0d73d9d-bbd9-4daa-a76c-5522385bf64e",
+          "name": "Battery & Electrical Check",
+          "description": "Test battery voltage, alternator output, and inspect wiring harness.",
+          "taskType": "INSPECTION",
+          "intervalKm": null,
+          "intervalDays": 90,
+          "estimatedDurationHours": 1,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "47442e87-3124-4b6e-ba53-ce5a4fd357eb",
+          "name": "Brake System Inspection",
+          "description": "Inspect brake pads, rotors, drums, lines, and fluid levels. Replace worn components.",
+          "taskType": "INSPECTION",
+          "intervalKm": 30000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 2.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "0a1456f9-d61e-43fd-82aa-7efa635a1ccb",
+          "name": "Coolant System Service",
+          "description": "Flush coolant system, replace coolant, inspect hoses and thermostat.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 50000,
+          "intervalDays": 365,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "09e25870-82f3-43bb-a67a-ea838eb88b57",
+          "name": "Differential Oil Change",
+          "description": "Drain and replace differential oil in rear axles.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 100000,
+          "intervalDays": null,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "fbacdfe2-5ee9-4298-a1dc-c8beebbf9d65",
+          "name": "Engine Oil & Filter Change",
+          "description": "Replace engine oil and oil filter. Check for leaks.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 15000,
+          "intervalDays": 90,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "a5649bca-5114-40e5-bf8a-fa957b707a6b",
+          "name": "Fuel Filter Replacement",
+          "description": "Replace primary and secondary fuel filters. Bleed fuel system.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 25000,
+          "intervalDays": null,
+          "estimatedDurationHours": 1,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "715c638b-6b09-4ada-a1c3-9ee33ccb2794",
+          "name": "Steering System Inspection",
+          "description": "Check power steering fluid, inspect tie rods, drag link, and king pins.",
+          "taskType": "INSPECTION",
+          "intervalKm": 40000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "a623b899-32a1-4085-a0dc-903cc09c0d3f",
+          "name": "Suspension Inspection",
+          "description": "Inspect leaf springs, shock absorbers, bushings, and air bags.",
+          "taskType": "INSPECTION",
+          "intervalKm": 40000,
+          "intervalDays": 180,
+          "estimatedDurationHours": 2,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "f5e767fb-52e2-4b76-b2c4-3f1c4c7c94a7",
+          "name": "Transmission Fluid Change",
+          "description": "Drain and replace transmission fluid. Inspect for metal particles.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 60000,
+          "intervalDays": null,
+          "estimatedDurationHours": 2,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        },
+        {
+          "id": "0a6a8ec6-60ee-43cb-bec7-b2f6a52d5998",
+          "name": "Wheel Bearing Inspection",
+          "description": "Inspect and repack wheel bearings. Replace seals as needed.",
+          "taskType": "INSPECTION",
+          "intervalKm": 80000,
+          "intervalDays": 365,
+          "estimatedDurationHours": 3,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:16:21.247Z",
+          "_count": {
+            "plans": 0
+          }
+        }
+      ]
+    }
+  },
+  "get_maintenance_rule_by_id": {
+    "url": "/maintenance/schedules/{id}",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+        "name": "Air Filter Replacement",
+        "description": "Replace engine air filter and cabin air filter.",
+        "taskType": "PREVENTIVE",
+        "intervalKm": 20000,
+        "intervalDays": 120,
+        "estimatedDurationHours": 0.5,
+        "applicableTruckMakes": "",
+        "isActive": true,
+        "notes": "",
+        "createdAt": "2026-02-19T18:16:21.247Z",
+        "updatedAt": "2026-02-19T18:16:21.247Z",
+        "plans": []
+      }
+    }
+  },
+  "update_maintenance_rule": {
+    "url": "/maintenance/schedules/{id}",
+    "method": "PUT",
+    "request_body": {
+      "name": "Air Filter Replacement",
+      "description": "Replace engine air filter and cabin air filter.",
+      "taskType": "PREVENTIVE",
+      "intervalKm": 20000,
+      "intervalDays": 120,
+      "estimatedDurationHours": 0.5,
+      "applicableTruckMakes": "",
+      "isActive": true,
+      "notes": ""
+    },
+    "response": {
+      "success": true,
+      "message": "Maintenance schedule updated",
+      "data": {
+        "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+        "name": "Engine Oil & Filter Change",
+        "description": "Replace engine oil and oil filter. Check for leaks.",
+        "taskType": "PREVENTIVE",
+        "intervalKm": 15000,
+        "intervalDays": 120,
+        "estimatedDurationHours": 1.5,
+        "applicableTruckMakes": "",
+        "isActive": true,
+        "notes": "",
+        "createdAt": "2026-02-19T18:16:21.247Z",
+        "updatedAt": "2026-02-19T18:28:44.014Z"
+      }
+    }
+  },
+  "assign_maintenance_rules_to_truck": {
+    "url": "/maintenance/plans",
+    "method": "POST",
+    "request_body": {
+      "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+      "plans": [
+        {
+          "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "lastServiceDate": "2026-01-15T10:00:00.000Z",
+          "lastServiceOdometer": 45000,
+          "notes": ""
+        },
+        {
+          "scheduleId": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+          "notes": ""
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "2 schedule(s) assigned to truck",
+      "data": [
+        {
+          "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "lastServiceDate": "2026-01-15T10:00:00.000Z",
+          "lastServiceOdometer": 45000,
+          "nextServiceDate": "2026-05-15T10:00:00.000Z",
+          "nextServiceOdometer": 60000,
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:03:14.213Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T"
+          },
+          "schedule": {
+            "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "name": "Engine Oil & Filter Change",
+            "description": "Replace engine oil and oil filter. Check for leaks.",
+            "taskType": "PREVENTIVE",
+            "intervalKm": 15000,
+            "intervalDays": 120,
+            "estimatedDurationHours": 1.5,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:28:44.014Z"
+          }
+        },
+        {
+          "id": "54feb609-8b4f-4bfa-a843-99670979cf9c",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+          "lastServiceDate": null,
+          "lastServiceOdometer": null,
+          "nextServiceDate": "2027-02-19T19:03:14.204Z",
+          "nextServiceOdometer": null,
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:03:14.213Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T"
+          },
+          "schedule": {
+            "id": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+            "name": "Annual Safety & Compliance Inspection",
+            "description": "Full DOT-compliant safety inspection covering all major systems.",
+            "taskType": "INSPECTION",
+            "intervalKm": null,
+            "intervalDays": 365,
+            "estimatedDurationHours": 4,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "Mandatory annual inspection per transport authority regulations",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:16:21.247Z"
+          }
+        }
+      ]
+    }
+  },
+  "get_all_maintenance_plans": {
+    "url": "/maintenance/plans",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": [
+        {
+          "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "lastServiceDate": "2026-01-15T10:00:00.000Z",
+          "lastServiceOdometer": 45000,
+          "nextServiceDate": "2026-05-15T10:00:00.000Z",
+          "nextServiceOdometer": 60000,
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:03:14.213Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T",
+            "currentOdometer": 12500
+          },
+          "schedule": {
+            "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "name": "Engine Oil & Filter Change",
+            "description": "Replace engine oil and oil filter. Check for leaks.",
+            "taskType": "PREVENTIVE",
+            "intervalKm": 15000,
+            "intervalDays": 120,
+            "estimatedDurationHours": 1.5,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:28:44.014Z"
+          },
+          "_count": {
+            "serviceLogs": 0
+          }
+        },
+        {
+          "id": "54feb609-8b4f-4bfa-a843-99670979cf9c",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+          "lastServiceDate": null,
+          "lastServiceOdometer": null,
+          "nextServiceDate": "2027-02-19T19:03:14.204Z",
+          "nextServiceOdometer": null,
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:03:14.213Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T",
+            "currentOdometer": 12500
+          },
+          "schedule": {
+            "id": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+            "name": "Annual Safety & Compliance Inspection",
+            "description": "Full DOT-compliant safety inspection covering all major systems.",
+            "taskType": "INSPECTION",
+            "intervalKm": null,
+            "intervalDays": 365,
+            "estimatedDurationHours": 4,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "Mandatory annual inspection per transport authority regulations",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:16:21.247Z"
+          },
+          "_count": {
+            "serviceLogs": 0
+          }
+        }
+      ]
+    }
+  },
+  "get_plan_by_id": {
+    "url": "/maintenance/plans/{id}",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+        "lastServiceDate": "2026-01-15T10:00:00.000Z",
+        "lastServiceOdometer": 45000,
+        "nextServiceDate": "2026-05-15T10:00:00.000Z",
+        "nextServiceOdometer": 60000,
+        "isActive": true,
+        "notes": "",
+        "createdAt": "2026-02-19T19:03:14.213Z",
+        "updatedAt": "2026-02-19T19:03:14.213Z",
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "registrationNumber": "UGA 123C",
+          "make": "Isuzu",
+          "model": "FVZ 34T",
+          "currentOdometer": 12500
+        },
+        "schedule": {
+          "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "name": "Engine Oil & Filter Change",
+          "description": "Replace engine oil and oil filter. Check for leaks.",
+          "taskType": "PREVENTIVE",
+          "intervalKm": 15000,
+          "intervalDays": 120,
+          "estimatedDurationHours": 1.5,
+          "applicableTruckMakes": "",
+          "isActive": true,
+          "notes": "",
+          "createdAt": "2026-02-19T18:16:21.247Z",
+          "updatedAt": "2026-02-19T18:28:44.014Z"
+        },
+        "serviceLogs": []
+      }
+    }
+  },
+  "deactivate_plan": {
+    "url": "/maintenance/plans/:id",
+    "method": "PUT",
+    "request_body": {
+      "isActive": false,
+      "notes": ""
+    },
+    "response": {
+      "success": true,
+      "message": "Maintenance plan updated",
+      "data": {
+        "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+        "lastServiceDate": "2026-01-15T10:00:00.000Z",
+        "lastServiceOdometer": 45000,
+        "nextServiceDate": "2026-05-15T10:00:00.000Z",
+        "nextServiceOdometer": 60000,
+        "isActive": false,
+        "notes": "plan nolonger in use",
+        "createdAt": "2026-02-19T19:03:14.213Z",
+        "updatedAt": "2026-02-19T19:14:50.312Z",
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "registrationNumber": "UGA 123C"
+        },
+        "schedule": {
+          "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "name": "Engine Oil & Filter Change"
+        }
+      }
+    }
+  },
+  "activate_plan": {
+    "url": "/maintenance/plans/:id",
+    "method": "PUT",
+    "request_body": {
+      "isActive": true,
+      "notes": ""
+    },
+    "response": {
+      "success": true,
+      "message": "Maintenance plan updated",
+      "data": {
+        "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+        "lastServiceDate": "2026-01-15T10:00:00.000Z",
+        "lastServiceOdometer": 45000,
+        "nextServiceDate": "2026-05-15T10:00:00.000Z",
+        "nextServiceOdometer": 60000,
+        "isActive": true,
+        "notes": "plan back in use",
+        "createdAt": "2026-02-19T19:03:14.213Z",
+        "updatedAt": "2026-02-19T19:14:50.312Z",
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "registrationNumber": "UGA 123C"
+        },
+        "schedule": {
+          "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "name": "Engine Oil & Filter Change"
+        }
+      }
+    }
+  },
+  "complete_maintenance": {
+    "url": "/maintenance/plans/:id/complete",
+    "method": "POST",
+    "request_body": {
+      "serviceDate": "2026-02-19T10:00:00.000Z",
+      "odometerAtService": 60500,
+      "cost": 350.0,
+      "serviceProviderName": "Fleet Workshop",
+      "summary": "Replaced engine oil and oil filter. No issues found.",
+      "notes": ""
+    },
+    "response": {
+      "success": true,
+      "message": "Service marked as completed",
+      "data": {
+        "serviceLog": {
+          "id": "2d1d4eaa-f2b1-4115-9536-d4f8e633523a",
+          "planId": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "serviceDate": "2026-02-19T10:00:00.000Z",
+          "odometerAtService": 60500,
+          "cost": 350,
+          "serviceProviderName": "Fleet Workshop",
+          "summary": "Replaced engine oil and oil filter. No issues found.",
+          "notes": "",
+          "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "createdAt": "2026-02-19T19:23:01.025Z"
+        },
+        "plan": {
+          "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "lastServiceDate": "2026-02-19T10:00:00.000Z",
+          "lastServiceOdometer": 60500,
+          "nextServiceDate": "2026-06-19T10:00:00.000Z",
+          "nextServiceOdometer": 75500,
+          "isActive": true,
+          "notes": "plan in use",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:23:01.025Z",
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T"
+          },
+          "schedule": {
+            "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "name": "Engine Oil & Filter Change",
+            "description": "Replace engine oil and oil filter. Check for leaks.",
+            "taskType": "PREVENTIVE",
+            "intervalKm": 15000,
+            "intervalDays": 120,
+            "estimatedDurationHours": 1.5,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:28:44.014Z"
+          }
+        }
+      }
+    }
+  },
+  "get_service_logs": {
+    "url": "/maintenance/logs",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": [
+        {
+          "id": "2d1d4eaa-f2b1-4115-9536-d4f8e633523a",
+          "planId": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "serviceDate": "2026-02-19T10:00:00.000Z",
+          "odometerAtService": 60500,
+          "cost": 350,
+          "serviceProviderName": "Fleet Workshop",
+          "summary": "Replaced engine oil and oil filter. No issues found.",
+          "notes": "",
+          "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "createdAt": "2026-02-19T19:23:01.025Z",
+          "plan": {
+            "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "lastServiceDate": "2026-02-19T10:00:00.000Z",
+            "lastServiceOdometer": 60500,
+            "nextServiceDate": "2026-06-19T10:00:00.000Z",
+            "nextServiceOdometer": 75500,
+            "isActive": true,
+            "notes": "plan in use",
+            "createdAt": "2026-02-19T19:03:14.213Z",
+            "updatedAt": "2026-02-19T19:23:01.025Z",
+            "schedule": {
+              "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+              "name": "Engine Oil & Filter Change",
+              "taskType": "PREVENTIVE"
+            }
+          },
+          "truck": {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "registrationNumber": "UGA 123C",
+            "make": "Isuzu",
+            "model": "FVZ 34T"
+          }
+        }
+      ]
+    }
+  },
+  "get_service_log_by_id": {
+    "url": "/maintenance/logs/{id}",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "2d1d4eaa-f2b1-4115-9536-d4f8e633523a",
+        "planId": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+        "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "serviceDate": "2026-02-19T10:00:00.000Z",
+        "odometerAtService": 60500,
+        "cost": 350,
+        "serviceProviderName": "Fleet Workshop",
+        "summary": "Replaced engine oil and oil filter. No issues found.",
+        "notes": "",
+        "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+        "createdAt": "2026-02-19T19:23:01.025Z",
+        "plan": {
+          "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+          "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+          "lastServiceDate": "2026-02-19T10:00:00.000Z",
+          "lastServiceOdometer": 60500,
+          "nextServiceDate": "2026-06-19T10:00:00.000Z",
+          "nextServiceOdometer": 75500,
+          "isActive": true,
+          "notes": "plan in use",
+          "createdAt": "2026-02-19T19:03:14.213Z",
+          "updatedAt": "2026-02-19T19:23:01.025Z",
+          "schedule": {
+            "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "name": "Engine Oil & Filter Change",
+            "description": "Replace engine oil and oil filter. Check for leaks.",
+            "taskType": "PREVENTIVE",
+            "intervalKm": 15000,
+            "intervalDays": 120,
+            "estimatedDurationHours": 1.5,
+            "applicableTruckMakes": "",
+            "isActive": true,
+            "notes": "",
+            "createdAt": "2026-02-19T18:16:21.247Z",
+            "updatedAt": "2026-02-19T18:28:44.014Z"
+          }
+        },
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "registrationNumber": "UGA 123C",
+          "make": "Isuzu",
+          "model": "FVZ 34T"
+        }
+      }
+    }
+  },
+  "maintenance_alerts": {
+    "url": "/maintenance/alerts",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "summary": {
+          "overdueCount": 0,
+          "dueSoonCount": 0,
+          "totalAlerts": 0
+        },
+        "overdue": [],
+        "dueSoon": []
+      }
+    }
+  },
+  "get_truck_maintenance_history": {
+    "url": "/maintenance/trucks/:truckId/history",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "truck": {
+          "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+          "fleetNumber": "FLT-003",
+          "make": "Isuzu",
+          "model": "FVZ 34T",
+          "year": 2022,
+          "color": "White",
+          "bodyType": "RIGID",
+          "registrationNumber": "UGA 123C",
+          "vin": "JALFVZ34TM7000126",
+          "engineNumber": "6HK1-TCN-456789",
+          "registrationDate": "2022-03-15T00:00:00.000Z",
+          "registrationExpiry": "2026-02-15T00:00:00.000Z",
+          "insurancePolicyNumber": "INS-2025-00456",
+          "insuranceProvider": "Jubilee Insurance",
+          "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+          "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+          "operatingLicenseNumber": "OL-2025-7890",
+          "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+          "fuelType": "DIESEL",
+          "engineCapacityCc": 7790,
+          "horsepower": 280,
+          "transmissionType": "MANUAL",
+          "numberOfGears": 6,
+          "driveType": "SIX_BY_FOUR",
+          "grossVehicleMass": 34000,
+          "tareWeight": 15500,
+          "payloadCapacity": 18500,
+          "tankCapacityLiters": 300,
+          "adBlueTankLiters": 40,
+          "lengthMm": 9500,
+          "widthMm": 2500,
+          "heightMm": 3800,
+          "wheelbaseMm": 5200,
+          "fifthWheelHeight": 1150,
+          "currentOdometer": 60500,
+          "engineHours": 850,
+          "status": "ACTIVE",
+          "homeDepot": "Nairobi Depot",
+          "assignedDriverId": null,
+          "wialonUnitId": null,
+          "purchaseDate": "2022-03-10T00:00:00.000Z",
+          "purchasePrice": 8500000,
+          "purchasedFrom": "Isuzu East Africa Ltd",
+          "ownershipType": "OWNED",
+          "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+          "createdBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "updatedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "createdAt": "2026-02-18T00:16:05.732Z",
+          "updatedAt": "2026-02-19T19:23:01.025Z"
+        },
+        "plans": [
+          {
+            "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+            "lastServiceDate": "2026-02-19T10:00:00.000Z",
+            "lastServiceOdometer": 60500,
+            "nextServiceDate": "2026-06-19T10:00:00.000Z",
+            "nextServiceOdometer": 75500,
+            "isActive": true,
+            "notes": "plan in use",
+            "createdAt": "2026-02-19T19:03:14.213Z",
+            "updatedAt": "2026-02-19T19:23:01.025Z",
+            "schedule": {
+              "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+              "name": "Engine Oil & Filter Change",
+              "description": "Replace engine oil and oil filter. Check for leaks.",
+              "taskType": "PREVENTIVE",
+              "intervalKm": 15000,
+              "intervalDays": 120,
+              "estimatedDurationHours": 1.5,
+              "applicableTruckMakes": "",
+              "isActive": true,
+              "notes": "",
+              "createdAt": "2026-02-19T18:16:21.247Z",
+              "updatedAt": "2026-02-19T18:28:44.014Z"
+            },
+            "_count": {
+              "serviceLogs": 1
+            }
+          },
+          {
+            "id": "54feb609-8b4f-4bfa-a843-99670979cf9c",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "scheduleId": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+            "lastServiceDate": null,
+            "lastServiceOdometer": null,
+            "nextServiceDate": "2027-02-19T19:03:14.204Z",
+            "nextServiceOdometer": null,
+            "isActive": true,
+            "notes": "",
+            "createdAt": "2026-02-19T19:03:14.213Z",
+            "updatedAt": "2026-02-19T19:03:14.213Z",
+            "schedule": {
+              "id": "e5e86019-b306-4f3d-8806-4ec89d7373b0",
+              "name": "Annual Safety & Compliance Inspection",
+              "description": "Full DOT-compliant safety inspection covering all major systems.",
+              "taskType": "INSPECTION",
+              "intervalKm": null,
+              "intervalDays": 365,
+              "estimatedDurationHours": 4,
+              "applicableTruckMakes": "",
+              "isActive": true,
+              "notes": "Mandatory annual inspection per transport authority regulations",
+              "createdAt": "2026-02-19T18:16:21.247Z",
+              "updatedAt": "2026-02-19T18:16:21.247Z"
+            },
+            "_count": {
+              "serviceLogs": 0
+            }
+          }
+        ],
+        "serviceLogs": [
+          {
+            "id": "2d1d4eaa-f2b1-4115-9536-d4f8e633523a",
+            "planId": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "serviceDate": "2026-02-19T10:00:00.000Z",
+            "odometerAtService": 60500,
+            "cost": 350,
+            "serviceProviderName": "Fleet Workshop",
+            "summary": "Replaced engine oil and oil filter. No issues found.",
+            "notes": "",
+            "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-19T19:23:01.025Z",
+            "plan": {
+              "id": "28cb2671-dae9-4c1f-8031-3f4e5f246093",
+              "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+              "scheduleId": "32323d6a-362f-44f4-843a-69dd2f534202",
+              "lastServiceDate": "2026-02-19T10:00:00.000Z",
+              "lastServiceOdometer": 60500,
+              "nextServiceDate": "2026-06-19T10:00:00.000Z",
+              "nextServiceOdometer": 75500,
+              "isActive": true,
+              "notes": "plan in use",
+              "createdAt": "2026-02-19T19:03:14.213Z",
+              "updatedAt": "2026-02-19T19:23:01.025Z",
+              "schedule": {
+                "id": "32323d6a-362f-44f4-843a-69dd2f534202",
+                "name": "Engine Oil & Filter Change",
+                "taskType": "PREVENTIVE"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

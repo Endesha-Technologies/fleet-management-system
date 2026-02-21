@@ -5,9 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
+import {
   ArrowLeft,
   ChevronRight,
   Check,
@@ -15,29 +13,38 @@ import {
 } from 'lucide-react';
 import { MOCK_VEHICLES } from '@/constants/vehicles';
 import { serviceCategories, frequencyUnits, timeSlots, mockMaintenanceSchedules } from '@/constants/schedules';
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+} from '@/components/ui/form';
 import type { MaintenanceSchedule } from '@/types/maintenance';
+import type { ScheduleFormStep } from '../../../_types';
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+const vehicleOptions = MOCK_VEHICLES.map((v) => ({
+  value: v.id,
+  label: `${v.plateNumber} - ${v.make} ${v.model} (${v.year})`,
+}));
 
 export default function EditMaintenanceSchedulePage() {
   const router = useRouter();
   const params = useParams();
-  const [currentStep, setCurrentStep] = useState<Step>(1);
+  const [currentStep, setCurrentStep] = useState<ScheduleFormStep>(1);
   const [loading, setLoading] = useState(true);
   const [schedule, setSchedule] = useState<MaintenanceSchedule | null>(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     // Step 1: Vehicle Selection
     vehicleId: '',
     applyToFleet: false,
     vehicleIds: [] as string[],
-    
+
     // Step 2: Service Definition
     serviceName: '',
     serviceCategory: '',
     description: '',
-    
+
     // Step 3: Schedule Frequency
     triggerType: 'time' as 'time' | 'mileage' | 'engine-hours' | 'combined',
     frequencyUnit: 'months' as 'days' | 'weeks' | 'months' | 'years',
@@ -47,24 +54,24 @@ export default function EditMaintenanceSchedulePage() {
     startingOdometer: '',
     engineHoursInterval: '',
     startingEngineHours: '',
-    
+
     // Step 4: Assignment
     defaultTechnicianName: '',
     workshopLocation: '',
     estimatedDuration: '',
     preferredTimeSlot: '',
-    
+
     // Step 5: Parts & Costs
     estimatedPartsCost: '',
     estimatedLaborHours: '',
-    
+
     // Step 6: Alerts & Reminders
     advanceNotificationDays: '',
     advanceNotificationKm: '',
     notifyFleetManager: true,
     notifyDriver: true,
     notifySupervisor: false,
-    
+
     // Step 7: Additional Settings
     priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
     allowDeferment: true,
@@ -76,7 +83,7 @@ export default function EditMaintenanceSchedulePage() {
   useEffect(() => {
     const scheduleId = params.id as string;
     const foundSchedule = mockMaintenanceSchedules.find(s => s.id === scheduleId);
-    
+
     if (foundSchedule) {
       setSchedule(foundSchedule);
       // Populate form with existing data
@@ -128,14 +135,14 @@ export default function EditMaintenanceSchedulePage() {
 
   const handleNext = () => {
     if (currentStep < 7) {
-      setCurrentStep((prev) => (prev + 1) as Step);
+      setCurrentStep((prev) => (prev + 1) as ScheduleFormStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep((prev) => (prev - 1) as Step);
+      setCurrentStep((prev) => (prev - 1) as ScheduleFormStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -173,7 +180,7 @@ export default function EditMaintenanceSchedulePage() {
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
           <h2 className="text-xl font-bold text-gray-900 mb-2">Schedule Not Found</h2>
           <p className="text-sm text-gray-600 mb-4">
-            The maintenance schedule you're trying to edit doesn't exist.
+            The maintenance schedule you&apos;re trying to edit doesn&apos;t exist.
           </p>
           <Link href="/maintenance/schedule">
             <Button>Back to Schedules</Button>
@@ -211,7 +218,7 @@ export default function EditMaintenanceSchedulePage() {
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${(currentStep / 7) * 100}%` }}
             />
@@ -247,7 +254,7 @@ export default function EditMaintenanceSchedulePage() {
           </div>
         </Card>
 
-        {/* Step Content - Same as create page */}
+        {/* Step Content */}
         <Card className="p-6">
           {/* Step 1: Vehicle Selection */}
           {currentStep === 1 && (
@@ -258,23 +265,14 @@ export default function EditMaintenanceSchedulePage() {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="vehicleId">Select Vehicle *</Label>
-                  <select
-                    id="vehicleId"
-                    value={formData.vehicleId}
-                    onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="">Choose a vehicle...</option>
-                    {MOCK_VEHICLES.map((vehicle) => (
-                      <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.plateNumber} - {vehicle.make} {vehicle.model} ({vehicle.year})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormSelect
+                  label="Select Vehicle"
+                  value={formData.vehicleId}
+                  onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
+                  placeholder="Choose a vehicle..."
+                  options={vehicleOptions}
+                  required
+                />
 
                 {selectedVehicle && (
                   <Card className="p-4 bg-blue-50 border-blue-200">
@@ -303,7 +301,7 @@ export default function EditMaintenanceSchedulePage() {
             </div>
           )}
 
-          {/* Steps 2-7: Copy from create page with same structure */}
+          {/* Step 2: Service Definition */}
           {currentStep === 2 && (
             <div className="space-y-6">
               <div>
@@ -312,47 +310,31 @@ export default function EditMaintenanceSchedulePage() {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="serviceName">Service Name *</Label>
-                  <Input
-                    id="serviceName"
-                    placeholder="e.g., Oil Change & Filter Replacement"
-                    value={formData.serviceName}
-                    onChange={(e) => setFormData({ ...formData, serviceName: e.target.value })}
-                    required
-                  />
-                </div>
+                <FormInput
+                  label="Service Name"
+                  placeholder="e.g., Oil Change & Filter Replacement"
+                  value={formData.serviceName}
+                  onChange={(e) => setFormData({ ...formData, serviceName: e.target.value })}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="serviceCategory">Service Category *</Label>
-                  <select
-                    id="serviceCategory"
-                    value={formData.serviceCategory}
-                    onChange={(e) => setFormData({ ...formData, serviceCategory: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="">Select category...</option>
-                    {serviceCategories.map((cat) => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormSelect
+                  label="Service Category"
+                  value={formData.serviceCategory}
+                  onChange={(e) => setFormData({ ...formData, serviceCategory: e.target.value })}
+                  placeholder="Select category..."
+                  options={serviceCategories}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="description">Description *</Label>
-                  <textarea
-                    id="description"
-                    placeholder="Describe the maintenance service in detail..."
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
+                <FormTextarea
+                  label="Description"
+                  placeholder="Describe the maintenance service in detail..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={4}
+                  required
+                />
               </div>
             </div>
           )}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MOCK_FUEL_LOGS } from '@/constants/fuel';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import FuelTable from '@/components/features/fuel/FuelTable';
+import { FuelTable } from './_components';
 
 export default function FuelPage() {
   return (

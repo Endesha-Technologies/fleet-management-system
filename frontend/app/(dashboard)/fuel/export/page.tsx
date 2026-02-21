@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Download, FileText, Calendar, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { FormCheckbox, FormSection } from '@/components/ui/form';
 import { MOCK_FUEL_LOGS, getFuelSummary } from '@/constants/fuel';
 
 export default function ExportFuelDataPage() {
@@ -130,31 +131,26 @@ export default function ExportFuelDataPage() {
 
               {/* Fields to Include */}
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Filter className="h-5 w-5" />
-                  Fields to Include
-                </h2>
-                <div className="grid grid-cols-2 gap-3">
-                  {Object.entries(includeFields).map(([field, checked]) => (
-                    <label
-                      key={field}
-                      className="flex items-center gap-2 p-2 rounded hover:bg-gray-50 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
+                <FormSection
+                  title="Fields to Include"
+                  className="space-y-4"
+                >
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.entries(includeFields).map(([field, checked]) => (
+                      <FormCheckbox
+                        key={field}
+                        label={field.charAt(0).toUpperCase() + field.slice(1)}
                         checked={checked}
-                        onChange={(e) =>
+                        onCheckedChange={(val) =>
                           setIncludeFields((prev) => ({
                             ...prev,
-                            [field]: e.target.checked,
+                            [field]: val,
                           }))
                         }
-                        className="w-4 h-4"
                       />
-                      <span className="text-sm text-gray-900 capitalize">{field}</span>
-                    </label>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                </FormSection>
               </div>
             </div>
 

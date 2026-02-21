@@ -4,13 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MOCK_INVENTORY_ITEMS } from '@/constants/inventory';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { ArrowLeft, ShoppingCart, Package, DollarSign } from 'lucide-react';
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+  FormNumberInput,
+  FormDateInput,
+  FormSection,
+} from '@/components/ui/form';
+import type { SaleFormData } from '../_types';
 
 export default function RecordSalePage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SaleFormData>({
     inventoryItemId: '',
     quantity: '1',
     saleAmount: '',
@@ -76,30 +83,27 @@ export default function RecordSalePage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Part Selection */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
+            <FormSection title="Part Information">
+              <div className="flex items-center gap-2 -mt-2 mb-2">
                 <Package className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-sm sm:text-base text-gray-900">Part Information</h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <Label htmlFor="inventoryItemId" className="text-xs sm:text-sm">Select Part to Sell *</Label>
-                  <select
-                    id="inventoryItemId"
+                  <FormSelect
+                    label="Select Part to Sell"
                     name="inventoryItemId"
                     value={formData.inventoryItemId}
                     onChange={handleChange}
-                    className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    options={[
+                      { value: '', label: 'Choose a part...' },
+                      ...availableItems.map(item => ({
+                        value: item.id,
+                        label: `${item.partName} (${item.partNumber}) - Available: ${item.quantity} - ${formatCurrency(item.unitPrice)}/unit`,
+                      })),
+                    ]}
                     required
-                  >
-                    <option value="">Choose a part...</option>
-                    {availableItems.map(item => (
-                      <option key={item.id} value={item.id}>
-                        {item.partName} ({item.partNumber}) - Available: {item.quantity} - {formatCurrency(item.unitPrice)}/unit
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
                 {selectedItem && (
@@ -125,60 +129,45 @@ export default function RecordSalePage() {
                   </div>
                 )}
 
-                <div>
-                  <Label htmlFor="quantity" className="text-xs sm:text-sm">Quantity *</Label>
-                  <Input
-                    id="quantity"
-                    name="quantity"
-                    type="number"
-                    min="1"
-                    max={selectedItem?.quantity || 1}
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                    disabled={!selectedItem}
-                  />
-                </div>
+                <FormNumberInput
+                  label="Quantity"
+                  name="quantity"
+                  min={1}
+                  max={selectedItem?.quantity || 1}
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  required
+                  disabled={!selectedItem}
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Sale Details */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
+            <FormSection title="Sale Details">
+              <div className="flex items-center gap-2 -mt-2 mb-2">
                 <ShoppingCart className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-sm sm:text-base text-gray-900">Sale Details</h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="saleAmount" className="text-xs sm:text-sm">Sale Amount (UGX) *</Label>
-                  <Input
-                    id="saleAmount"
-                    name="saleAmount"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.saleAmount}
-                    onChange={handleChange}
-                    placeholder={selectedItem ? `Min: ${formatCurrency(selectedItem.unitPrice * 0.5)}` : ''}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormNumberInput
+                  label="Sale Amount (UGX)"
+                  name="saleAmount"
+                  min={0}
+                  step={0.01}
+                  value={formData.saleAmount}
+                  onChange={handleChange}
+                  placeholder={selectedItem ? `Min: ${formatCurrency(selectedItem.unitPrice * 0.5)}` : ''}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="transactionDate" className="text-xs sm:text-sm">Sale Date & Time *</Label>
-                  <Input
-                    id="transactionDate"
-                    name="transactionDate"
-                    type="datetime-local"
-                    value={formData.transactionDate}
-                    onChange={handleChange}
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormDateInput
+                  label="Sale Date & Time"
+                  name="transactionDate"
+                  includeTime
+                  value={formData.transactionDate}
+                  onChange={handleChange}
+                  required
+                />
 
                 {profitInfo && (
                   <div className="sm:col-span-2 bg-blue-50 border border-blue-200 p-4 rounded-lg">
@@ -206,102 +195,75 @@ export default function RecordSalePage() {
                   </div>
                 )}
               </div>
-            </div>
+            </FormSection>
 
             {/* Buyer Information */}
-            <div className="space-y-4 pb-4 border-b border-gray-100">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Buyer Information</h3>
-              
+            <FormSection title="Buyer Information">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="buyer" className="text-xs sm:text-sm">Buyer Name/Shop *</Label>
-                  <Input
-                    id="buyer"
-                    name="buyer"
-                    value={formData.buyer}
-                    onChange={handleChange}
-                    placeholder="e.g., ABC Mechanic Shop"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormInput
+                  label="Buyer Name/Shop"
+                  name="buyer"
+                  value={formData.buyer}
+                  onChange={handleChange}
+                  placeholder="e.g., ABC Mechanic Shop"
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="buyerContact" className="text-xs sm:text-sm">Contact Number</Label>
-                  <Input
-                    id="buyerContact"
-                    name="buyerContact"
-                    type="tel"
-                    value={formData.buyerContact}
-                    onChange={handleChange}
-                    placeholder="e.g., +256 700 123 456"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                  />
-                </div>
+                <FormInput
+                  label="Contact Number"
+                  name="buyerContact"
+                  type="tel"
+                  value={formData.buyerContact}
+                  onChange={handleChange}
+                  placeholder="e.g., +256 700 123 456"
+                />
 
-                <div>
-                  <Label htmlFor="paymentMethod" className="text-xs sm:text-sm">Payment Method *</Label>
-                  <select
-                    id="paymentMethod"
-                    name="paymentMethod"
-                    value={formData.paymentMethod}
-                    onChange={handleChange}
-                    className="flex h-9 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    required
-                  >
-                    <option value="Cash">Cash</option>
-                    <option value="Mobile Money">Mobile Money</option>
-                    <option value="Bank Transfer">Bank Transfer</option>
-                    <option value="Check">Check</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Payment Method"
+                  name="paymentMethod"
+                  value={formData.paymentMethod}
+                  onChange={handleChange}
+                  options={[
+                    { value: 'Cash', label: 'Cash' },
+                    { value: 'Mobile Money', label: 'Mobile Money' },
+                    { value: 'Bank Transfer', label: 'Bank Transfer' },
+                    { value: 'Check', label: 'Check' },
+                  ]}
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="invoiceNumber" className="text-xs sm:text-sm">Invoice Number</Label>
-                  <Input
-                    id="invoiceNumber"
-                    name="invoiceNumber"
-                    value={formData.invoiceNumber}
-                    onChange={handleChange}
-                    placeholder="e.g., INV-2024-001"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                  />
-                </div>
+                <FormInput
+                  label="Invoice Number"
+                  name="invoiceNumber"
+                  value={formData.invoiceNumber}
+                  onChange={handleChange}
+                  placeholder="e.g., INV-2024-001"
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Additional Information */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-sm sm:text-base text-gray-900">Additional Information</h3>
-              
+            <FormSection title="Additional Information">
               <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <Label htmlFor="performedBy" className="text-xs sm:text-sm">Recorded By *</Label>
-                  <Input
-                    id="performedBy"
-                    name="performedBy"
-                    value={formData.performedBy}
-                    onChange={handleChange}
-                    placeholder="e.g., Sarah Sales"
-                    className="h-9 sm:h-10 text-xs sm:text-sm"
-                    required
-                  />
-                </div>
+                <FormInput
+                  label="Recorded By"
+                  name="performedBy"
+                  value={formData.performedBy}
+                  onChange={handleChange}
+                  placeholder="e.g., Sarah Sales"
+                  required
+                />
 
-                <div>
-                  <Label htmlFor="notes" className="text-xs sm:text-sm">Notes</Label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    rows={3}
-                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    placeholder="Additional details about this sale..."
-                  />
-                </div>
+                <FormTextarea
+                  label="Notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Additional details about this sale..."
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Action Buttons */}
             <div className="flex flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200">

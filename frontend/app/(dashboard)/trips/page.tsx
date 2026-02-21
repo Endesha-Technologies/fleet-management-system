@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Plus, TrendingUp, Clock, CheckCircle, AlertCircle, Navigation } from 'lucide-react';
-import { TripTable } from '@/components/features/trips/TripTable';
-import { AssignRouteDrawer } from '@/components/features/trips/AssignRouteDrawer';
+import { TripTable, AssignRouteDrawer } from './_components';
 import { MOCK_TRIPS } from '@/constants/trips';
-import { Trip } from '@/types/trip';
+import type { Trip } from './_types';
 
 export default function TripsPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'scheduled' | 'in-progress' | 'completed'>('all');

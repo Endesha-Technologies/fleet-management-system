@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, CheckCircle } from 'lucide-react';
+import { FormSelect, FormDateInput, FormNumberInput, FormInput, FormTextarea } from '@/components/ui/form';
 import { MOCK_TYRES } from '@/constants/tyres';
 import { MOCK_VEHICLES } from '@/constants/vehicles';
+import type { AssignTyreFormData } from '../../_types';
 
 export default function AssignTyrePage() {
   const params = useParams();
@@ -15,7 +17,7 @@ export default function AssignTyrePage() {
   const tyre = MOCK_TYRES.find(t => t.id === tyreId);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AssignTyreFormData>({
     vehicleId: '',
     position: '',
     installationDate: new Date().toISOString().split('T')[0],
@@ -114,20 +116,23 @@ export default function AssignTyrePage() {
 
   const selectedVehicle = MOCK_VEHICLES.find(v => v.id === formData.vehicleId);
 
+  // Vehicle options for select
+  const vehicleOptions = MOCK_VEHICLES.map(vehicle => ({
+    value: vehicle.id,
+    label: `${vehicle.plateNumber} - ${vehicle.make} ${vehicle.model} (${vehicle.type})`,
+  }));
+
   // Position options based on vehicle type
   const getPositionOptions = () => {
     if (!selectedVehicle) return [];
     
-    // Basic positions for most vehicles
-    const positions = [
+    return [
       { value: 'front-left', label: 'Front Left' },
       { value: 'front-right', label: 'Front Right' },
       { value: 'rear-left', label: 'Rear Left' },
       { value: 'rear-right', label: 'Rear Right' },
       { value: 'spare', label: 'Spare' },
     ];
-
-    return positions;
   };
 
   return (
@@ -183,26 +188,15 @@ export default function AssignTyrePage() {
                 <h2 className="text-lg font-semibold">Vehicle Selection</h2>
               </div>
               <div className="p-6 space-y-4">
-                <div>
-                  <label htmlFor="vehicleId" className="block text-sm font-medium text-gray-700 mb-1">
-                    Select Vehicle <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="vehicleId"
-                    name="vehicleId"
-                    value={formData.vehicleId}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                  >
-                    <option value="">Choose a vehicle...</option>
-                    {MOCK_VEHICLES.map(vehicle => (
-                      <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.plateNumber} - {vehicle.make} {vehicle.model} ({vehicle.type})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FormSelect
+                  label="Select Vehicle"
+                  required
+                  name="vehicleId"
+                  value={formData.vehicleId}
+                  onChange={handleChange}
+                  options={vehicleOptions}
+                  placeholder="Choose a vehicle..."
+                />
 
                 {selectedVehicle && (
                   <div className="bg-gray-50 rounded-lg p-4">
@@ -240,24 +234,15 @@ export default function AssignTyrePage() {
                   <h2 className="text-lg font-semibold">Position Selection</h2>
                 </div>
                 <div className="p-6">
-                  <label htmlFor="position" className="block text-sm font-medium text-gray-700 mb-1">
-                    Tyre Position <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="position"
+                  <FormSelect
+                    label="Tyre Position"
+                    required
                     name="position"
                     value={formData.position}
                     onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                  >
-                    <option value="">Select position...</option>
-                    {getPositionOptions().map(pos => (
-                      <option key={pos.value} value={pos.value}>
-                        {pos.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={getPositionOptions()}
+                    placeholder="Select position..."
+                  />
                 </div>
               </div>
             )}
@@ -269,84 +254,50 @@ export default function AssignTyrePage() {
                   <h2 className="text-lg font-semibold">Installation Details</h2>
                 </div>
                 <div className="p-6 space-y-4">
-                  <div>
-                    <label htmlFor="installationDate" className="block text-sm font-medium text-gray-700 mb-1">
-                      Installation Date <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      id="installationDate"
-                      name="installationDate"
-                      value={formData.installationDate}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormDateInput
+                    label="Installation Date"
+                    required
+                    name="installationDate"
+                    value={formData.installationDate}
+                    onChange={handleChange}
+                  />
 
-                  <div>
-                    <label htmlFor="currentOdometer" className="block text-sm font-medium text-gray-700 mb-1">
-                      Current Vehicle Odometer (km) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      id="currentOdometer"
-                      name="currentOdometer"
-                      value={formData.currentOdometer}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., 45000"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormNumberInput
+                    label="Current Vehicle Odometer (km)"
+                    required
+                    name="currentOdometer"
+                    value={formData.currentOdometer}
+                    onChange={handleChange}
+                    placeholder="e.g., 45000"
+                  />
 
-                  <div>
-                    <label htmlFor="treadDepthAtInstallation" className="block text-sm font-medium text-gray-700 mb-1">
-                      Tread Depth at Installation (mm) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      id="treadDepthAtInstallation"
-                      name="treadDepthAtInstallation"
-                      value={formData.treadDepthAtInstallation}
-                      onChange={handleChange}
-                      required
-                      step="0.1"
-                      placeholder="e.g., 12.5"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormNumberInput
+                    label="Tread Depth at Installation (mm)"
+                    required
+                    name="treadDepthAtInstallation"
+                    value={formData.treadDepthAtInstallation}
+                    onChange={handleChange}
+                    step={0.1}
+                    placeholder="e.g., 12.5"
+                  />
 
-                  <div>
-                    <label htmlFor="installedBy" className="block text-sm font-medium text-gray-700 mb-1">
-                      Installed By (Technician) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="installedBy"
-                      name="installedBy"
-                      value={formData.installedBy}
-                      onChange={handleChange}
-                      required
-                      placeholder="Technician name"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Installed By (Technician)"
+                    required
+                    name="installedBy"
+                    value={formData.installedBy}
+                    onChange={handleChange}
+                    placeholder="Technician name"
+                  />
 
-                  <div>
-                    <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                      Installation Notes
-                    </label>
-                    <textarea
-                      id="notes"
-                      name="notes"
-                      value={formData.notes}
-                      onChange={handleChange}
-                      rows={3}
-                      placeholder="Any observations or special notes about the installation..."
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormTextarea
+                    label="Installation Notes"
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="Any observations or special notes about the installation..."
+                  />
                 </div>
               </div>
             )}

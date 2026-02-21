@@ -1,5 +1,5 @@
 import { Modal } from '@/components/ui/modal';
-import { RouteForm } from '@/components/features/routes/RouteForm';
+import { RouteForm } from '../../_components/RouteForm';
 
 export default function CreateRouteModal() {
   return (

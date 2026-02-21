@@ -2,7 +2,7 @@
 
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { mockWorkOrders } from '@/constants/maintenance';
-import { WorkOrderForm } from '@/components/features/maintenance';
+import { WorkOrderForm } from '../../../_components';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

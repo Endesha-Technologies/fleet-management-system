@@ -1,12 +1,9 @@
 import { notFound } from 'next/navigation';
 import { MOCK_ROUTES } from '@/constants/routes';
-import { RouteForm } from '@/components/features/routes/RouteForm';
+import { RouteForm } from '../../_components/RouteForm';
+import type { RoutePageProps } from '../../_types';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function EditRoutePage({ params }: PageProps) {
+export default async function EditRoutePage({ params }: RoutePageProps) {
   const { id } = await params;
   const route = MOCK_ROUTES.find((r) => r.id === id);
 

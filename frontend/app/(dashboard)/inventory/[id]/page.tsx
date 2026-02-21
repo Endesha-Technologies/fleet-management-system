@@ -25,18 +25,18 @@ import {
   MOCK_ASSIGNMENTS 
 } from '@/constants/asset_details';
 
-// Components
-import OverviewTab from '@/components/features/assets/tabs/OverviewTab';
-import StockUnitsTab from '@/components/features/assets/tabs/StockUnitsTab';
-import MovementsTab from '@/components/features/assets/tabs/MovementsTab';
-import AssignmentsTab from '@/components/features/assets/tabs/AssignmentsTab';
-
-// Drawers
-import PurchaseStockDrawer from '@/components/features/assets/PurchaseStockDrawer';
-import AssignAssetDrawer from '@/components/features/assets/AssignAssetDrawer';
-import RemoveAssetDrawer from '@/components/features/assets/RemoveAssetDrawer';
-import SellAssetDrawer from '@/components/features/assets/SellAssetDrawer';
-import DisposeAssetDrawer from '@/components/features/assets/DisposeAssetDrawer';
+// Components & Drawers
+import {
+  OverviewTab,
+  StockUnitsTab,
+  MovementsTab,
+  AssignmentsTab,
+  PurchaseStockDrawer,
+  AssignAssetDrawer,
+  RemoveAssetDrawer,
+  SellAssetDrawer,
+  DisposeAssetDrawer,
+} from '../_components';
 
 export default function AssetDetailsPage() {
   const params = useParams();

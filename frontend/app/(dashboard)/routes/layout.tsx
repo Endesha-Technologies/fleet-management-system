@@ -1,12 +1,11 @@
 import React from 'react';
 
-export default function RoutesLayout({
-  children,
-  modal,
-}: {
+interface RoutesLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
-}) {
+}
+
+export default function RoutesLayout({ children, modal }: RoutesLayoutProps) {
   return (
     <>
       {children}

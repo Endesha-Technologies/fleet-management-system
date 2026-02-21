@@ -1,5 +1,5 @@
 import { Modal } from '@/components/ui/modal';
-import { TripForm } from '@/components/features/trips/TripForm';
+import { TripForm } from '../../_components';
 
 export default function CreateTripModal() {
   return (

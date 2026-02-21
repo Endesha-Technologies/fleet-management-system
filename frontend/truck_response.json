@@ -1,0 +1,1033 @@
+{
+  "create_truck": {
+    "url": "/trucks",
+    "method": "POST",
+    "request_body": {
+      // ─── Identity ──────────────────────────────
+      "fleetNumber": "FLT-003", // Optional internal fleet ID
+      "make": "Isuzu", // Required — manufacturer
+      "model": "FVZ 34T", // Required — model name
+      "year": 2022, // Required — 1900–2100
+      "color": "White",
+      "bodyType": "RIGID", //RIGID | TRACTOR | TRAILER | TANKER | FLATBED | TIPPER | REFRIGERATED | CURTAIN_SIDE | BOX_BODY | LOW_LOADER
+
+      // ─── Registration & Compliance ─────────────
+      "registrationNumber": "UGA 123C", // Required — unique plate number
+      "vin": "JALFVZ34TM7000126", // Vehicle Identification Number
+      "engineNumber": "6HK1-TCN-456789",
+      "registrationDate": "2022-03-15",
+      "registrationExpiry": "2026-02-15",
+      "insurancePolicyNumber": "INS-2025-00456",
+      "insuranceProvider": "Jubilee Insurance",
+      "insuranceExpiry": "2027-01-15",
+      "inspectionExpiry": "2026-08-30",
+      "operatingLicenseNumber": "OL-2025-7890",
+      "operatingLicenseExpiry": "2026-12-01",
+
+      // ─── Technical ─────────────────────────────
+
+      "fuelType": "DIESEL", // fuelType: DIESEL | PETROL | CNG | LNG
+      "engineCapacityCc": 7790, // Engine displacement in cc
+      "horsepower": 280,
+      "transmissionType": "MANUAL", // transmissionType: MANUAL | AUTOMATIC | AMT
+      "numberOfGears": 6, // 1–20
+      "driveType": "SIX_BY_FOUR", // driveType: FOUR_BY_TWO | SIX_BY_TWO | SIX_BY_FOUR | EIGHT_BY_FOUR
+      "grossVehicleMass": 34000, // GVM in kg
+      "tareWeight": 15500, // Unladen weight in kg
+      "payloadCapacity": 18500, // Max payload in kg
+      "tankCapacityLiters": 300,
+      "adBlueTankLiters": 40,
+
+      // ─── Dimensions (all in mm) ────────────────
+      "lengthMm": 9500,
+      "widthMm": 2500,
+      "heightMm": 3800,
+      "wheelbaseMm": 5200,
+      "fifthWheelHeight": 1150,
+
+      // ─── Operational ───────────────────────────
+      "currentOdometer": 12500, // Defaults to 0
+      "engineHours": 850, // Defaults to 0
+      "homeDepot": "Nairobi Depot",
+      "assignedDriverId": "", // UUID of driver
+      "wialonUnitId": "", // Telematics unit ID
+
+      // ─── Purchase ──────────────────────────────
+      "purchaseDate": "2022-03-10",
+      "purchasePrice": 8500000, // In base currency
+      "purchasedFrom": "Isuzu East Africa Ltd",
+      "ownershipType": "OWNED", // ownershipType: OWNED | LEASED | RENTED
+
+      // ─── Notes ─────────────────────────────────
+      "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+
+      // ─── Axle Configuration ────────────────────
+      "axleConfig": [
+        {
+          "axleName": "Front Steer", // Required — descriptive name
+          "axleIndex": 0, // Required — position (0-based)
+          "positionsPerSide": 1, // 1 or 2 (single or dual tyres) — defaults to 1
+          "tyreSize": "295/80R22.5",
+          "maxLoadKg": 7000,
+          "axleType": "STEER"
+        },
+        {
+          "axleName": "Rear Drive 1",
+          "axleIndex": 1,
+          "positionsPerSide": 2, // Dual tyres
+          "tyreSize": "315/80R22.5",
+          "maxLoadKg": 13000,
+          "axleType": "DRIVE"
+        },
+        {
+          "axleName": "Rear Drive 2",
+          "axleIndex": 2,
+          "positionsPerSide": 2,
+          "tyreSize": "315/80R22.5",
+          "maxLoadKg": 14000,
+          "axleType": "DRIVE"
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "Truck created successfully",
+      "data": {
+        "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "fleetNumber": "FLT-003",
+        "make": "Isuzu",
+        "model": "FVZ 34T",
+        "year": 2022,
+        "color": "White",
+        "bodyType": "RIGID",
+        "registrationNumber": "UGA 123C",
+        "vin": "JALFVZ34TM7000126",
+        "engineNumber": "6HK1-TCN-456789",
+        "registrationDate": "2022-03-15T00:00:00.000Z",
+        "registrationExpiry": "2026-02-15T00:00:00.000Z",
+        "insurancePolicyNumber": "INS-2025-00456",
+        "insuranceProvider": "Jubilee Insurance",
+        "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+        "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+        "operatingLicenseNumber": "OL-2025-7890",
+        "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+        "fuelType": "DIESEL",
+        "engineCapacityCc": 7790,
+        "horsepower": 280,
+        "transmissionType": "MANUAL",
+        "numberOfGears": 6,
+        "driveType": "SIX_BY_FOUR",
+        "grossVehicleMass": 34000,
+        "tareWeight": 15500,
+        "payloadCapacity": 18500,
+        "tankCapacityLiters": 300,
+        "adBlueTankLiters": 40,
+        "lengthMm": 9500,
+        "widthMm": 2500,
+        "heightMm": 3800,
+        "wheelbaseMm": 5200,
+        "fifthWheelHeight": 1150,
+        "currentOdometer": 12500,
+        "engineHours": 850,
+        "status": "ACTIVE",
+        "homeDepot": "Nairobi Depot",
+        "assignedDriverId": null,
+        "wialonUnitId": null,
+        "purchaseDate": "2022-03-10T00:00:00.000Z",
+        "purchasePrice": 8500000,
+        "purchasedFrom": "Isuzu East Africa Ltd",
+        "ownershipType": "OWNED",
+        "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+        "createdBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+        "updatedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+        "createdAt": "2026-02-18T00:16:05.732Z",
+        "updatedAt": "2026-02-18T00:16:05.732Z",
+        "truckAxles": [
+          {
+            "id": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Front Steer",
+            "axleType": "STEER",
+            "axleIndex": 0,
+            "positionsPerSide": 1,
+            "tyreSize": "295/80R22.5",
+            "maxLoadKg": 7000
+          },
+          {
+            "id": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Rear Drive 1",
+            "axleType": "DRIVE",
+            "axleIndex": 1,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 13000
+          },
+          {
+            "id": "23642206-6fde-431f-a888-416fb9f1d82e",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Rear Drive 2",
+            "axleType": "DRIVE",
+            "axleIndex": 2,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 14000
+          }
+        ],
+        "creator": {
+          "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "updater": {
+          "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "_count": {
+          "assetInstallations": 0,
+          "trips": 0,
+          "fuelLogs": 0,
+          "maintenancePlans": 0,
+          "serviceLogs": 0,
+          "documents": 0
+        }
+      }
+    }
+  },
+  "get_trucks": {
+    "url": "/trucks",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "data": [
+          {
+            "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "fleetNumber": "FLT-003",
+            "make": "Isuzu",
+            "model": "FVZ 34T",
+            "year": 2022,
+            "color": "White",
+            "bodyType": "RIGID",
+            "registrationNumber": "UGA 123C",
+            "vin": "JALFVZ34TM7000126",
+            "engineNumber": "6HK1-TCN-456789",
+            "registrationDate": "2022-03-15T00:00:00.000Z",
+            "registrationExpiry": "2026-02-15T00:00:00.000Z",
+            "insurancePolicyNumber": "INS-2025-00456",
+            "insuranceProvider": "Jubilee Insurance",
+            "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+            "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+            "operatingLicenseNumber": "OL-2025-7890",
+            "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+            "fuelType": "DIESEL",
+            "engineCapacityCc": 7790,
+            "horsepower": 280,
+            "transmissionType": "MANUAL",
+            "numberOfGears": 6,
+            "driveType": "SIX_BY_FOUR",
+            "grossVehicleMass": 34000,
+            "tareWeight": 15500,
+            "payloadCapacity": 18500,
+            "tankCapacityLiters": 300,
+            "adBlueTankLiters": 40,
+            "lengthMm": 9500,
+            "widthMm": 2500,
+            "heightMm": 3800,
+            "wheelbaseMm": 5200,
+            "fifthWheelHeight": 1150,
+            "currentOdometer": 12500,
+            "engineHours": 850,
+            "status": "ACTIVE",
+            "homeDepot": "Nairobi Depot",
+            "assignedDriverId": null,
+            "wialonUnitId": null,
+            "purchaseDate": "2022-03-10T00:00:00.000Z",
+            "purchasePrice": 8500000,
+            "purchasedFrom": "Isuzu East Africa Ltd",
+            "ownershipType": "OWNED",
+            "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+            "createdBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "updatedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+            "createdAt": "2026-02-18T00:16:05.732Z",
+            "updatedAt": "2026-02-18T00:16:05.732Z",
+            "truckAxles": [
+              {
+                "id": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleName": "Front Steer",
+                "axleType": "STEER",
+                "axleIndex": 0,
+                "positionsPerSide": 1,
+                "tyreSize": "295/80R22.5",
+                "maxLoadKg": 7000
+              },
+              {
+                "id": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleName": "Rear Drive 1",
+                "axleType": "DRIVE",
+                "axleIndex": 1,
+                "positionsPerSide": 2,
+                "tyreSize": "315/80R22.5",
+                "maxLoadKg": 13000
+              },
+              {
+                "id": "23642206-6fde-431f-a888-416fb9f1d82e",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleName": "Rear Drive 2",
+                "axleType": "DRIVE",
+                "axleIndex": 2,
+                "positionsPerSide": 2,
+                "tyreSize": "315/80R22.5",
+                "maxLoadKg": 14000
+              }
+            ],
+            "creator": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator",
+              "email": "admin@fleet.com"
+            },
+            "updater": {
+              "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "firstName": "System",
+              "lastName": "Administrator",
+              "email": "admin@fleet.com"
+            },
+            "_count": {
+              "assetInstallations": 0,
+              "trips": 0,
+              "fuelLogs": 0,
+              "maintenancePlans": 0,
+              "serviceLogs": 0,
+              "documents": 0
+            }
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "limit": 20,
+          "total": 1,
+          "totalPages": 1,
+          "hasNextPage": false,
+          "hasPrevPage": false
+        }
+      }
+    }
+  },
+  "get_truck_by_id": {
+    "url": "/trucks/{id}",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+        "fleetNumber": "FLT-003",
+        "make": "Isuzu",
+        "model": "FVZ 34T",
+        "year": 2022,
+        "color": "White",
+        "bodyType": "RIGID",
+        "registrationNumber": "UGA 123C",
+        "vin": "JALFVZ34TM7000126",
+        "engineNumber": "6HK1-TCN-456789",
+        "registrationDate": "2022-03-15T00:00:00.000Z",
+        "registrationExpiry": "2026-02-15T00:00:00.000Z",
+        "insurancePolicyNumber": "INS-2025-00456",
+        "insuranceProvider": "Jubilee Insurance",
+        "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+        "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+        "operatingLicenseNumber": "OL-2025-7890",
+        "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+        "fuelType": "DIESEL",
+        "engineCapacityCc": 7790,
+        "horsepower": 280,
+        "transmissionType": "MANUAL",
+        "numberOfGears": 6,
+        "driveType": "SIX_BY_FOUR",
+        "grossVehicleMass": 34000,
+        "tareWeight": 15500,
+        "payloadCapacity": 18500,
+        "tankCapacityLiters": 300,
+        "adBlueTankLiters": 40,
+        "lengthMm": 9500,
+        "widthMm": 2500,
+        "heightMm": 3800,
+        "wheelbaseMm": 5200,
+        "fifthWheelHeight": 1150,
+        "currentOdometer": 12500,
+        "engineHours": 850,
+        "status": "ACTIVE",
+        "homeDepot": "Nairobi Depot",
+        "assignedDriverId": null,
+        "wialonUnitId": null,
+        "purchaseDate": "2022-03-10T00:00:00.000Z",
+        "purchasePrice": 8500000,
+        "purchasedFrom": "Isuzu East Africa Ltd",
+        "ownershipType": "OWNED",
+        "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+        "createdBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+        "updatedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+        "createdAt": "2026-02-18T00:16:05.732Z",
+        "updatedAt": "2026-02-18T00:16:05.732Z",
+        "truckAxles": [
+          {
+            "id": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Front Steer",
+            "axleType": "STEER",
+            "axleIndex": 0,
+            "positionsPerSide": 1,
+            "tyreSize": "295/80R22.5",
+            "maxLoadKg": 7000,
+            "tyrePositions": [
+              {
+                "id": "57c25430-d3e9-4342-8c62-3ad4d7bb9c76",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+                "positionCode": "0-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "339896d8-c137-4fad-b1d0-012b2c9ef308",
+                "positionCode": "0-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              }
+            ]
+          },
+          {
+            "id": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Rear Drive 1",
+            "axleType": "DRIVE",
+            "axleIndex": 1,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 13000,
+            "tyrePositions": [
+              {
+                "id": "3a6648fa-2427-4e0c-827f-909d1211a2c2",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+                "positionCode": "1-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "41362371-f250-450a-9600-a26e46a0f10d",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+                "positionCode": "1-L2",
+                "side": "LEFT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "d162df11-f484-4604-aa1f-16f412eba525",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+                "positionCode": "1-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "3d7e6d90-3d52-4a09-8d46-e2711dd9f2f0",
+                "positionCode": "1-R2",
+                "side": "RIGHT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              }
+            ]
+          },
+          {
+            "id": "23642206-6fde-431f-a888-416fb9f1d82e",
+            "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+            "axleName": "Rear Drive 2",
+            "axleType": "DRIVE",
+            "axleIndex": 2,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 14000,
+            "tyrePositions": [
+              {
+                "id": "10fce4e8-30de-4c48-8429-61d11b969600",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+                "positionCode": "2-L1",
+                "side": "LEFT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+                "positionCode": "2-L2",
+                "side": "LEFT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "274911a0-6427-4a0c-8e31-a9ba19ae88a9",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+                "positionCode": "2-R1",
+                "side": "RIGHT",
+                "slot": "OUTER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              },
+              {
+                "id": "540b5071-96dd-4187-8d8c-c8d9829e9366",
+                "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+                "axleConfigId": "23642206-6fde-431f-a888-416fb9f1d82e",
+                "positionCode": "2-R2",
+                "side": "RIGHT",
+                "slot": "INNER",
+                "status": "EMPTY",
+                "currentTyreId": null,
+                "createdAt": "2026-02-18T00:16:05.753Z",
+                "updatedAt": "2026-02-18T00:16:05.753Z",
+                "currentTyre": null
+              }
+            ]
+          }
+        ],
+        "creator": {
+          "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "updater": {
+          "id": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "documents": [],
+        "assetInstallations": [],
+        "maintenancePlans": [],
+        "_count": {
+          "trips": 0,
+          "fuelLogs": 0,
+          "serviceLogs": 0
+        }
+      }
+    }
+  },
+  "update_truck": {
+    "url": "/trucks/{id}",
+    "method": "PUT",
+    "request_body": {
+      // ─── Identity ──────────────────────────────
+      "fleetNumber": "FLT-002", // Optional internal fleet ID
+      "make": "Isuzu", // Required — manufacturer
+      "model": "FVZ 34T", // Required — model name
+      "year": 2022, // Required — 1900–2100
+      "color": "Blue",
+      "bodyType": "TANKER", //RIGID | TRACTOR | TRAILER | TANKER | FLATBED | TIPPER | REFRIGERATED | CURTAIN_SIDE | BOX_BODY | LOW_LOADER
+
+      // ─── Registration & Compliance ─────────────
+      "registrationNumber": "UGA 123B", // Required — unique plate number
+      "vin": "JALFVZ34TM7000125", // Vehicle Identification Number
+      "engineNumber": "6HK1-TCN-456786",
+      "registrationDate": "2022-03-15",
+      "registrationExpiry": "2027-03-15",
+      "insurancePolicyNumber": "INS-2025-00456",
+      "insuranceProvider": "Jubilee Insurance",
+      "insuranceExpiry": "2027-01-15",
+      "inspectionExpiry": "2026-08-30",
+      "operatingLicenseNumber": "OL-2025-7890",
+      "operatingLicenseExpiry": "2026-12-01",
+
+      // ─── Technical ─────────────────────────────
+
+      "fuelType": "DIESEL", // fuelType: DIESEL | PETROL | CNG | LNG
+      "engineCapacityCc": 7790, // Engine displacement in cc
+      "horsepower": 280,
+      "transmissionType": "MANUAL", // transmissionType: MANUAL | AUTOMATIC | AMT
+      "numberOfGears": 6, // 1–20
+      "driveType": "SIX_BY_FOUR", // driveType: FOUR_BY_TWO | SIX_BY_TWO | SIX_BY_FOUR | EIGHT_BY_FOUR
+      "grossVehicleMass": 34000, // GVM in kg
+      "tareWeight": 15500, // Unladen weight in kg
+      "payloadCapacity": 18500, // Max payload in kg
+      "tankCapacityLiters": 300,
+      "adBlueTankLiters": 40,
+
+      // ─── Dimensions (all in mm) ────────────────
+      "lengthMm": 9500,
+      "widthMm": 2500,
+      "heightMm": 3800,
+      "wheelbaseMm": 5200,
+      "fifthWheelHeight": 1150,
+
+      // ─── Operational ───────────────────────────
+      "currentOdometer": 12500, // Defaults to 0
+      "engineHours": 850, // Defaults to 0
+      "homeDepot": "Nairobi Depot",
+      "assignedDriverId": "", // UUID of driver
+      "wialonUnitId": "", // Telematics unit ID
+
+      // ─── Purchase ──────────────────────────────
+      "purchaseDate": "2022-03-10",
+      "purchasePrice": 8500000, // In base currency
+      "purchasedFrom": "Isuzu East Africa Ltd",
+      "ownershipType": "OWNED", // ownershipType: OWNED | LEASED | RENTED
+
+      // ─── Notes ─────────────────────────────────
+      "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+
+      // ─── Axle Configuration ────────────────────
+      "axleConfig": [
+        {
+          "axleName": "Front Steer", // Required — descriptive name
+          "axleIndex": 0, // Required — position (0-based)
+          "positionsPerSide": 1, // 1 or 2 (single or dual tyres) — defaults to 1
+          "tyreSize": "295/80R22.5",
+          "maxLoadKg": 7000
+        },
+        {
+          "axleName": "Rear Drive 1",
+          "axleIndex": 1,
+          "positionsPerSide": 2, // Dual tyres
+          "tyreSize": "315/80R22.5",
+          "maxLoadKg": 13000
+        },
+        {
+          "axleName": "Rear Drive 2",
+          "axleIndex": 2,
+          "positionsPerSide": 2,
+          "tyreSize": "315/80R22.5",
+          "maxLoadKg": 14000
+        }
+      ]
+    },
+    "response": {
+      "success": true,
+      "message": "Truck updated successfully",
+      "data": {
+        "id": "3515c129-8794-4bda-bfa9-d5747ada07ee",
+        "fleetNumber": "FLT-002",
+        "make": "Isuzu",
+        "model": "FVZ 34T",
+        "year": 2022,
+        "color": "Blue",
+        "bodyType": "TANKER",
+        "registrationNumber": "UGA 123B",
+        "vin": "JALFVZ34TM7000125",
+        "engineNumber": "6HK1-TCN-456786",
+        "registrationDate": "2022-03-15T00:00:00.000Z",
+        "registrationExpiry": "2027-03-15T00:00:00.000Z",
+        "insurancePolicyNumber": "INS-2025-00456",
+        "insuranceProvider": "Jubilee Insurance",
+        "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+        "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+        "operatingLicenseNumber": "OL-2025-7890",
+        "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+        "fuelType": "DIESEL",
+        "engineCapacityCc": 7790,
+        "horsepower": 280,
+        "transmissionType": "MANUAL",
+        "numberOfGears": 6,
+        "driveType": "SIX_BY_FOUR",
+        "grossVehicleMass": 34000,
+        "tareWeight": 15500,
+        "payloadCapacity": 18500,
+        "tankCapacityLiters": 300,
+        "adBlueTankLiters": 40,
+        "lengthMm": 9500,
+        "widthMm": 2500,
+        "heightMm": 3800,
+        "wheelbaseMm": 5200,
+        "fifthWheelHeight": 1150,
+        "currentOdometer": 12500,
+        "engineHours": 850,
+        "status": "ACTIVE",
+        "homeDepot": "Nairobi Depot",
+        "assignedDriverId": null,
+        "wialonUnitId": null,
+        "purchaseDate": "2022-03-10T00:00:00.000Z",
+        "purchasePrice": 8500000,
+        "purchasedFrom": "Isuzu East Africa Ltd",
+        "ownershipType": "OWNED",
+        "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+        "createdBy": "d589b7aa-924b-4400-930d-5b317303c2d3",
+        "updatedBy": "d589b7aa-924b-4400-930d-5b317303c2d3",
+        "createdAt": "2026-02-17T18:02:56.921Z",
+        "updatedAt": "2026-02-17T18:11:27.990Z",
+        "truckAxles": [
+          {
+            "id": "ecd63d56-bb27-4936-8cb9-74c9e113118a",
+            "truckId": "3515c129-8794-4bda-bfa9-d5747ada07ee",
+            "axleName": "Front Steer",
+            "axleIndex": 0,
+            "positionsPerSide": 1,
+            "tyreSize": "295/80R22.5",
+            "maxLoadKg": 7000
+          },
+          {
+            "id": "ffc9f380-456a-436a-ab33-8c9d5a4df61a",
+            "truckId": "3515c129-8794-4bda-bfa9-d5747ada07ee",
+            "axleName": "Rear Drive 1",
+            "axleIndex": 1,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 13000
+          },
+          {
+            "id": "8807669c-2473-407f-9aec-ff2b0d915a7e",
+            "truckId": "3515c129-8794-4bda-bfa9-d5747ada07ee",
+            "axleName": "Rear Drive 2",
+            "axleIndex": 2,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 14000
+          }
+        ],
+        "creator": {
+          "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "updater": {
+          "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "_count": {
+          "assetInstallations": 0,
+          "trips": 0,
+          "fuelLogs": 0,
+          "maintenancePlans": 0,
+          "serviceLogs": 0,
+          "documents": 0
+        }
+      }
+    }
+  },
+  "delete_truck": {
+    "url": "/trucks/{id}",
+    "method": "DELETE",
+    "response": {
+      "success": true,
+      "message": "Truck deleted successfully",
+      "data": null
+    }
+  },
+  "fleet_overview": {
+    "url": "/fleet/overview",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "totalTrucks": 1,
+        "byStatus": {
+          "ACTIVE": 1
+        },
+        "byMake": [
+          {
+            "make": "Isuzu",
+            "count": 1
+          }
+        ],
+        "byBodyType": [
+          {
+            "bodyType": "TANKER",
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "complaince_alerts": {
+    "url": "/trucks/compliance-alerts?warningDays=30",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "summary": {
+          "expiredCount": 1,
+          "expiringSoonCount": 1,
+          "totalAlerts": 2
+        },
+        "expired": [
+          {
+            "truckId": "a3c2116d-5f03-4846-8743-712f726cf382",
+            "registrationNumber": "UGA 123C",
+            "fleetNumber": "FLT-003",
+            "type": "registration",
+            "expiryDate": "2026-02-15T00:00:00.000Z",
+            "status": "expired",
+            "daysRemaining": -3
+          }
+        ],
+        "expiringSoon": [
+          {
+            "truckId": "3515c129-8794-4bda-bfa9-d5747ada07ee",
+            "registrationNumber": "UGA 123B",
+            "fleetNumber": "FLT-002",
+            "type": "registration",
+            "expiryDate": "2026-03-15T00:00:00.000Z",
+            "status": "expiring_soon",
+            "daysRemaining": 25
+          }
+        ]
+      }
+    }
+  },
+  "update_truck_status": {
+    "url": "/trucks/{id}/status",
+    "method": "PATCH",
+    "request_body": {
+      "status": "IN_MAINTENANCE" //'ACTIVE', 'INACTIVE', 'IN_MAINTENANCE', 'DECOMMISSIONED'
+    },
+    "response": {
+      "success": true,
+      "message": "Truck status updated",
+      "data": {
+        "id": "a3c2116d-5f03-4846-8743-712f726cf382",
+        "fleetNumber": "FLT-003",
+        "make": "Isuzu",
+        "model": "FVZ 34T",
+        "year": 2022,
+        "color": "White",
+        "bodyType": "RIGID",
+        "registrationNumber": "UGA 123C",
+        "vin": "JALFVZ34TM7000126",
+        "engineNumber": "6HK1-TCN-456789",
+        "registrationDate": "2022-03-15T00:00:00.000Z",
+        "registrationExpiry": "2026-02-15T00:00:00.000Z",
+        "insurancePolicyNumber": "INS-2025-00456",
+        "insuranceProvider": "Jubilee Insurance",
+        "insuranceExpiry": "2027-01-15T00:00:00.000Z",
+        "inspectionExpiry": "2026-08-30T00:00:00.000Z",
+        "operatingLicenseNumber": "OL-2025-7890",
+        "operatingLicenseExpiry": "2026-12-01T00:00:00.000Z",
+        "fuelType": "DIESEL",
+        "engineCapacityCc": 7790,
+        "horsepower": 280,
+        "transmissionType": "MANUAL",
+        "numberOfGears": 6,
+        "driveType": "SIX_BY_FOUR",
+        "grossVehicleMass": 34000,
+        "tareWeight": 15500,
+        "payloadCapacity": 18500,
+        "tankCapacityLiters": 300,
+        "adBlueTankLiters": 40,
+        "lengthMm": 9500,
+        "widthMm": 2500,
+        "heightMm": 3800,
+        "wheelbaseMm": 5200,
+        "fifthWheelHeight": 1150,
+        "currentOdometer": 12500,
+        "engineHours": 850,
+        "status": "IN_MAINTENANCE",
+        "homeDepot": "Nairobi Depot",
+        "assignedDriverId": null,
+        "wialonUnitId": null,
+        "purchaseDate": "2022-03-10T00:00:00.000Z",
+        "purchasePrice": 8500000,
+        "purchasedFrom": "Isuzu East Africa Ltd",
+        "ownershipType": "OWNED",
+        "notes": "New fleet addition. Heavy-haul spec for Kampala-Mbarara corridor.",
+        "createdBy": "d589b7aa-924b-4400-930d-5b317303c2d3",
+        "updatedBy": "d589b7aa-924b-4400-930d-5b317303c2d3",
+        "createdAt": "2026-02-17T18:21:50.946Z",
+        "updatedAt": "2026-02-17T18:32:14.208Z",
+        "truckAxles": [
+          {
+            "id": "0f519005-c9f2-44f8-bdbb-9733c251240e",
+            "truckId": "a3c2116d-5f03-4846-8743-712f726cf382",
+            "axleName": "Front Steer",
+            "axleIndex": 0,
+            "positionsPerSide": 1,
+            "tyreSize": "295/80R22.5",
+            "maxLoadKg": 7000
+          },
+          {
+            "id": "c9ef109c-f5da-47a4-876d-9a71024eb8ca",
+            "truckId": "a3c2116d-5f03-4846-8743-712f726cf382",
+            "axleName": "Rear Drive 1",
+            "axleIndex": 1,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 13000
+          },
+          {
+            "id": "6e4f0a5f-bcc0-4ace-937b-9fad50c936b4",
+            "truckId": "a3c2116d-5f03-4846-8743-712f726cf382",
+            "axleName": "Rear Drive 2",
+            "axleIndex": 2,
+            "positionsPerSide": 2,
+            "tyreSize": "315/80R22.5",
+            "maxLoadKg": 14000
+          }
+        ],
+        "creator": {
+          "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "updater": {
+          "id": "d589b7aa-924b-4400-930d-5b317303c2d3",
+          "firstName": "System",
+          "lastName": "Administrator",
+          "email": "admin@fleet.com"
+        },
+        "_count": {
+          "assetInstallations": 0,
+          "trips": 0,
+          "fuelLogs": 0,
+          "maintenancePlans": 0,
+          "serviceLogs": 0,
+          "documents": 0
+        }
+      }
+    }
+  },
+  "rotate_tyres": {
+    "url": "/tyres/rotate",
+    "method": "POST",
+    "request_body": {
+      "truckId": "8eecdeb7-9762-4a01-94f6-90e56bb4d302",
+      "odometerReading": 45200,
+      "method": "CUSTOM",
+      "rotations": [
+        {
+          "fromPositionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+          "toPositionId": "1c43eb4b-e909-4520-b724-923bb7298cf5"
+        },
+        {
+          "fromPositionId": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+          "toPositionId": "57c25430-d3e9-4342-8c62-3ad4d7bb9c76"
+        }
+      ],
+      "notes": "Swap front-left outer with rear-drive-1 left outer"
+    },
+    "response": {
+      "success": true,
+      "message": "Tyres rotated successfully",
+      "data": {
+        "method": "CUSTOM",
+        "rotationCount": 2,
+        "moves": [
+          {
+            "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+            "from": {
+              "positionId": "b97780b8-f7ed-494b-aade-85c5778f54c5",
+              "positionCode": "1-R2",
+              "axleName": "Rear Drive 1"
+            },
+            "to": {
+              "positionId": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+              "positionCode": "0-R1",
+              "axleName": "Front Steer"
+            },
+            "mileageAccrued": 0,
+            "history": {
+              "id": "f46feb9f-03a2-4c2c-ab0b-f4726d9b0212",
+              "tyrePositionId": "1c43eb4b-e909-4520-b724-923bb7298cf5",
+              "assetId": "5de67b21-71c8-4bd6-b13a-5569a0634dfd",
+              "event": "ROTATED",
+              "odometerReading": 45200,
+              "treadDepthMm": null,
+              "mileageAccrued": null,
+              "tyreMileageAtEvent": 38000,
+              "rotationMethod": "CUSTOM",
+              "inspectionId": null,
+              "notes": "Swap front-left outer with rear-drive-1 left outer",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T01:32:28.723Z"
+            }
+          },
+          {
+            "assetId": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+            "from": {
+              "positionId": "78836011-34d6-4be5-ad93-12ee5b0353f7",
+              "positionCode": "2-L2",
+              "axleName": "Rear Drive 2"
+            },
+            "to": {
+              "positionId": "57c25430-d3e9-4342-8c62-3ad4d7bb9c76",
+              "positionCode": "0-L1",
+              "axleName": "Front Steer"
+            },
+            "mileageAccrued": 0,
+            "history": {
+              "id": "f06a8c76-f9bf-4372-862b-d02998b0191f",
+              "tyrePositionId": "57c25430-d3e9-4342-8c62-3ad4d7bb9c76",
+              "assetId": "1eea2595-d2e3-40b7-9424-ccb461c2a398",
+              "event": "ROTATED",
+              "odometerReading": 45200,
+              "treadDepthMm": null,
+              "mileageAccrued": null,
+              "tyreMileageAtEvent": 28000,
+              "rotationMethod": "CUSTOM",
+              "inspectionId": null,
+              "notes": "Swap front-left outer with rear-drive-1 left outer",
+              "performedBy": "fc7e2a06-e3f4-4c3e-9fae-c7efb242fcc3",
+              "createdAt": "2026-02-18T01:32:28.725Z"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

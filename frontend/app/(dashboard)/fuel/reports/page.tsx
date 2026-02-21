@@ -7,13 +7,12 @@ import {
   TrendingDown,
   DollarSign,
   Gauge,
-  Calendar,
   Download,
   ArrowLeft,
-  BarChart3,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FormSelect } from '@/components/ui/form';
 import Link from 'next/link';
 import { MOCK_FUEL_LOGS, calculateFuelEfficiency, getFuelSummary, formatCurrency } from '@/constants/fuel';
 
@@ -62,15 +61,15 @@ export default function FuelReportsPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <select
+          <FormSelect
             value={period}
-            onChange={(e) => setPeriod(e.target.value as any)}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm"
-          >
-            <option value="week">Last 7 Days</option>
-            <option value="month">Last 30 Days</option>
-            <option value="quarter">Last 90 Days</option>
-          </select>
+            onChange={(e) => setPeriod(e.target.value as 'week' | 'month' | 'quarter')}
+            options={[
+              { value: 'week', label: 'Last 7 Days' },
+              { value: 'month', label: 'Last 30 Days' },
+              { value: 'quarter', label: 'Last 90 Days' },
+            ]}
+          />
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
             Export Report

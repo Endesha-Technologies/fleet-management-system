@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 
 const FleetTrackingPage = dynamic(
-  () => import('@/components/features/trips/FleetTracking'),
+  () => import('../_components/FleetTracking'),
   { 
     ssr: false,
     loading: () => (

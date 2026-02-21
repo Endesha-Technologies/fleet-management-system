@@ -3,13 +3,9 @@
 import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
 import { MOCK_TRIPS } from '@/constants/trips'
-import { Trip } from '@/types/trip'
+import type { Trip, TripPageProps } from '../../_types'
 
-interface PageProps {
-  params: Promise<{ id: string }>
-}
-
-export default function PrintTripPage({ params }: PageProps) {
+export default function PrintTripPage({ params }: TripPageProps) {
   const [trip, setTrip] = useState<Trip | null>(null)
   const [loading, setLoading] = useState(true)
 

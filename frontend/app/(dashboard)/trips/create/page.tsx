@@ -1,6 +1,6 @@
 'use client'
 
-import { TripForm } from '@/components/features/trips/TripForm'
+import { TripForm } from '../_components'
 
 export default function CreateTripPage() {
   return (

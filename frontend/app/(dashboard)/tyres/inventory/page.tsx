@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MOCK_TYRES } from '@/constants/tyres';
 import { Search, Plus, Filter, Download, MoreHorizontal } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { Tyre, TyreStatus } from '@/types/tyre';
+import type { Tyre, TyreStatus } from '../_types';
 
 export default function TyreInventoryPage() {
   const [searchTerm, setSearchTerm] = useState('');

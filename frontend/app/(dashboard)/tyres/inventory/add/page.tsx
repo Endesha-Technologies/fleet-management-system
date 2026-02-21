@@ -4,19 +4,29 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Upload, Check } from 'lucide-react';
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+  FormCheckbox,
+  FormNumberInput,
+  FormDateInput,
+  FormSection,
+} from '@/components/ui/form';
+import type { AddTyreFormData } from '../../_types';
 
 export default function AddTyrePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AddTyreFormData>({
     // Basic Information
     serialNumber: '',
     autoGenerateSerial: true,
     brand: '',
     model: '',
-    type: 'all-season' as const,
+    type: 'all-season',
     
     // Specifications
     width: '',
@@ -51,6 +61,10 @@ export default function AddTyrePage() {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleCheckboxChange = (name: string) => (checked: boolean) => {
+    setFormData(prev => ({ ...prev, [name]: checked }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,6 +103,14 @@ export default function AddTyrePage() {
     { number: 1, title: 'Basic Info & Specifications' },
     { number: 2, title: 'Purchase Details & Status' },
     { number: 3, title: 'Additional Information' },
+  ];
+
+  const tyreTypeOptions = [
+    { value: 'all-season', label: 'All-Season' },
+    { value: 'summer', label: 'Summer' },
+    { value: 'winter', label: 'Winter' },
+    { value: 'all-terrain', label: 'All-Terrain' },
+    { value: 'mud-terrain', label: 'Mud-Terrain' },
   ];
 
   return (
@@ -152,94 +174,54 @@ export default function AddTyrePage() {
         {currentStep === 1 && (
           <>
             {/* Basic Information */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-lg font-semibold">Basic Information</h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="serialNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                      Serial Number
-                    </label>
-                    <input
-                      type="text"
-                      id="serialNumber"
-                      name="serialNumber"
-                      value={formData.serialNumber}
-                      onChange={handleChange}
-                      disabled={formData.autoGenerateSerial}
-                      placeholder={formData.autoGenerateSerial ? 'Auto-generated' : 'Enter serial number'}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
-                    />
-                    <div className="mt-2">
-                      <label className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          name="autoGenerateSerial"
-                          checked={formData.autoGenerateSerial}
-                          onChange={handleChange}
-                          className="rounded border-gray-300 text-black focus:ring-black"
-                        />
-                        <span className="ml-2 text-sm text-gray-600">Auto-generate serial number</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-                      Tyre Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    >
-                      <option value="all-season">All-Season</option>
-                      <option value="summer">Summer</option>
-                      <option value="winter">Winter</option>
-                      <option value="all-terrain">All-Terrain</option>
-                      <option value="mud-terrain">Mud-Terrain</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1">
-                      Brand <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="brand"
-                      name="brand"
-                      value={formData.brand}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., Michelin"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-1">
-                      Model <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="model"
-                      name="model"
-                      value={formData.model}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., XZE"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            <FormSection title="Basic Information">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <FormInput
+                    label="Serial Number"
+                    name="serialNumber"
+                    value={formData.serialNumber}
+                    onChange={handleChange}
+                    disabled={formData.autoGenerateSerial}
+                    placeholder={formData.autoGenerateSerial ? 'Auto-generated' : 'Enter serial number'}
+                  />
+                  <div className="mt-2">
+                    <FormCheckbox
+                      label="Auto-generate serial number"
+                      checked={formData.autoGenerateSerial}
+                      onCheckedChange={handleCheckboxChange('autoGenerateSerial')}
                     />
                   </div>
                 </div>
+
+                <FormSelect
+                  label="Tyre Type"
+                  required
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  options={tyreTypeOptions}
+                />
+
+                <FormInput
+                  label="Brand"
+                  required
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleChange}
+                  placeholder="e.g., Michelin"
+                />
+
+                <FormInput
+                  label="Model"
+                  required
+                  name="model"
+                  value={formData.model}
+                  onChange={handleChange}
+                  placeholder="e.g., XZE"
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Specifications */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100">
@@ -253,102 +235,60 @@ export default function AddTyrePage() {
               </div>
               <div className="p-6 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <label htmlFor="width" className="block text-sm font-medium text-gray-700 mb-1">
-                      Width (mm) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="width"
-                      name="width"
-                      value={formData.width}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., 295"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Width (mm)"
+                    required
+                    name="width"
+                    value={formData.width}
+                    onChange={handleChange}
+                    placeholder="e.g., 295"
+                  />
 
-                  <div>
-                    <label htmlFor="aspectRatio" className="block text-sm font-medium text-gray-700 mb-1">
-                      Aspect Ratio <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="aspectRatio"
-                      name="aspectRatio"
-                      value={formData.aspectRatio}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., 80"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Aspect Ratio"
+                    required
+                    name="aspectRatio"
+                    value={formData.aspectRatio}
+                    onChange={handleChange}
+                    placeholder="e.g., 80"
+                  />
 
-                  <div>
-                    <label htmlFor="diameter" className="block text-sm font-medium text-gray-700 mb-1">
-                      Diameter (inches) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="diameter"
-                      name="diameter"
-                      value={formData.diameter}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., 22.5"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Diameter (inches)"
+                    required
+                    name="diameter"
+                    value={formData.diameter}
+                    onChange={handleChange}
+                    placeholder="e.g., 22.5"
+                  />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <label htmlFor="loadIndex" className="block text-sm font-medium text-gray-700 mb-1">
-                      Load Index <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="loadIndex"
-                      name="loadIndex"
-                      value={formData.loadIndex}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., 152"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Load Index"
+                    required
+                    name="loadIndex"
+                    value={formData.loadIndex}
+                    onChange={handleChange}
+                    placeholder="e.g., 152"
+                  />
 
-                  <div>
-                    <label htmlFor="speedRating" className="block text-sm font-medium text-gray-700 mb-1">
-                      Speed Rating <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="speedRating"
-                      name="speedRating"
-                      value={formData.speedRating}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., L"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Speed Rating"
+                    required
+                    name="speedRating"
+                    value={formData.speedRating}
+                    onChange={handleChange}
+                    placeholder="e.g., L"
+                  />
 
-                  <div>
-                    <label htmlFor="treadPattern" className="block text-sm font-medium text-gray-700 mb-1">
-                      Tread Pattern
-                    </label>
-                    <input
-                      type="text"
-                      id="treadPattern"
-                      name="treadPattern"
-                      value={formData.treadPattern}
-                      onChange={handleChange}
-                      placeholder="e.g., Highway"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+                  <FormInput
+                    label="Tread Pattern"
+                    name="treadPattern"
+                    value={formData.treadPattern}
+                    onChange={handleChange}
+                    placeholder="e.g., Highway"
+                  />
                 </div>
               </div>
             </div>
@@ -359,150 +299,84 @@ export default function AddTyrePage() {
         {currentStep === 2 && (
           <>
             {/* Purchase Details */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-lg font-semibold">Purchase Details</h2>
+            <FormSection title="Purchase Details">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormInput
+                  label="Supplier"
+                  required
+                  name="supplier"
+                  value={formData.supplier}
+                  onChange={handleChange}
+                  placeholder="Supplier name"
+                />
+
+                <FormDateInput
+                  label="Purchase Date"
+                  required
+                  name="purchaseDate"
+                  value={formData.purchaseDate}
+                  onChange={handleChange}
+                />
+
+                <FormInput
+                  label="Purchase Order Number"
+                  name="purchaseOrderNumber"
+                  value={formData.purchaseOrderNumber}
+                  onChange={handleChange}
+                  placeholder="PO number"
+                />
+
+                <FormNumberInput
+                  label="Unit Cost (UGX)"
+                  required
+                  name="unitCost"
+                  value={formData.unitCost}
+                  onChange={handleChange}
+                  placeholder="Cost per tyre"
+                />
+
+                <FormNumberInput
+                  label="Quantity"
+                  required
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  min={1}
+                />
+
+                <FormNumberInput
+                  label="Warranty Period (months)"
+                  name="warrantyMonths"
+                  value={formData.warrantyMonths}
+                  onChange={handleChange}
+                  placeholder="e.g., 24"
+                />
               </div>
-              <div className="p-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="supplier" className="block text-sm font-medium text-gray-700 mb-1">
-                      Supplier <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="supplier"
-                      name="supplier"
-                      value={formData.supplier}
-                      onChange={handleChange}
-                      required
-                      placeholder="Supplier name"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="purchaseDate" className="block text-sm font-medium text-gray-700 mb-1">
-                      Purchase Date <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      id="purchaseDate"
-                      name="purchaseDate"
-                      value={formData.purchaseDate}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="purchaseOrderNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                      Purchase Order Number
-                    </label>
-                    <input
-                      type="text"
-                      id="purchaseOrderNumber"
-                      name="purchaseOrderNumber"
-                      value={formData.purchaseOrderNumber}
-                      onChange={handleChange}
-                      placeholder="PO number"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="unitCost" className="block text-sm font-medium text-gray-700 mb-1">
-                      Unit Cost (UGX) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      id="unitCost"
-                      name="unitCost"
-                      value={formData.unitCost}
-                      onChange={handleChange}
-                      required
-                      placeholder="Cost per tyre"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                      Quantity <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      id="quantity"
-                      name="quantity"
-                      value={formData.quantity}
-                      onChange={handleChange}
-                      required
-                      min="1"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="warrantyMonths" className="block text-sm font-medium text-gray-700 mb-1">
-                      Warranty Period (months)
-                    </label>
-                    <input
-                      type="number"
-                      id="warrantyMonths"
-                      name="warrantyMonths"
-                      value={formData.warrantyMonths}
-                      onChange={handleChange}
-                      placeholder="e.g., 24"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            </FormSection>
 
             {/* Initial Status */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-lg font-semibold">Initial Status</h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="warehouseLocation" className="block text-sm font-medium text-gray-700 mb-1">
-                      Warehouse Location <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="warehouseLocation"
-                      name="warehouseLocation"
-                      value={formData.warehouseLocation}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g., Section A, Shelf 3"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
+            <FormSection title="Initial Status">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormInput
+                  label="Warehouse Location"
+                  required
+                  name="warehouseLocation"
+                  value={formData.warehouseLocation}
+                  onChange={handleChange}
+                  placeholder="e.g., Section A, Shelf 3"
+                />
 
-                  <div>
-                    <label htmlFor="initialTreadDepth" className="block text-sm font-medium text-gray-700 mb-1">
-                      Initial Tread Depth (mm) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      id="initialTreadDepth"
-                      name="initialTreadDepth"
-                      value={formData.initialTreadDepth}
-                      onChange={handleChange}
-                      required
-                      step="0.1"
-                      placeholder="e.g., 18"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    />
-                  </div>
-                </div>
+                <FormNumberInput
+                  label="Initial Tread Depth (mm)"
+                  required
+                  name="initialTreadDepth"
+                  value={formData.initialTreadDepth}
+                  onChange={handleChange}
+                  step={0.1}
+                  placeholder="e.g., 18"
+                />
               </div>
-            </div>
+            </FormSection>
           </>
         )}
 
@@ -510,42 +384,31 @@ export default function AddTyrePage() {
         {currentStep === 3 && (
           <>
             {/* Optional Information */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-lg font-semibold">Additional Information</h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div>
-                  <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                    Notes
-                  </label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    rows={4}
-                    placeholder="Any additional notes or observations..."
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                  />
-                </div>
+            <FormSection title="Additional Information">
+              <FormTextarea
+                label="Notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                rows={4}
+                placeholder="Any additional notes or observations..."
+              />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Attachments
-                  </label>
-                  <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-gray-300 transition-colors cursor-pointer">
-                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Invoice, warranty documents, or photos (PDF, PNG, JPG up to 10MB)
-                    </p>
-                  </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Attachments
+                </label>
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-gray-300 transition-colors cursor-pointer">
+                  <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Invoice, warranty documents, or photos (PDF, PNG, JPG up to 10MB)
+                  </p>
                 </div>
               </div>
-            </div>
+            </FormSection>
           </>
         )}
 

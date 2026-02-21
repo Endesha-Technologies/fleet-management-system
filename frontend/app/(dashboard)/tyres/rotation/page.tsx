@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { RotationScheduleCard } from '@/components/features/tyres/RotationScheduleCard';
-import { RotationHistoryTable } from '@/components/features/tyres/RotationHistoryTable';
+import { RotationScheduleCard, RotationHistoryTable } from '../_components';
 import { Button } from '@/components/ui/button';
 import { Plus, Calendar } from 'lucide-react';
-import type { RotationSchedule, RotationRecord } from '@/types/rotation';
+import type { RotationSchedule, RotationRecord } from '../_types';
 
 // Mock data for demonstration
 const mockSchedules: RotationSchedule[] = [

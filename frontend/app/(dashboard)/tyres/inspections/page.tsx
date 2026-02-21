@@ -8,8 +8,8 @@ import {
   InspectionScheduleCard,
   InspectionTable,
   InspectionFilters,
-  type InspectionFilterState,
-} from '@/components/features/tyres';
+} from '../_components';
+import type { InspectionFilterState } from '../_types';
 import { MOCK_INSPECTIONS, MOCK_INSPECTION_SCHEDULES } from '@/constants/inspections';
 import {
   Calendar,
