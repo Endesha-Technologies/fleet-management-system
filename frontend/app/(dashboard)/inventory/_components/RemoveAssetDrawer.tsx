@@ -1,156 +1,307 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { FormSelect, FormDateInput, FormNumberInput, FormTextarea } from '@/components/ui/form';
-import { MOCK_ASSIGNMENTS } from '@/constants/asset_details';
-import { AlertCircle, Truck } from 'lucide-react';
+import { FormSelect, FormNumberInput, FormTextarea } from '@/components/ui/form';
+import { AlertCircle, Truck, Loader2, CheckCircle2, MinusCircle, MapPin, Calendar } from 'lucide-react';
+import { assetsService } from '@/api/assets';
+import type { ActiveInstallation, AssetStockSummary } from '@/api/assets/assets.types';
 import type { RemoveAssetDrawerProps } from '../_types';
 
-export default function RemoveAssetDrawer({ open, onOpenChange, asset }: RemoveAssetDrawerProps) {
-  // Form State
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState('');
-  const [dismountDate, setDismountDate] = useState(new Date().toISOString().split('T')[0]);
-  const [dismountOdometer, setDismountOdometer] = useState<number>(0);
-  const [returnCondition, setReturnCondition] = useState('Used');
+// ---- Removal reason options -----------------------------------------------
+
+const REMOVAL_REASONS = [
+  { value: 'WORN_OUT', label: 'Worn Out' },
+  { value: 'DAMAGED', label: 'Damaged' },
+  { value: 'PREVENTIVE', label: 'Preventive Maintenance' },
+  { value: 'UPGRADE', label: 'Upgrade / Replacement' },
+  { value: 'RECALL', label: 'Recall' },
+  { value: 'OTHER', label: 'Other' },
+];
+
+// ---- Component ------------------------------------------------------------
+
+export default function RemoveAssetDrawer({
+  open,
+  onOpenChange,
+  initialAssetId,
+  onSuccess,
+}: RemoveAssetDrawerProps) {
+  // ---- Data state -----------------------------------------------------------
+  const [stockSummary, setStockSummary] = useState<AssetStockSummary | null>(null);
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [dataError, setDataError] = useState<string | null>(null);
+
+  // ---- Form state -----------------------------------------------------------
+  const [selectedInstallationId, setSelectedInstallationId] = useState('');
+  const [odometerAtRemoval, setOdometerAtRemoval] = useState<number | ''>('');
+  const [removalReason, setRemovalReason] = useState('');
+  const [storageLocation, setStorageLocation] = useState('');
   const [notes, setNotes] = useState('');
 
-  const [errors, setErrors] = useState<string[]>([]);
-  
-  // Get active assignments for this asset
-  const activeAssignments = MOCK_ASSIGNMENTS.filter(a => a.assetId === asset.id && a.status === 'Active');
+  // ---- Submit state ---------------------------------------------------------
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const selectedAssignment = activeAssignments.find(a => a.id === selectedAssignmentId);
+  // ---- Derived state --------------------------------------------------------
+  const activeInstallations: ActiveInstallation[] = stockSummary?.activeInstallations ?? [];
+  const selectedInstallation = activeInstallations.find((i) => i.installationId === selectedInstallationId);
+  const assetName = stockSummary?.assetName ?? 'Asset';
 
-  const validate = () => {
-    const errs = [];
-    if (!selectedAssignmentId) errs.push('Please select which assignment to terminate');
-    if (!dismountDate) errs.push('Dismount Date is required');
-    if (selectedAssignment && dismountOdometer < selectedAssignment.mountOdometer) {
-        errs.push(`Dismount Odometer cannot be less than Mount Odometer (${selectedAssignment.mountOdometer})`);
+  // ---- Fetch stock summary on open ------------------------------------------
+  const fetchData = useCallback(async () => {
+    if (!initialAssetId) return;
+
+    setIsLoadingData(true);
+    setDataError(null);
+    try {
+      const summary = await assetsService.getStockSummary(initialAssetId);
+      setStockSummary(summary);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to load installation data';
+      setDataError(msg);
+    } finally {
+      setIsLoadingData(false);
+    }
+  }, [initialAssetId]);
+
+  // ---- Reset form on open ---------------------------------------------------
+  useEffect(() => {
+    if (open) {
+      setSelectedInstallationId('');
+      setOdometerAtRemoval('');
+      setRemovalReason('');
+      setStorageLocation('');
+      setNotes('');
+      setSubmitError(null);
+      setSubmitSuccess(false);
+      setStockSummary(null);
+      fetchData();
+    }
+  }, [open, fetchData]);
+
+  // ---- Validate -------------------------------------------------------------
+  const validate = (): string[] => {
+    const errs: string[] = [];
+    if (!selectedInstallationId) errs.push('Please select an installation to remove.');
+    return errs;
+  };
+
+  // ---- Submit ---------------------------------------------------------------
+  const handleSubmit = async () => {
+    const errs = validate();
+    if (errs.length > 0) {
+      setSubmitError(errs.join(' '));
+      return;
     }
 
-    setErrors(errs);
-    return errs.length === 0;
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await assetsService.removeAsset(selectedInstallationId, {
+        odometerAtRemoval: odometerAtRemoval !== '' ? Number(odometerAtRemoval) : undefined,
+        removalReason: removalReason || undefined,
+        storageLocation: storageLocation.trim() || undefined,
+        notes: notes.trim() || undefined,
+      });
+
+      setSubmitSuccess(true);
+      onSuccess?.();
+
+      // Auto-close after brief success message
+      setTimeout(() => {
+        onOpenChange(false);
+      }, 1500);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Removal failed. Please try again.';
+      setSubmitError(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleSubmit = () => {
-      if (validate()) {
-          console.log("Removing Asset", { selectedAssignmentId, dismountDate, dismountOdometer, returnCondition, notes });
-          onOpenChange(false);
-      }
-  };
+  // ---- Format helper --------------------------------------------------------
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
+  // ---- Render ---------------------------------------------------------------
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" size="xl" className="overflow-y-auto">
+      <SheetContent side="right" className="overflow-y-auto sm:max-w-[560px] w-full">
         <SheetHeader className="mb-6">
-          <SheetTitle>Remove from Truck</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <MinusCircle className="h-5 w-5 text-orange-600" />
+            Remove from Truck
+          </SheetTitle>
           <SheetDescription>
-             Record the removal of {asset.name} from a vehicle.
+            Remove {assetName} from a vehicle. The stock will be returned to inventory.
           </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-8">
-            {/* Selection Section */}
+        {/* Success banner */}
+        {submitSuccess && (
+          <div className="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+            <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-green-800">Removal successful!</p>
+              <p className="text-xs text-green-600">The asset has been removed and returned to stock.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Loading data */}
+        {isLoadingData && (
+          <div className="flex items-center justify-center h-32 gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+            <span className="text-sm text-gray-500">Loading installations…</span>
+          </div>
+        )}
+
+        {/* Data error */}
+        {dataError && !isLoadingData && (
+          <div className="flex flex-col items-center justify-center h-32 gap-3">
+            <AlertCircle className="h-6 w-6 text-red-500" />
+            <p className="text-sm text-red-600">{dataError}</p>
+            <Button variant="outline" size="sm" onClick={fetchData}>
+              Retry
+            </Button>
+          </div>
+        )}
+
+        {/* No active installations */}
+        {!isLoadingData && !dataError && !submitSuccess && activeInstallations.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-32 gap-3">
+            <Truck className="h-8 w-8 text-gray-300" />
+            <p className="text-sm text-gray-500">No active installations found for this asset.</p>
+          </div>
+        )}
+
+        {/* Form */}
+        {!isLoadingData && !dataError && !submitSuccess && activeInstallations.length > 0 && (
+          <div className="space-y-8">
+            {/* Installation selection */}
             <div className="space-y-4">
-                 <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center gap-2">
-                    <Truck className="h-4 w-4" />
-                    Select Assignment
-                 </h3>
-                 <FormSelect
-                    label="Active Assignment"
-                    value={selectedAssignmentId}
-                    onChange={(e) => setSelectedAssignmentId(e.target.value)}
-                    options={activeAssignments.map(a => ({ 
-                        value: a.id, 
-                        label: `${a.truckPlate} - ${a.serialNumber ? a.serialNumber : 'Bulk Qty'}` 
-                    }))}
-                    placeholder={activeAssignments.length > 0 ? "Select truck/unit" : "No active assignments found"}
-                    disabled={activeAssignments.length === 0}
-                 />
-                 
-                 {selectedAssignment && (
-                     <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-800 grid grid-cols-2 gap-2">
-                         <div>
-                             <span className="text-gray-500 text-xs uppercase">Truck</span>
-                             <p className="font-semibold">{selectedAssignment.truckPlate}</p>
-                         </div>
-                         <div>
-                             <span className="text-gray-500 text-xs uppercase">Mount Date</span>
-                             <p className="font-semibold">{new Date(selectedAssignment.mountDate).toLocaleDateString()}</p>
-                         </div>
-                         <div>
-                             <span className="text-gray-500 text-xs uppercase">Mount Odometer</span>
-                             <p className="font-semibold">{selectedAssignment.mountOdometer.toLocaleString()} km</p>
-                         </div>
-                         <div>
-                             <span className="text-gray-500 text-xs uppercase">Position</span>
-                             <p className="font-semibold">{selectedAssignment.position || 'N/A'}</p>
-                         </div>
-                     </div>
-                 )}
+              <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center gap-2">
+                <Truck className="h-4 w-4 text-gray-500" />
+                Select Installation
+              </h3>
+              <FormSelect
+                label="Active Installation"
+                value={selectedInstallationId}
+                onChange={(e) => setSelectedInstallationId(e.target.value)}
+                options={activeInstallations.map((i) => ({
+                  value: i.installationId,
+                  label: `${i.registrationNumber} — ${i.quantity} unit${i.quantity !== 1 ? 's' : ''}`,
+                }))}
+                placeholder="Select installation to remove"
+              />
+
+              {/* Installation details card */}
+              {selectedInstallation && (
+                <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 space-y-2">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <span className="text-xs text-gray-500 uppercase tracking-wide">Truck</span>
+                      <p className="text-sm font-semibold text-gray-900 flex items-center gap-1">
+                        <Truck className="h-3.5 w-3.5 text-blue-600" />
+                        {selectedInstallation.registrationNumber}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500 uppercase tracking-wide">Installed</span>
+                      <p className="text-sm font-semibold text-gray-900 flex items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5 text-gray-400" />
+                        {formatDate(selectedInstallation.installedAt)}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500 uppercase tracking-wide">Quantity</span>
+                      <p className="text-sm font-semibold text-gray-900">{selectedInstallation.quantity}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Removal Details */}
-            {selectedAssignment && (
-                <div className="space-y-4">
-                     <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2">Removal Details</h3>
-                     
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <FormDateInput
-                            label="Dismount Date"
-                            value={dismountDate}
-                            onChange={(e) => setDismountDate(e.target.value)}
-                         />
-                         <FormNumberInput
-                            label="Current Odometer (km)"
-                            value={dismountOdometer}
-                            onChange={(e) => setDismountOdometer(Number(e.target.value))}
-                         />
-                         <FormSelect
-                            label="Return Condition"
-                            value={returnCondition}
-                            onChange={(e) => setReturnCondition(e.target.value)}
-                            options={[
-                                { value: 'Good', label: 'Good (Return to Stock)' },
-                                { value: 'Used', label: 'Used (Return to Stock)' },
-                                { value: 'Damaged', label: 'Damaged (Quarantine)' },
-                                { value: 'Worn Out', label: 'Worn Out (Dispose)' },
-                            ]}
-                        />
-                     </div>
+            {/* Removal details */}
+            {selectedInstallation && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2">
+                  Removal Details
+                </h3>
 
-                     <FormTextarea
-                        label="Notes"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Reason for removal..."
-                     />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormNumberInput
+                    label="Odometer at Removal (km)"
+                    value={odometerAtRemoval}
+                    onChange={(e) => setOdometerAtRemoval(e.target.value ? Number(e.target.value) : '')}
+                    min={0}
+                  />
+                  <FormSelect
+                    label="Removal Reason"
+                    value={removalReason}
+                    onChange={(e) => setRemovalReason(e.target.value)}
+                    options={REMOVAL_REASONS}
+                    placeholder="Select reason"
+                  />
                 </div>
+
+                <FormTextarea
+                  label="Storage Location"
+                  id="storage-location"
+                  value={storageLocation}
+                  onChange={(e) => setStorageLocation(e.target.value)}
+                  placeholder="Where will the removed part be stored? (e.g., Warehouse A, Shelf B3)"
+                />
+
+                <FormTextarea
+                  label="Notes"
+                  id="removal-notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Additional details about the removal…"
+                />
+              </div>
             )}
 
-            {/* Errors */}
-            {errors.length > 0 && (
-                <div className="bg-red-50 border border-red-200 p-4 rounded-md">
-                    <div className="flex items-center gap-2 text-red-800 font-medium mb-2">
-                         <AlertCircle className="h-4 w-4" />
-                         Validation Error
-                    </div>
-                    <ul className="list-disc list-inside text-sm text-red-700">
-                        {errors.map((e, i) => <li key={i}>{e}</li>)}
-                    </ul>
+            {/* Error banner */}
+            {submitError && (
+              <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+                <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-red-800">Error</p>
+                  <p className="text-xs text-red-600 mt-0.5">{submitError}</p>
                 </div>
+              </div>
             )}
-        </div>
+          </div>
+        )}
 
-        <div className="mt-8 flex justify-end gap-3">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={handleSubmit} className="bg-red-600 hover:bg-red-700 text-white">
-                Confirm Removal
+        {/* Footer */}
+        {!submitSuccess && !isLoadingData && activeInstallations.length > 0 && (
+          <SheetFooter className="mt-8">
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              Cancel
             </Button>
-        </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting || !selectedInstallationId}
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Removing…
+                </>
+              ) : (
+                'Confirm Removal'
+              )}
+            </Button>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );

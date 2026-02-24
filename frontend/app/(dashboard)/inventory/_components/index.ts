@@ -7,6 +7,8 @@ export { default as LowStockBanner } from './LowStockBanner';
 export { default as PurchaseStockDrawer } from './PurchaseStockDrawer';
 export { default as RemoveAssetDrawer } from './RemoveAssetDrawer';
 export { default as SellAssetDrawer } from './SellAssetDrawer';
+export { default as ToolCheckoutDrawer } from './ToolCheckoutDrawer';
+export { default as ToolReturnDrawer } from './ToolReturnDrawer';
 export { default as AssignmentsTab } from './tabs/AssignmentsTab';
 export { default as MovementsTab } from './tabs/MovementsTab';
 export { default as OverviewTab } from './tabs/OverviewTab';

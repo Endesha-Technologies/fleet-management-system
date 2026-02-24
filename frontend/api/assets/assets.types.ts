@@ -541,7 +541,6 @@ export interface CheckoutToolRequest {
 }
 
 export interface ReturnToolRequest {
-  assetId: string;
   condition?: ToolCondition;
   notes?: string;
 }

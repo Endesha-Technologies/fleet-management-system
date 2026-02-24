@@ -1,14 +1,17 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// DisposeAssetDrawer — Record asset disposal (scrap, write-off, donation)
+// DisposeAssetDrawer — Record asset disposal (scrap / warranty claim)
 // ---------------------------------------------------------------------------
-// Uses the disposal API with disposalType ∈ { SCRAP, WRITE_OFF, DONATION }.
+// Uses the disposal API with disposalType ∈ { SCRAP, WARRANTY_CLAIM }.
+// (RESALE is handled separately by SellAssetDrawer.)
+//
 // Supports two modes:
 //   • initialAssetId – pre-fills a single asset (from detail page)
 //   • No pre-fill    – user selects an asset from a dropdown
 //
-// API: assetsService.disposeAsset(assetId, { disposalType, quantity, reason, notes })
+// API: assetsService.disposeAsset(assetId, { disposalType, quantity, reason,
+//      salePrice?, buyerInfo?, notes? })
 // ---------------------------------------------------------------------------
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -21,12 +24,14 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import {
+  FormInput,
   FormSelect,
   FormTextarea,
   FormNumberInput,
 } from '@/components/ui/form';
 import {
   AlertCircle,
+  AlertTriangle,
   Loader2,
   CheckCircle2,
   Trash2,
@@ -34,6 +39,8 @@ import {
   Wrench,
   Droplets,
   Settings,
+  FileText,
+  Receipt,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { assetsService } from '@/api/assets';
@@ -48,9 +55,17 @@ import type { DisposeAssetDrawerProps } from '../_types';
 // Constants
 // ===========================================================================
 
-const DISPOSAL_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: 'SCRAP',          label: 'Scrap' },
-  { value: 'WARRANTY_CLAIM', label: 'Warranty Claim' },
+const DISPOSAL_TYPE_OPTIONS: { value: string; label: string; description: string }[] = [
+  {
+    value: 'SCRAP',
+    label: 'Scrap / Write-off',
+    description: 'Permanently remove damaged, obsolete, or unusable items',
+  },
+  {
+    value: 'WARRANTY_CLAIM',
+    label: 'Warranty Claim',
+    description: 'Return to manufacturer under warranty for replacement or refund',
+  },
 ];
 
 const DISPOSAL_REASONS = [
@@ -60,6 +75,7 @@ const DISPOSAL_REASONS = [
   { value: 'Expired',               label: 'Expired' },
   { value: 'Excess inventory',      label: 'Excess inventory' },
   { value: 'Safety concern',        label: 'Safety concern' },
+  { value: 'Warranty defect',       label: 'Warranty defect' },
   { value: 'Other',                 label: 'Other' },
 ];
 
@@ -103,6 +119,10 @@ export default function DisposeAssetDrawer({
   const [reason, setReason] = useState('');
   const [notes, setNotes] = useState('');
 
+  // WARRANTY_CLAIM specific fields
+  const [claimReference, setClaimReference] = useState('');
+  const [refundAmount, setRefundAmount] = useState<number | ''>('');
+
   // ---- Submit state --------------------------------------------------------
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -137,13 +157,14 @@ export default function DisposeAssetDrawer({
     setQuantity(1);
     setReason('');
     setNotes('');
+    setClaimReference('');
+    setRefundAmount('');
     setErrors([]);
     setSuccess(false);
 
     // Pre-fill from initialAssetId
     if (initialAssetId) {
       setAssetId(initialAssetId);
-      // Try to find asset in the already-loaded list, otherwise fetch
       const found = availableAssets.find((a) => a.id === initialAssetId);
       if (found) {
         setSelectedAsset(found);
@@ -187,6 +208,7 @@ export default function DisposeAssetDrawer({
     ? SERIALIZED_ASSET_TYPES.has(selectedAsset.assetType)
     : false;
   const maxQuantity = selectedAsset?.quantity ?? 0;
+  const isWarrantyClaim = disposalType === 'WARRANTY_CLAIM';
 
   const assetOptions = availableAssets
     .filter((a) => a.quantity > 0)
@@ -196,6 +218,9 @@ export default function DisposeAssetDrawer({
     }));
 
   const selectedDisposalMeta = DISPOSAL_TYPE_OPTIONS.find((d) => d.value === disposalType);
+  const estimatedValueLoss = selectedAsset?.unitCost != null && selectedAsset.unitCost > 0
+    ? quantity * selectedAsset.unitCost
+    : null;
 
   // =========================================================================
   // Validation
@@ -210,6 +235,9 @@ export default function DisposeAssetDrawer({
       errs.push(`Quantity cannot exceed available stock (${maxQuantity})`);
     }
     if (!reason) errs.push('Please select a reason for disposal');
+    if (isWarrantyClaim && refundAmount !== '' && refundAmount < 0) {
+      errs.push('Refund amount cannot be negative');
+    }
     return errs;
   };
 
@@ -234,6 +262,16 @@ export default function DisposeAssetDrawer({
       };
       if (reason.trim()) request.reason = reason.trim();
       if (notes.trim()) request.notes = notes.trim();
+
+      // WARRANTY_CLAIM-specific fields
+      if (isWarrantyClaim) {
+        if (refundAmount !== '' && refundAmount > 0) {
+          request.salePrice = refundAmount;
+        }
+        if (claimReference.trim()) {
+          request.buyerInfo = claimReference.trim();
+        }
+      }
 
       await assetsService.disposeAsset(assetId, request);
 
@@ -280,6 +318,16 @@ export default function DisposeAssetDrawer({
           </div>
         </SheetHeader>
 
+        {/* ── Warning banner ─────────────────────────────────────── */}
+        {!success && (
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 flex items-start gap-2.5 shrink-0">
+            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-800">
+              This action will permanently remove stock from your inventory. Disposed assets cannot be recovered.
+            </p>
+          </div>
+        )}
+
         {/* ── Error banner ──────────────────────────────────────── */}
         {errors.length > 0 && (
           <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 shrink-0">
@@ -299,9 +347,14 @@ export default function DisposeAssetDrawer({
         {success && (
           <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 flex items-start gap-3 shrink-0">
             <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-green-800 font-medium">
-              Disposal recorded successfully!
-            </p>
+            <div>
+              <p className="text-sm text-green-800 font-medium">
+                Disposal recorded successfully!
+              </p>
+              <p className="text-xs text-green-700 mt-0.5">
+                {quantity} × {selectedAsset?.name ?? 'asset'} has been disposed ({selectedDisposalMeta?.label}).
+              </p>
+            </div>
           </div>
         )}
 
@@ -360,6 +413,48 @@ export default function DisposeAssetDrawer({
             </div>
           </div>
 
+          {/* ── Disposal Type ────────────────────────────────────── */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-1 bg-red-600 rounded-full" />
+              <h3 className="text-base font-semibold text-gray-900">
+                Disposal Type
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-3">
+              {DISPOSAL_TYPE_OPTIONS.map((option) => {
+                const isSelected = disposalType === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setDisposalType(option.value as DisposalType)}
+                    className={cn(
+                      'flex flex-col items-start gap-1 p-3.5 rounded-lg border-2 text-left transition-all',
+                      isSelected
+                        ? 'border-red-500 bg-red-50/50 ring-1 ring-red-200'
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50',
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {option.value === 'SCRAP' ? (
+                        <Trash2 className={cn('h-4 w-4', isSelected ? 'text-red-600' : 'text-gray-400')} />
+                      ) : (
+                        <Receipt className={cn('h-4 w-4', isSelected ? 'text-red-600' : 'text-gray-400')} />
+                      )}
+                      <span className={cn('text-sm font-semibold', isSelected ? 'text-red-900' : 'text-gray-900')}>
+                        {option.label}
+                      </span>
+                    </div>
+                    <span className={cn('text-xs', isSelected ? 'text-red-700' : 'text-gray-500')}>
+                      {option.description}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* ── Disposal Details ────────────────────────────────── */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -369,27 +464,18 @@ export default function DisposeAssetDrawer({
               </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-3">
-              {/* Disposal Type */}
-              <FormSelect
-                label="Disposal Type"
-                required
-                id="dispose-type"
-                value={disposalType}
-                onChange={(e) => setDisposalType(e.target.value as DisposalType)}
-                options={DISPOSAL_TYPE_OPTIONS}
-                placeholder="Select disposal type"
-              />
-
               {/* Quantity */}
               <div>
                 <FormNumberInput
                   label="Quantity"
                   required
                   id="dispose-quantity"
+                  min={1}
+                  max={isSerialized ? 1 : maxQuantity}
                   value={String(quantity)}
                   onChange={(e) => {
                     const val = parseInt(e.target.value) || 0;
-                    setQuantity(isSerialized ? 1 : Math.min(val, maxQuantity));
+                    setQuantity(isSerialized ? 1 : Math.max(1, Math.min(val, maxQuantity)));
                   }}
                   placeholder="1"
                   disabled={isSerialized || !assetId}
@@ -400,7 +486,9 @@ export default function DisposeAssetDrawer({
                   </p>
                 )}
                 {!isSerialized && maxQuantity > 0 && (
-                  <p className="text-xs text-gray-500 mt-1">Max: {maxQuantity}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Available: <span className="font-medium">{maxQuantity}</span>
+                  </p>
                 )}
               </div>
 
@@ -414,6 +502,33 @@ export default function DisposeAssetDrawer({
                 options={DISPOSAL_REASONS}
                 placeholder="Select reason"
               />
+
+              {/* WARRANTY_CLAIM: Claim Reference */}
+              {isWarrantyClaim && (
+                <FormInput
+                  label="Claim Reference"
+                  id="dispose-claim-ref"
+                  value={claimReference}
+                  onChange={(e) => setClaimReference(e.target.value)}
+                  placeholder="e.g. WC-2026-001"
+                />
+              )}
+
+              {/* WARRANTY_CLAIM: Refund / Credit Amount */}
+              {isWarrantyClaim && (
+                <FormNumberInput
+                  label="Expected Refund (UGX)"
+                  id="dispose-refund"
+                  min={0}
+                  value={refundAmount === '' ? '' : String(refundAmount)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setRefundAmount(val === '' ? '' : parseFloat(val) || 0);
+                  }}
+                  placeholder="0"
+                  description="Amount expected from warranty claim"
+                />
+              )}
 
               {/* Notes */}
               <div className="md:col-span-2">
@@ -462,16 +577,44 @@ export default function DisposeAssetDrawer({
                       <span className="font-medium text-gray-900">{reason}</span>
                     </div>
                   )}
-                  {selectedAsset?.unitCost != null && selectedAsset.unitCost > 0 && (
+
+                  {/* WARRANTY_CLAIM extras */}
+                  {isWarrantyClaim && claimReference && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Claim Reference</span>
+                      <span className="font-medium font-mono text-gray-900">{claimReference}</span>
+                    </div>
+                  )}
+                  {isWarrantyClaim && refundAmount !== '' && refundAmount > 0 && (
+                    <div className="border-t border-red-200 pt-3 flex justify-between">
+                      <span className="text-gray-900 font-semibold">Expected Refund</span>
+                      <span className="text-lg font-bold text-green-700">
+                        UGX {refundAmount.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Value loss estimate */}
+                  {!isWarrantyClaim && estimatedValueLoss != null && estimatedValueLoss > 0 && (
                     <div className="border-t border-red-200 pt-3 flex justify-between">
                       <span className="text-gray-900 font-semibold">
                         Estimated Value Loss
                       </span>
                       <span className="text-lg font-bold text-red-700">
-                        UGX {(quantity * (selectedAsset.unitCost ?? 0)).toLocaleString()}
+                        UGX {estimatedValueLoss.toLocaleString()}
                       </span>
                     </div>
                   )}
+
+                  {/* Stock impact */}
+                  <div className="border-t border-red-200 pt-3">
+                    <div className="flex justify-between text-xs text-gray-500">
+                      <span>Stock after disposal</span>
+                      <span className="font-medium text-gray-700">
+                        {maxQuantity} → {Math.max(0, maxQuantity - quantity)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -498,7 +641,7 @@ export default function DisposeAssetDrawer({
               {isSubmitting && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Confirm Disposal
+              {isWarrantyClaim ? 'Submit Warranty Claim' : 'Confirm Disposal'}
             </Button>
           </div>
         </div>

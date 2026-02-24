@@ -238,9 +238,12 @@ export const assetsService = {
   },
 
   /** Return a previously checked-out tool. */
-  async returnTool(data: ReturnToolRequest): Promise<Asset> {
+  async returnTool(
+    assetId: string,
+    data: ReturnToolRequest,
+  ): Promise<Asset> {
     const res = await apiClient.post<Asset>(
-      ENDPOINTS.ASSETS.TOOLS_RETURN,
+      ENDPOINTS.ASSETS.TOOLS_RETURN(assetId),
       data,
     );
     return res.data;

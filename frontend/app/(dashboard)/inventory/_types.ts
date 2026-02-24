@@ -109,7 +109,10 @@ export interface AddAssetDrawerProps {
 export interface AssignAssetDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset: import('@/types/asset').Asset;
+  /** Pre-fill a single asset by ID (from detail page). */
+  initialAssetId?: string;
+  /** Called after a successful installation to refresh the parent data. */
+  onSuccess?: () => void;
 }
 
 /** Props for the DisposeAssetDrawer */
@@ -163,7 +166,10 @@ export interface PurchaseLineItem {
 export interface RemoveAssetDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset: import('@/types/asset').Asset;
+  /** Pre-fill a single asset by ID (from detail page). */
+  initialAssetId?: string;
+  /** Called after a successful removal to refresh the parent data. */
+  onSuccess?: () => void;
 }
 
 /** Props for the SellAssetDrawer */
@@ -185,7 +191,10 @@ export interface AssignmentsTabProps {
 
 /** Props for MovementsTab */
 export interface MovementsTabProps {
-  movements: import('@/types/asset').AssetMovement[];
+  /** Asset ID — used to fetch transaction history from the API. */
+  assetId: string;
+  /** Aggregated movement summaries from stock summary API (optional). */
+  movementSummary?: import('@/api/assets/assets.types').StockMovementSummary[];
 }
 
 /** Props for OverviewTab */

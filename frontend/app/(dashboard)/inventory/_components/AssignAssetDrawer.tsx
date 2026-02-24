@@ -1,200 +1,331 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FormSelect, FormNumberInput, FormDateInput } from '@/components/ui/form';
-import { MOCK_VEHICLES } from '@/constants/vehicles';
-import { StockUnit } from '@/types/asset';
-import { AlertCircle, Truck } from 'lucide-react';
-import { MOCK_STOCK_UNITS } from '@/constants/asset_details';
+import { FormSelect, FormNumberInput, FormTextarea } from '@/components/ui/form';
+import { AlertCircle, Truck, Loader2, CheckCircle2, Package, Wrench } from 'lucide-react';
+import { assetsService } from '@/api/assets';
+import { trucksService } from '@/api/trucks';
+import type { AssetListItem } from '@/api/assets/assets.types';
+import type { Truck as TruckType } from '@/api/trucks/trucks.types';
 import type { AssignAssetDrawerProps } from '../_types';
 
-export const TYRE_POSITIONS = [
-    { value: 'FL', label: 'Front Left' },
-    { value: 'FR', label: 'Front Right' },
-    { value: 'RLI', label: 'Rear Left Inner' },
-    { value: 'RLO', label: 'Rear Left Outer' },
-    { value: 'RRI', label: 'Rear Right Inner' },
-    { value: 'RRO', label: 'Rear Right Outer' },
+// ---- Position options for tyres -------------------------------------------
+
+const TYRE_POSITIONS = [
+  { value: 'FL', label: 'Front Left' },
+  { value: 'FR', label: 'Front Right' },
+  { value: 'RLI', label: 'Rear Left Inner' },
+  { value: 'RLO', label: 'Rear Left Outer' },
+  { value: 'RRI', label: 'Rear Right Inner' },
+  { value: 'RRO', label: 'Rear Right Outer' },
+  { value: 'SPARE', label: 'Spare' },
 ];
 
-export default function AssignAssetDrawer({ open, onOpenChange, asset }: AssignAssetDrawerProps) {
-  // Form State
+// ---- Component ------------------------------------------------------------
+
+export default function AssignAssetDrawer({
+  open,
+  onOpenChange,
+  initialAssetId,
+  onSuccess,
+}: AssignAssetDrawerProps) {
+  // ---- Data state -----------------------------------------------------------
+  const [assets, setAssets] = useState<AssetListItem[]>([]);
+  const [trucks, setTrucks] = useState<TruckType[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(false);
+
+  // ---- Form state -----------------------------------------------------------
+  const [assetId, setAssetId] = useState('');
   const [truckId, setTruckId] = useState('');
-  const [mountDate, setMountDate] = useState(new Date().toISOString().split('T')[0]);
-  const [odometer, setOdometer] = useState<number>(0);
-  const [engineHours, setEngineHours] = useState<number>(0);
-  
-  // Asset Specific
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedStockUnitId, setSelectedStockUnitId] = useState('');
-  const [tyrePosition, setTyrePosition] = useState('');
+  const [position, setPosition] = useState('');
+  const [odometerAtInstall, setOdometerAtInstall] = useState<number | ''>('');
+  const [notes, setNotes] = useState('');
 
-  const [errors, setErrors] = useState<string[]>([]);
-  
-  // Derived
-  const isSerialTracked = asset.tracking === 'Serial Number';
-  const availableStockUnits = MOCK_STOCK_UNITS.filter(u => u.assetId === asset.id && u.status === 'In Stock');
+  // ---- Submit state ---------------------------------------------------------
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Load truck details when selected
+  // ---- Derived state --------------------------------------------------------
+  const selectedAsset = assets.find((a) => a.id === assetId);
+  const selectedTruck = trucks.find((t) => t.id === truckId);
+  const isTyre = selectedAsset?.assetType === 'TYRE';
+  const isSpare = selectedAsset?.assetType === 'SPARE_PART';
+  const isQuantityBased = selectedAsset?.assetType === 'CONSUMABLE' || selectedAsset?.assetType === 'SPARE_PART';
+  const showPosition = isTyre || isSpare;
+  const maxQuantity = selectedAsset?.quantity ?? 0;
+
+  // ---- Fetch assets & trucks on open ----------------------------------------
+  const fetchData = useCallback(async () => {
+    setIsLoadingData(true);
+    try {
+      const [assetsRes, trucksRes] = await Promise.all([
+        assetsService.getAssets({ limit: 200 }),
+        trucksService.getTrucks({ limit: 200 }),
+      ]);
+      // Only show assets that have stock
+      setAssets(assetsRes.data.filter((a) => a.quantity > 0));
+      setTrucks(trucksRes.data);
+    } catch {
+      // Silent — assets/trucks lists just won't populate
+    } finally {
+      setIsLoadingData(false);
+    }
+  }, []);
+
+  // ---- Reset form on open ---------------------------------------------------
   useEffect(() => {
-      if (truckId) {
-          const truck = MOCK_VEHICLES.find(v => v.id === truckId);
-          if (truck && truck.currentOdometer) {
-              setOdometer(truck.currentOdometer);
-          }
-      }
-  }, [truckId]);
+    if (open) {
+      setAssetId(initialAssetId ?? '');
+      setTruckId('');
+      setQuantity(1);
+      setPosition('');
+      setOdometerAtInstall('');
+      setNotes('');
+      setSubmitError(null);
+      setSubmitSuccess(false);
+      fetchData();
+    }
+  }, [open, initialAssetId, fetchData]);
 
-  const validate = () => {
-    const errs = [];
-    if (!truckId) errs.push('Truck is required');
-    if (!mountDate) errs.push('Assignment Date is required');
-    if (odometer < 0) errs.push('Odometer cannot be negative');
+  // ---- Auto-fill odometer when truck selected --------------------------------
+  useEffect(() => {
+    if (selectedTruck) {
+      setOdometerAtInstall(selectedTruck.currentOdometer);
+    }
+  }, [selectedTruck]);
 
-    if (isSerialTracked) {
-        if (!selectedStockUnitId) errs.push('Specific Serial Number must be selected');
-        // Tyre Logic
-        if (asset.type === 'Spare Part' || asset.name.toLowerCase().includes('tyre')) {
-             if (!tyrePosition) errs.push('Position is required for Tyres/Parts');
-        }
-    } else {
-        if (quantity < 1) errs.push('Quantity must be at least 1');
-        if (quantity > asset.inStock) errs.push(`Quantity exceeds available stock (${asset.inStock})`);
+  // ---- Validate -------------------------------------------------------------
+  const validate = (): string[] => {
+    const errs: string[] = [];
+    if (!assetId) errs.push('Please select an asset.');
+    if (!truckId) errs.push('Please select a truck.');
+    if (isQuantityBased && (quantity < 1 || quantity > maxQuantity)) {
+      errs.push(`Quantity must be between 1 and ${maxQuantity}.`);
+    }
+    if (isTyre && !position) {
+      errs.push('Please select a tyre position.');
+    }
+    return errs;
+  };
+
+  // ---- Submit ---------------------------------------------------------------
+  const handleSubmit = async () => {
+    const errs = validate();
+    if (errs.length > 0) {
+      setSubmitError(errs.join(' '));
+      return;
     }
 
-    setErrors(errs);
-    return errs.length === 0;
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await assetsService.installAsset({
+        assetId,
+        truckId,
+        quantity: isQuantityBased ? quantity : 1,
+        position: showPosition && position ? position : undefined,
+        odometerAtInstall: odometerAtInstall !== '' ? Number(odometerAtInstall) : undefined,
+        notes: notes.trim() || undefined,
+      });
+
+      setSubmitSuccess(true);
+      onSuccess?.();
+
+      // Auto-close after brief success message
+      setTimeout(() => {
+        onOpenChange(false);
+      }, 1500);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Installation failed. Please try again.';
+      setSubmitError(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleSubmit = () => {
-      if (validate()) {
-          // In a real app, this would modify state or call an API
-          console.log("Assigning Asset", { truckId, mountDate, odometer, selectedStockUnitId, quantity, tyrePosition });
-          onOpenChange(false);
-      }
-  };
-
+  // ---- Render ---------------------------------------------------------------
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" size="xl" className="overflow-y-auto">
+      <SheetContent side="right" className="overflow-y-auto sm:max-w-[560px] w-full">
         <SheetHeader className="mb-6">
-          <SheetTitle>Assign to Truck</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <Wrench className="h-5 w-5 text-blue-600" />
+            Install on Truck
+          </SheetTitle>
           <SheetDescription>
-             Allocating {asset.name} to a fleet vehicle.
+            Install an asset onto a fleet vehicle. This will reduce available stock.
           </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-8">
-            {/* Truck Information Section */}
-            <div className="space-y-4">
-                 <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center gap-2">
-                    <Truck className="h-4 w-4" />
-                    Vehicle Information
-                 </h3>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div className="col-span-2">
-                        <FormSelect
-                            label="Select Truck"
-                            value={truckId}
-                            onChange={(e) => setTruckId(e.target.value)}
-                            options={MOCK_VEHICLES.map(v => ({ value: v.id, label: `${v.plateNumber} - ${v.make} ${v.model}` }))}
-                            placeholder="Select a vehicle"
-                        />
-                     </div>
-                     <FormNumberInput
-                        label="Odometer Reading (km)"
-                        value={odometer}
-                        onChange={(e) => setOdometer(Number(e.target.value))}
-                     />
-                     <FormNumberInput
-                        label="Engine Hours (hrs)"
-                        value={engineHours}
-                        onChange={(e) => setEngineHours(Number(e.target.value))}
-                     />
-                     <FormDateInput
-                        label="Assignment Date"
-                        value={mountDate}
-                        onChange={(e) => setMountDate(e.target.value)}
-                     />
-                 </div>
+        {/* Success banner */}
+        {submitSuccess && (
+          <div className="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+            <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-green-800">Installation successful!</p>
+              <p className="text-xs text-green-600">The asset has been installed on the truck.</p>
             </div>
+          </div>
+        )}
 
-            {/* Asset Allocation Section */}
+        {/* Loading data */}
+        {isLoadingData && (
+          <div className="flex items-center justify-center h-32 gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+            <span className="text-sm text-gray-500">Loading assets and trucks…</span>
+          </div>
+        )}
+
+        {/* Form */}
+        {!isLoadingData && !submitSuccess && (
+          <div className="space-y-8">
+            {/* Asset selection */}
             <div className="space-y-4">
-                 <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2">Asset Allocation</h3>
-                 
-                 {isSerialTracked ? (
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="col-span-2">
-                             <FormSelect
-                                label="Stock Unit (Serial Number)"
-                                value={selectedStockUnitId}
-                                onChange={(e) => setSelectedStockUnitId(e.target.value)}
-                                options={availableStockUnits.map(u => ({ 
-                                    value: u.id, 
-                                    label: `${u.serialNumber} (${u.condition})` 
-                                }))}
-                                placeholder={availableStockUnits.length > 0 ? "Select serial number" : "No available units in stock"}
-                                disabled={availableStockUnits.length === 0}
-                             />
-                             {availableStockUnits.length === 0 && (
-                                 <p className="text-xs text-red-500">No stock available for assignment.</p>
-                             )}
-                        </div>
-                        
-                        {(asset.type === 'Spare Part' || asset.type === 'Equipment') && (
-                             <FormSelect
-                                label="Mount Position"
-                                value={tyrePosition}
-                                onChange={(e) => setTyrePosition(e.target.value)}
-                                options={TYRE_POSITIONS}
-                                placeholder="Select position"
-                             />
-                        )}
-                     </div>
-                 ) : (
-                      <div className="space-y-2">
-                         <label className="text-sm font-medium">Quantity to Assign</label>
-                         <div className="flex items-center gap-3">
-                             <Input 
-                                type="number" 
-                                min={1}
-                                max={asset.inStock}
-                                value={quantity} 
-                                onChange={(e) => setQuantity(Number(e.target.value))}
-                                className="w-32"
-                             />
-                             <span className="text-sm text-gray-500">
-                                 / {asset.inStock} available
-                             </span>
-                         </div>
-                      </div>
-                 )}
-            </div>
+              <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center gap-2">
+                <Package className="h-4 w-4 text-gray-500" />
+                Asset
+              </h3>
+              <FormSelect
+                label="Select Asset"
+                value={assetId}
+                onChange={(e) => {
+                  setAssetId(e.target.value);
+                  setQuantity(1);
+                  setPosition('');
+                }}
+                options={assets.map((a) => ({
+                  value: a.id,
+                  label: `${a.name} (${a.quantity} available)`,
+                }))}
+                placeholder="Choose an asset to install"
+                disabled={!!initialAssetId}
+              />
 
-            {/* Errors */}
-            {errors.length > 0 && (
-                <div className="bg-red-50 border border-red-200 p-4 rounded-md">
-                    <div className="flex items-center gap-2 text-red-800 font-medium mb-2">
-                         <AlertCircle className="h-4 w-4" />
-                         Validation Error
+              {selectedAsset && (
+                <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">Type</span>
+                    <span className="text-xs font-medium text-gray-700">{selectedAsset.assetType.replace(/_/g, ' ')}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">Available stock</span>
+                    <span className="text-xs font-medium text-gray-700">{selectedAsset.quantity}</span>
+                  </div>
+                  {selectedAsset.storageLocation && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500">Location</span>
+                      <span className="text-xs font-medium text-gray-700">{selectedAsset.storageLocation}</span>
                     </div>
-                    <ul className="list-disc list-inside text-sm text-red-700">
-                        {errors.map((e, i) => <li key={i}>{e}</li>)}
-                    </ul>
+                  )}
                 </div>
-            )}
-        </div>
+              )}
+            </div>
 
-        <div className="mt-8 flex justify-end gap-3">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 text-white">
-                Confirm Assignment
+            {/* Truck selection */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 flex items-center gap-2">
+                <Truck className="h-4 w-4 text-gray-500" />
+                Vehicle
+              </h3>
+              <FormSelect
+                label="Select Truck"
+                value={truckId}
+                onChange={(e) => setTruckId(e.target.value)}
+                options={trucks.map((t) => ({
+                  value: t.id,
+                  label: `${t.registrationNumber} — ${t.make} ${t.model}`,
+                }))}
+                placeholder="Choose a vehicle"
+              />
+
+              <FormNumberInput
+                label="Odometer at Install (km)"
+                value={odometerAtInstall}
+                onChange={(e) => setOdometerAtInstall(e.target.value ? Number(e.target.value) : '')}
+                min={0}
+                description={selectedTruck ? `Current: ${selectedTruck.currentOdometer.toLocaleString()} km` : undefined}
+              />
+            </div>
+
+            {/* Installation details */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2">
+                Installation Details
+              </h3>
+
+              {/* Quantity (for consumable / spare parts) */}
+              {isQuantityBased && selectedAsset && (
+                <FormNumberInput
+                  label="Quantity"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, Math.min(maxQuantity, Number(e.target.value) || 1)))}
+                  min={1}
+                  max={maxQuantity}
+                  description={`Max: ${maxQuantity}`}
+                />
+              )}
+
+              {/* Position (for tyres / spare parts) */}
+              {showPosition && (
+                <FormSelect
+                  label={isTyre ? 'Tyre Position' : 'Mount Position'}
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  options={TYRE_POSITIONS}
+                  placeholder="Select position"
+                />
+              )}
+
+              {/* Notes */}
+              <FormTextarea
+                label="Notes"
+                id="install-notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Optional notes about this installation…"
+              />
+            </div>
+
+            {/* Error banner */}
+            {submitError && (
+              <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+                <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-red-800">Error</p>
+                  <p className="text-xs text-red-600 mt-0.5">{submitError}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Footer */}
+        {!submitSuccess && !isLoadingData && (
+          <SheetFooter className="mt-8">
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              Cancel
             </Button>
-        </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting || !assetId || !truckId}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Installing…
+                </>
+              ) : (
+                'Confirm Installation'
+              )}
+            </Button>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );
