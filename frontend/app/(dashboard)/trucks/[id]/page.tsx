@@ -136,10 +136,10 @@ export default function TruckDetailsPage() {
         </div>
       </Tabs>
 
+      {/* Edit drawer — disabled until detail page migrates to real API data */}
       <AddTruckDrawer
         open={showEditDrawer}
         onOpenChange={setShowEditDrawer}
-        initialTruck={truck}
         onAddComplete={() => setShowEditDrawer(false)}
       />
 

@@ -124,6 +124,7 @@ export function DataTable<TData>({
   // Loading & empty
   isLoading = false,
   skeletonRowCount = 5,
+  minRows = 0,
   emptyState,
   // Toolbar
   toolbar,
@@ -444,6 +445,26 @@ export function DataTable<TData>({
                       </TableCell>
                     );
                   })}
+                </TableRow>
+              ))}
+
+            {/* Filler rows — pad the table when there are fewer rows than minRows */}
+            {!isLoading &&
+              paginatedData.length > 0 &&
+              paginatedData.length < minRows &&
+              Array.from({ length: minRows - paginatedData.length }).map((_, i) => (
+                <TableRow key={`filler-${i}`} className="pointer-events-none">
+                  {columns.map((col) => (
+                    <TableCell
+                      key={col.id}
+                      className={cn(
+                        col.hideOnMobile && 'hidden md:table-cell',
+                        col.className,
+                      )}
+                    >
+                      &nbsp;
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
           </TableBody>

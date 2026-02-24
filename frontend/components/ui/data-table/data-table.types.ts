@@ -192,6 +192,13 @@ export interface DataTableProps<TData> {
   /** Number of skeleton rows to show when loading. Default: `5`. */
   skeletonRowCount?: number;
 
+  /**
+   * Minimum number of rows to display. When the actual data has fewer rows
+   * than this, empty placeholder rows are appended to maintain a consistent
+   * table height. Default: `0` (no filler rows).
+   */
+  minRows?: number;
+
   /** Configuration for the empty state. */
   emptyState?: EmptyStateConfig;
 

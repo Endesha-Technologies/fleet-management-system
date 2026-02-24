@@ -1,58 +1,167 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+// ---------------------------------------------------------------------------
+// TruckTable — Displays a paginated, filterable list of trucks from the API
+// ---------------------------------------------------------------------------
+// Columns are aligned with the API `Truck` type. Filters correspond to the
+// server-side `TruckListParams` (status, bodyType, ownershipType). On mobile
+// viewports the DataTable's `mobileCard` render prop is used to display a
+// compact card instead of table rows.
+// ---------------------------------------------------------------------------
+
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { DataTable } from '@/components/ui/data-table';
 import type { ColumnDef } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Select } from '@/components/ui/select';
 import {
-  MoreHorizontal,
   Eye,
-  Edit,
+  Pencil,
   Truck as TruckIcon,
-  RefreshCw,
-  AlertCircle,
+  Gauge,
+  ChevronRight,
   X,
 } from 'lucide-react';
-import type { Truck } from '@/types/truck';
-import type { TruckTableProps } from '../_types';
+import type {
+  Truck,
+  TruckStatus,
+  BodyType,
+} from '@/api/trucks/trucks.types';
 
 // ---------------------------------------------------------------------------
-// Status badge helper
+// Display-label maps (enum → human-readable)
 // ---------------------------------------------------------------------------
 
-function getStatusBadge(status: string) {
-  switch (status) {
-    case 'Active':
-      return (
-        <Badge className="bg-green-100 text-green-800 hover:bg-green-200 border-green-200">
-          Active
-        </Badge>
-      );
-    case 'Maintenance':
-      return (
-        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-200">
-          Maintenance
-        </Badge>
-      );
-    case 'Inactive':
-      return (
-        <Badge className="bg-red-100 text-red-800 hover:bg-red-200 border-red-200">
-          Inactive
-        </Badge>
-      );
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
+const STATUS_CONFIG: Record<
+  TruckStatus,
+  { label: string; className: string }
+> = {
+  ACTIVE: {
+    label: 'Active',
+    className:
+      'bg-green-100 text-green-800 border-green-200 hover:bg-green-200',
+  },
+  INACTIVE: {
+    label: 'Inactive',
+    className:
+      'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200',
+  },
+  IN_MAINTENANCE: {
+    label: 'In Maintenance',
+    className:
+      'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200',
+  },
+  DECOMMISSIONED: {
+    label: 'Decommissioned',
+    className: 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200',
+  },
+};
+
+const BODY_TYPE_LABELS: Record<BodyType, string> = {
+  RIGID: 'Rigid',
+  TRACTOR: 'Tractor',
+  TRAILER: 'Trailer',
+  TANKER: 'Tanker',
+  FLATBED: 'Flatbed',
+  TIPPER: 'Tipper',
+  REFRIGERATED: 'Refrigerated',
+  CURTAIN_SIDE: 'Curtain Side',
+  BOX_BODY: 'Box Body',
+  LOW_LOADER: 'Low Loader',
+};
+
+const FUEL_TYPE_LABELS: Record<string, string> = {
+  DIESEL: 'Diesel',
+  PETROL: 'Petrol',
+  CNG: 'CNG',
+  LNG: 'LNG',
+};
+
+function formatOdometer(km: number): string {
+  return km.toLocaleString('en-US');
+}
+
+// ---------------------------------------------------------------------------
+// Filter types & constants (aligned with TruckListParams)
+// ---------------------------------------------------------------------------
+
+export interface TruckFilterValues {
+  status: string;
+  bodyType: string;
+  ownershipType: string;
+}
+
+export const EMPTY_FILTERS: TruckFilterValues = {
+  status: 'all',
+  bodyType: 'all',
+  ownershipType: 'all',
+};
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'INACTIVE', label: 'Inactive' },
+  { value: 'IN_MAINTENANCE', label: 'In Maintenance' },
+  { value: 'DECOMMISSIONED', label: 'Decommissioned' },
+];
+
+const BODY_TYPE_OPTIONS = [
+  { value: 'all', label: 'All Body Types' },
+  { value: 'RIGID', label: 'Rigid' },
+  { value: 'TRACTOR', label: 'Tractor' },
+  { value: 'TRAILER', label: 'Trailer' },
+  { value: 'TANKER', label: 'Tanker' },
+  { value: 'FLATBED', label: 'Flatbed' },
+  { value: 'TIPPER', label: 'Tipper' },
+  { value: 'REFRIGERATED', label: 'Refrigerated' },
+  { value: 'CURTAIN_SIDE', label: 'Curtain Side' },
+  { value: 'BOX_BODY', label: 'Box Body' },
+  { value: 'LOW_LOADER', label: 'Low Loader' },
+];
+
+const OWNERSHIP_OPTIONS = [
+  { value: 'all', label: 'All Ownership' },
+  { value: 'OWNED', label: 'Owned' },
+  { value: 'LEASED', label: 'Leased' },
+  { value: 'RENTED', label: 'Rented' },
+];
+
+// ---------------------------------------------------------------------------
+// Component props
+// ---------------------------------------------------------------------------
+
+interface TruckTableProps {
+  trucks: Truck[];
+  isLoading?: boolean;
+  pagination?: {
+    page: number;
+    pageSize: number;
+    total: number;
+  };
+  /** Current filter dropdown values. */
+  filters: TruckFilterValues;
+  /** Current search text (controlled from the page). */
+  searchQuery: string;
+  onSearchChange: (search: string) => void;
+  onFiltersChange: (filters: TruckFilterValues) => void;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+  onView?: (truck: Truck) => void;
+  onEdit?: (truck: Truck) => void;
+}
+
+// ---------------------------------------------------------------------------
+// Status badge
+// ---------------------------------------------------------------------------
+
+function StatusBadge({ status }: { status: TruckStatus }) {
+  const config = STATUS_CONFIG[status] ?? {
+    label: status,
+    className: '',
+  };
+  return <Badge className={config.className}>{config.label}</Badge>;
 }
 
 // ---------------------------------------------------------------------------
@@ -65,9 +174,9 @@ function buildColumns(
 ): ColumnDef<Truck>[] {
   return [
     {
-      id: 'plateNumber',
-      header: 'Plate Number',
-      accessorKey: 'plateNumber',
+      id: 'registrationNumber',
+      header: 'Registration',
+      accessorKey: 'registrationNumber',
       sortable: true,
       cell: (truck) => (
         <div className="flex flex-col">
@@ -76,9 +185,13 @@ function buildColumns(
             className="text-blue-600 hover:underline hover:text-blue-800 font-semibold"
             onClick={(e) => e.stopPropagation()}
           >
-            {truck.plateNumber}
+            {truck.registrationNumber}
           </Link>
-          <span className="text-xs text-gray-500">{truck.axleConfig}</span>
+          {truck.fleetNumber && (
+            <span className="text-xs text-gray-500">
+              {truck.fleetNumber}
+            </span>
+          )}
         </div>
       ),
     },
@@ -96,32 +209,14 @@ function buildColumns(
       ),
     },
     {
-      id: 'driver',
-      header: 'Driver',
-      accessorFn: (row) => row.driver?.name ?? '',
-      cell: (truck) =>
-        truck.driver ? (
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
-              {truck.driver.name.charAt(0)}
-            </div>
-            <span className="text-sm text-gray-700">{truck.driver.name}</span>
-          </div>
-        ) : (
-          <span className="text-gray-400 text-sm italic">Unassigned</span>
-        ),
-    },
-    {
-      id: 'odometer',
-      header: 'Odometer',
-      accessorKey: 'currentOdometer',
-      align: 'center',
-      searchable: false,
-      sortable: true,
+      id: 'bodyType',
+      header: 'Body Type',
+      accessorKey: 'bodyType',
+      hideOnMobile: true,
       cell: (truck) => (
-        <span className="font-mono text-sm text-gray-600">
-          {truck.currentOdometer.toLocaleString()} km
-        </span>
+        <Badge variant="outline" className="text-gray-600 font-normal">
+          {BODY_TYPE_LABELS[truck.bodyType] ?? truck.bodyType}
+        </Badge>
       ),
     },
     {
@@ -130,67 +225,93 @@ function buildColumns(
       accessorKey: 'status',
       align: 'center',
       searchable: false,
-      cell: (truck) => getStatusBadge(truck.status),
+      cell: (truck) => <StatusBadge status={truck.status} />,
     },
     {
-      id: 'alerts',
-      header: 'Alerts',
-      accessorKey: 'alerts',
+      id: 'odometer',
+      header: 'Odometer',
+      accessorKey: 'currentOdometer',
+      align: 'right',
+      searchable: false,
+      sortable: true,
+      hideOnMobile: true,
+      cell: (truck) => (
+        <span className="font-mono text-sm text-gray-600">
+          {formatOdometer(truck.currentOdometer)} km
+        </span>
+      ),
+    },
+    {
+      id: 'fuelType',
+      header: 'Fuel',
+      accessorKey: 'fuelType',
+      hideOnMobile: true,
+      searchable: false,
+      cell: (truck) => (
+        <span className="text-sm text-gray-600">
+          {FUEL_TYPE_LABELS[truck.fuelType] ?? truck.fuelType}
+        </span>
+      ),
+    },
+    {
+      id: 'axles',
+      header: 'Axles',
+      accessorFn: (row) => row.truckAxles?.length ?? 0,
       align: 'center',
       searchable: false,
-      cell: (truck) =>
-        truck.alerts > 0 ? (
-          <Badge
-            variant="outline"
-            className="text-red-600 bg-red-50 border-red-200 gap-1 pl-1.5"
+      hideOnMobile: true,
+      cell: (truck) => {
+        const count = truck.truckAxles?.length ?? 0;
+        const totalPositions =
+          truck.truckAxles?.reduce(
+            (sum, a) => sum + a.positionsPerSide * 2,
+            0,
+          ) ?? 0;
+        return (
+          <span
+            className="text-sm text-gray-600"
+            title={`${totalPositions} tyre positions`}
           >
-            <AlertCircle className="w-3 h-3" />
-            {truck.alerts}
-          </Badge>
-        ) : (
-          <span className="text-gray-300">-</span>
-        ),
+            {count}{' '}
+            <span className="text-gray-400 text-xs">
+              ({totalPositions}T)
+            </span>
+          </span>
+        );
+      },
     },
     {
       id: 'actions',
-      header: 'Actions',
+      header: '',
       align: 'right',
       searchable: false,
       cell: (truck) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-gray-500 hover:text-gray-900"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => onView?.(truck)}
-            >
-              <Eye className="mr-2 h-4 w-4 text-blue-600" />
-              <span>View Details</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => onEdit?.(truck)}
-            >
-              <Edit className="mr-2 h-4 w-4 text-gray-600" />
-              <span>Edit Truck</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              <RefreshCw className="mr-2 h-4 w-4 text-orange-600" />
-              <span>Rotate Tyres</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              onView?.(truck);
+            }}
+          >
+            <Eye className="h-4 w-4 mr-1" />
+            Details
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit?.(truck);
+            }}
+          >
+            <Pencil className="h-4 w-4 mr-1" />
+            Edit
+          </Button>
+        </div>
       ),
     },
   ];
@@ -201,51 +322,51 @@ function buildColumns(
 // ---------------------------------------------------------------------------
 
 function TruckFiltersToolbar({
-  trucks,
-  statusFilter,
-  setStatusFilter,
-  makeFilter,
-  setMakeFilter,
-  hasActiveFilters,
-  clearFilters,
+  filters,
+  onFiltersChange,
 }: {
-  trucks: Truck[];
-  statusFilter: string;
-  setStatusFilter: (v: string) => void;
-  makeFilter: string;
-  setMakeFilter: (v: string) => void;
-  hasActiveFilters: boolean;
-  clearFilters: () => void;
+  filters: TruckFilterValues;
+  onFiltersChange: (filters: TruckFilterValues) => void;
 }) {
-  const uniqueMakes = useMemo(() => {
-    const makes = new Set(trucks.map((t) => t.make));
-    return Array.from(makes).sort();
-  }, [trucks]);
+  const hasActiveFilters =
+    filters.status !== 'all' ||
+    filters.bodyType !== 'all' ||
+    filters.ownershipType !== 'all';
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-      <div className="w-full sm:w-48">
+    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+      <div className="w-full sm:w-40">
         <Select
-          value={makeFilter}
-          onChange={(e) => setMakeFilter(e.target.value)}
-          options={[
-            { value: 'all', label: 'All Makes' },
-            ...uniqueMakes.map((make) => ({ value: make, label: make })),
-          ]}
+          value={filters.status}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, status: e.target.value })
+          }
+          options={STATUS_OPTIONS}
           className="bg-white border-gray-200"
         />
       </div>
 
-      <div className="w-full sm:w-48">
+      <div className="w-full sm:w-40">
         <Select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          options={[
-            { value: 'all', label: 'All Statuses' },
-            { value: 'Active', label: 'Active' },
-            { value: 'Maintenance', label: 'Maintenance' },
-            { value: 'Inactive', label: 'Inactive' },
-          ]}
+          value={filters.bodyType}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, bodyType: e.target.value })
+          }
+          options={BODY_TYPE_OPTIONS}
+          className="bg-white border-gray-200"
+        />
+      </div>
+
+      <div className="w-full sm:w-40">
+        <Select
+          value={filters.ownershipType}
+          onChange={(e) =>
+            onFiltersChange({
+              ...filters,
+              ownershipType: e.target.value,
+            })
+          }
+          options={OWNERSHIP_OPTIONS}
           className="bg-white border-gray-200"
         />
       </div>
@@ -254,10 +375,10 @@ function TruckFiltersToolbar({
         <Button
           variant="ghost"
           size="sm"
-          onClick={clearFilters}
+          onClick={() => onFiltersChange(EMPTY_FILTERS)}
           className="h-10 text-red-600 hover:text-red-700 hover:bg-red-50"
         >
-          <X className="h-4 w-4 mr-2" />
+          <X className="h-4 w-4 mr-1" />
           Clear
         </Button>
       )}
@@ -266,61 +387,150 @@ function TruckFiltersToolbar({
 }
 
 // ---------------------------------------------------------------------------
-// Component
+// Mobile card
 // ---------------------------------------------------------------------------
 
-export function TruckTable({ trucks, onView, onEdit }: TruckTableProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [makeFilter, setMakeFilter] = useState('all');
+function TruckMobileCard({
+  truck,
+  onView,
+}: {
+  truck: Truck;
+  onView?: (truck: Truck) => void;
+}) {
+  return (
+    <div
+      className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm active:bg-gray-50 transition-colors"
+      onClick={() => onView?.(truck)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onView?.(truck);
+        }
+      }}
+    >
+      {/* Header: Registration + Status */}
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <Link
+            href={`/trucks/${truck.id}`}
+            className="text-base font-bold text-blue-700 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {truck.registrationNumber}
+          </Link>
+          {truck.fleetNumber && (
+            <p className="text-xs text-gray-500 mt-0.5">
+              {truck.fleetNumber}
+            </p>
+          )}
+        </div>
+        <StatusBadge status={truck.status} />
+      </div>
 
-  const columns = useMemo(() => buildColumns(onView, onEdit), [onView, onEdit]);
+      {/* Body: Make, Model, Type */}
+      <div className="space-y-1.5 mb-3">
+        <p className="text-sm text-gray-800">
+          <span className="font-medium">{truck.make}</span>{' '}
+          <span className="text-gray-600">{truck.model}</span>
+          <span className="text-gray-400 ml-1">• {truck.year}</span>
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge
+            variant="outline"
+            className="text-xs text-gray-600 font-normal"
+          >
+            {BODY_TYPE_LABELS[truck.bodyType] ?? truck.bodyType}
+          </Badge>
+          <span className="text-xs text-gray-500">
+            {FUEL_TYPE_LABELS[truck.fuelType] ?? truck.fuelType}
+          </span>
+          {truck.ownershipType && (
+            <span className="text-xs text-gray-400">
+              • {truck.ownershipType.charAt(0) +
+                truck.ownershipType.slice(1).toLowerCase()}
+            </span>
+          )}
+        </div>
+      </div>
 
-  // Pre-filter by status and make — DataTable handles search
-  const filteredTrucks = useMemo(() => {
-    let list = trucks;
-    if (statusFilter !== 'all') {
-      list = list.filter((t) => t.status === statusFilter);
-    }
-    if (makeFilter !== 'all') {
-      list = list.filter((t) => t.make === makeFilter);
-    }
-    return list;
-  }, [trucks, statusFilter, makeFilter]);
+      {/* Footer: Odometer + chevron */}
+      <div className="flex items-center justify-between border-t border-gray-100 pt-2.5">
+        <div className="flex items-center gap-1.5 text-sm text-gray-600">
+          <Gauge className="h-3.5 w-3.5 text-gray-400" />
+          <span className="font-mono">
+            {formatOdometer(truck.currentOdometer)} km
+          </span>
+        </div>
+        <ChevronRight className="h-4 w-4 text-gray-400" />
+      </div>
+    </div>
+  );
+}
 
-  const hasActiveFilters =
-    statusFilter !== 'all' || makeFilter !== 'all' || searchQuery !== '';
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
 
-  const clearFilters = () => {
-    setSearchQuery('');
-    setStatusFilter('all');
-    setMakeFilter('all');
-  };
+export function TruckTable({
+  trucks,
+  isLoading = false,
+  pagination,
+  filters,
+  searchQuery,
+  onSearchChange,
+  onFiltersChange,
+  onPageChange,
+  onPageSizeChange,
+  onView,
+  onEdit,
+}: TruckTableProps) {
+  const columns = useMemo(
+    () => buildColumns(onView, onEdit),
+    [onView, onEdit],
+  );
 
   return (
     <DataTable
       columns={columns}
-      data={filteredTrucks}
+      data={trucks}
       getRowId={(row) => row.id}
+      // Search — controlled from the parent page (debounced → API)
       searchValue={searchQuery}
-      onSearchChange={setSearchQuery}
-      searchPlaceholder="Search trucks, drivers, plates..."
+      onSearchChange={onSearchChange}
+      searchPlaceholder="Search by registration, make, model…"
+      // Server-side pagination
+      pagination={
+        pagination
+          ? {
+              page: pagination.page,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+            }
+          : undefined
+      }
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      isLoading={isLoading}
+      // Filters
       toolbar={
         <TruckFiltersToolbar
-          trucks={trucks}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          makeFilter={makeFilter}
-          setMakeFilter={setMakeFilter}
-          hasActiveFilters={hasActiveFilters}
-          clearFilters={clearFilters}
+          filters={filters}
+          onFiltersChange={onFiltersChange}
         />
       }
+      // Mobile card view (replaces table rows on <md)
+      mobileCard={(truck) => (
+        <TruckMobileCard truck={truck} onView={onView} />
+      )}
       emptyState={{
         icon: TruckIcon,
         title: 'No trucks found',
-        description: 'No trucks found matching your filters.',
+        description:
+          'No trucks match your current filters. Try adjusting your search or filter criteria.',
       }}
+      onRowClick={onView}
     />
   );
 }

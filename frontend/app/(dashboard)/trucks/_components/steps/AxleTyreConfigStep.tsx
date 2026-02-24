@@ -1,135 +1,262 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { FormSelect, FormCheckbox } from '@/components/ui/form';
-import type { AxleTyreConfigStepProps, TyrePosition } from '../../_types';
+import React, { useCallback, useMemo } from 'react';
+import { Plus, X } from 'lucide-react';
+import { FormInput, FormSelect } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import type {
+  FormStepProps,
+  AxleConfig,
+} from '../../_types';
+import {
+  AXLE_TYPE_OPTIONS,
+  POSITIONS_PER_SIDE_OPTIONS,
+  createDefaultAxle,
+} from '../../_types';
 
-export function AxleTyreConfigStep({ formData, setFormData }: AxleTyreConfigStepProps) {
-  const handleChange = (field: string, value: string | boolean) => {
-    setFormData({ ...formData, [field]: value });
-  };
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-  const generateTyrePositions = useMemo(() => {
-    const positions: TyrePosition[] = [];
+const MAX_AXLES = 8;
 
-    // Steer Axle (1)
-    const steerCount = parseInt(formData.steerAxles) || 2;
-    for (let i = 0; i < steerCount; i++) {
-      positions.push({
-        id: `steer-${i}`,
-        name: `Steer ${i + 1}`,
-        row: 'Steer Axle (1)',
-        side: i === 0 ? 'Left' : i === 1 ? 'Right' : `Dual ${i - 1}`,
-      });
-    }
+const COMMON_TYRE_SIZES = [
+  '295/80R22.5',
+  '315/80R22.5',
+  '385/65R22.5',
+  '12R22.5',
+  '11R22.5',
+  '275/70R22.5',
+];
 
-    // Drive Axles
-    const driveCount = parseInt(formData.driveAxles) || 2;
-    const tyresPerDriveAxle = formData.twinTyresOnDrive ? 2 : 1;
+// ---------------------------------------------------------------------------
+// Single Axle Card
+// ---------------------------------------------------------------------------
 
-    for (let axle = 0; axle < driveCount; axle++) {
-      for (let tyre = 0; tyre < tyresPerDriveAxle; tyre++) {
-        positions.push({
-          id: `drive-${axle}-${tyre}`,
-          name: `Drive Axle ${axle + 1}`,
-          row: `Drive Axle ${axle + 1}`,
-          side:
-            tyresPerDriveAxle === 1
-              ? 'Single'
-              : tyre === 0
-                ? 'Left'
-                : 'Right',
-        });
-      }
-    }
+interface AxleCardProps {
+  axle: AxleConfig;
+  index: number;
+  canRemove: boolean;
+  onUpdate: (key: string, field: keyof Omit<AxleConfig, 'key'>, value: string) => void;
+  onRemove: (key: string) => void;
+}
 
-    // Lift Axle
-    if (formData.liftAxlePresent) {
-      const liftCount = 2; // Typical lift axle configuration
-      for (let i = 0; i < liftCount; i++) {
-        positions.push({
-          id: `lift-${i}`,
-          name: `Lift Axle`,
-          row: 'Lift Axle',
-          side: i === 0 ? 'Left' : 'Right',
-        });
-      }
-    }
-
-    return positions;
-  }, [
-    formData.steerAxles,
-    formData.driveAxles,
-    formData.liftAxlePresent,
-    formData.twinTyresOnDrive,
-  ]);
-
+function AxleCard({ axle, index, canRemove, onUpdate, onRemove }: AxleCardProps) {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-4">
-        <FormSelect
-          label="Steer Axles (Number)"
-          required
-          value={formData.steerAxles}
-          onChange={(e) => handleChange('steerAxles', e.target.value)}
-          options={[
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-            { value: '3', label: '3' },
-          ]}
-        />
-        <FormSelect
-          label="Drive Axles (Number)"
-          required
-          value={formData.driveAxles}
-          onChange={(e) => handleChange('driveAxles', e.target.value)}
-          options={[
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-            { value: '3', label: '3' },
-          ]}
-        />
-        <div className="flex items-end">
-          <FormCheckbox
-            label="Lift Axle Present"
-            checked={formData.liftAxlePresent}
-            onCheckedChange={(checked) => handleChange('liftAxlePresent', checked)}
+    <div className="relative rounded-lg border border-gray-200 bg-white">
+      {/* Card Header */}
+      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+        <h4 className="text-sm font-semibold text-gray-900">
+          Axle {index}
+          {axle.name && (
+            <span className="ml-2 font-normal text-gray-500">— {axle.name}</span>
+          )}
+        </h4>
+        {canRemove && (
+          <button
+            type="button"
+            onClick={() => onRemove(axle.key)}
+            className="rounded-md p-1 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+            aria-label={`Remove axle ${index}`}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Card Body */}
+      <div className="space-y-4 p-4">
+        {/* Row 1: Name, Type, Positions/Side */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <FormInput
+            label="Name"
+            value={axle.name}
+            onChange={(e) => onUpdate(axle.key, 'name', e.target.value)}
+            placeholder="e.g. Front Steer"
+          />
+          <FormSelect
+            label="Type"
+            required
+            value={axle.type}
+            onChange={(e) => onUpdate(axle.key, 'type', e.target.value)}
+            placeholder="Select type"
+            options={AXLE_TYPE_OPTIONS.map((o) => ({
+              value: o.value,
+              label: o.label,
+            }))}
+          />
+          <FormSelect
+            label="Positions / Side"
+            required
+            value={axle.positionsPerSide}
+            onChange={(e) => onUpdate(axle.key, 'positionsPerSide', e.target.value)}
+            placeholder="Select"
+            options={POSITIONS_PER_SIDE_OPTIONS}
           />
         </div>
+
+        {/* Row 2: Tyre Size, Max Load */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            label="Tyre Size"
+            value={axle.tyreSize}
+            onChange={(e) => onUpdate(axle.key, 'tyreSize', e.target.value)}
+            placeholder="e.g. 295/80R22.5"
+            list={`tyre-sizes-${axle.key}`}
+          />
+          <FormInput
+            label="Max Load (kg)"
+            value={axle.maxLoad}
+            onChange={(e) => onUpdate(axle.key, 'maxLoad', e.target.value)}
+            placeholder="e.g. 7000"
+            type="number"
+          />
+        </div>
+
+        {/* Tyre size datalist for auto-suggest */}
+        <datalist id={`tyre-sizes-${axle.key}`}>
+          {COMMON_TYRE_SIZES.map((size) => (
+            <option key={size} value={size} />
+          ))}
+        </datalist>
       </div>
+    </div>
+  );
+}
 
-      <FormCheckbox
-        label="Twin Tyres on Drive Axles"
-        checked={formData.twinTyresOnDrive}
-        onCheckedChange={(checked) => handleChange('twinTyresOnDrive', checked)}
-      />
+// ---------------------------------------------------------------------------
+// Summary Bar
+// ---------------------------------------------------------------------------
 
-      {/* Tyre Position Preview */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 p-4 border-b border-gray-200">
-          <h3 className="font-medium text-gray-900">Tyre Positions Preview</h3>
-          <p className="text-xs text-gray-600 mt-1">
-            {generateTyrePositions.length} tyre positions will be created
+function AxleSummary({ axles }: { axles: AxleConfig[] }) {
+  const stats = useMemo(() => {
+    let totalPositions = 0;
+    const typeCounts: Record<string, number> = {};
+
+    for (const axle of axles) {
+      const perSide = parseInt(axle.positionsPerSide) || 0;
+      totalPositions += perSide * 2; // left + right
+      const label = AXLE_TYPE_OPTIONS.find((o) => o.value === axle.type)?.label ?? (axle.type || 'Unset');
+      typeCounts[label] = (typeCounts[label] ?? 0) + 1;
+    }
+
+    return { totalPositions, typeCounts };
+  }, [axles]);
+
+  return (
+    <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
+        <span className="font-medium text-blue-900">
+          {axles.length} {axles.length === 1 ? 'axle' : 'axles'}
+        </span>
+        <span className="text-blue-700">
+          {stats.totalPositions} tyre {stats.totalPositions === 1 ? 'position' : 'positions'}
+        </span>
+        <span className="text-blue-600">
+          {Object.entries(stats.typeCounts)
+            .map(([type, count]) => `${count} ${type}`)
+            .join(', ')}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
+
+export function AxleTyreConfigStep({ formData, setFormData }: FormStepProps) {
+  const axles = formData.axles;
+
+  // Update a single field on a single axle
+  const handleUpdateAxle = useCallback(
+    (key: string, field: keyof Omit<AxleConfig, 'key'>, value: string) => {
+      setFormData({
+        ...formData,
+        axles: formData.axles.map((a) =>
+          a.key === key ? { ...a, [field]: value } : a
+        ),
+      });
+    },
+    [formData, setFormData]
+  );
+
+  // Remove an axle
+  const handleRemoveAxle = useCallback(
+    (key: string) => {
+      setFormData({
+        ...formData,
+        axles: formData.axles.filter((a) => a.key !== key),
+      });
+    },
+    [formData, setFormData]
+  );
+
+  // Add a new axle (blank — user fills in all fields)
+  const handleAddAxle = useCallback(() => {
+    if (formData.axles.length >= MAX_AXLES) return;
+
+    setFormData({
+      ...formData,
+      axles: [...formData.axles, createDefaultAxle()],
+    });
+  }, [formData, setFormData]);
+
+  return (
+    <div className="space-y-4">
+      {/* Header with Add button */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-base font-semibold text-gray-900">Axle Configuration</h3>
+          <p className="text-sm text-gray-500">
+            Configure each axle with its type, tyre positions, and specifications.
           </p>
         </div>
-        <div className="p-4 bg-white">
-          <div className="grid grid-cols-2 gap-3">
-            {generateTyrePositions.map((position) => (
-              <div
-                key={position.id}
-                className="border border-gray-200 rounded-lg p-3 bg-gray-50"
-              >
-                <div className="text-sm font-medium text-gray-900">{position.name}</div>
-                <div className="text-xs text-gray-600">
-                  {position.row} - {position.side}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddAxle}
+          disabled={axles.length >= MAX_AXLES}
+          className="shrink-0"
+        >
+          <Plus className="mr-1.5 h-4 w-4" />
+          Add Axle
+        </Button>
       </div>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+      {/* Axle Cards */}
+      <div className="space-y-3">
+        {axles.map((axle, index) => (
+          <AxleCard
+            key={axle.key}
+            axle={axle}
+            index={index}
+            canRemove={axles.length > 1}
+            onUpdate={handleUpdateAxle}
+            onRemove={handleRemoveAxle}
+          />
+        ))}
+      </div>
+
+      {/* Add Axle — bottom CTA (when there are already axles) */}
+      {axles.length > 0 && axles.length < MAX_AXLES && (
+        <button
+          type="button"
+          onClick={handleAddAxle}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-200 py-3 text-sm font-medium text-gray-500 transition-colors hover:border-blue-300 hover:text-blue-600"
+        >
+          <Plus className="h-4 w-4" />
+          Add Axle
+        </button>
+      )}
+
+      {/* Summary */}
+      {axles.length > 0 && <AxleSummary axles={axles} />}
+
+      {/* Help text */}
+      <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3">
         <p className="text-sm text-green-800">
           After you submit, you&apos;ll be able to assign tyres to these positions.
         </p>

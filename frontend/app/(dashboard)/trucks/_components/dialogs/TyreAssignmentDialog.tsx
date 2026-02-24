@@ -1,117 +1,245 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { X, Search } from 'lucide-react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { X, Loader2, AlertCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FormInput } from '@/components/ui/form';
-import type { TyreAssignmentDialogProps, TyrePosition, TyreAssignment } from '../../_types';
+import { tyresService } from '@/api/tyres/tyres.service';
+import { assetsService } from '@/api/assets/assets.service';
+import type { TyreAxlePositions, PositionSummary } from '@/api/tyres/tyres.types';
+import type { AssetListItem } from '@/api/assets/assets.types';
+import type { TyreAssignmentDialogProps } from '../../_types';
 
-// Mock available tyres
-const AVAILABLE_TYRES = [
-  { id: 'tyre-1', code: 'TYRE-001', size: '275/80 R22.5', brand: 'Bridgestone', condition: 'Good' },
-  { id: 'tyre-2', code: 'TYRE-002', size: '275/80 R22.5', brand: 'Michelin', condition: 'Good' },
-  { id: 'tyre-3', code: 'TYRE-003', size: '275/80 R22.5', brand: 'Continental', condition: 'Fair' },
-  { id: 'tyre-4', code: 'TYRE-004', size: '275/80 R22.5', brand: 'Goodyear', condition: 'Good' },
-  { id: 'tyre-5', code: 'TYRE-005', size: '275/80 R22.5', brand: 'Pirelli', condition: 'Good' },
-  { id: 'tyre-6', code: 'TYRE-006', size: '275/80 R22.5', brand: 'Dunlop', condition: 'Fair' },
-  { id: 'tyre-7', code: 'TYRE-007', size: '7.00 R16', brand: 'Bridgestone', condition: 'Good' },
-  { id: 'tyre-8', code: 'TYRE-008', size: '7.00 R16', brand: 'Michelin', condition: 'Good' },
-];
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface PositionRow {
+  /** API position ID */
+  id: string;
+  /** Human-readable label, e.g. "Front Steer – Left (Outer)" */
+  label: string;
+  /** Axle group for visual grouping */
+  axleName: string;
+  /** Side + slot */
+  detail: string;
+  /** The tyre size hint from the axle config */
+  tyreSize: string;
+  /** Whether a tyre is already mounted */
+  status: 'EMPTY' | 'OCCUPIED';
+  /** Currently mounted tyre info (if any) */
+  currentTyre: string | null;
+}
+
+/** Tyre option for the select dropdown */
+interface TyreOption {
+  id: string;
+  label: string;
+  serialNumber: string;
+  size: string;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function TyreAssignmentDialog({
   open,
   onOpenChange,
-  formData,
+  truckId,
   onComplete,
 }: TyreAssignmentDialogProps) {
-  const [assignments, setAssignments] = useState<TyreAssignment[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [positions, setPositions] = useState<PositionRow[]>([]);
+  const [summary, setSummary] = useState<{
+    total: number;
+    occupied: number;
+    empty: number;
+  }>({ total: 0, occupied: 0, empty: 0 });
 
-  const tyrePositions = useMemo(() => {
-    const positions: TyrePosition[] = [];
+  // Available tyres from inventory
+  const [availableTyres, setAvailableTyres] = useState<TyreOption[]>([]);
+  const [isTyresLoading, setIsTyresLoading] = useState(false);
 
-    const steerCount = parseInt(formData.steerAxles) || 2;
-    for (let i = 0; i < steerCount; i++) {
-      positions.push({
-        id: `steer-${i}`,
-        name: `Steer ${i + 1}`,
-        row: 'Steer Axle (1)',
-        side: i === 0 ? 'Left' : i === 1 ? 'Right' : `Dual ${i - 1}`,
+  // Mounting state: positionId → assetId
+  const [selections, setSelections] = useState<Record<string, string>>({});
+  const [odometerReading, setOdometerReading] = useState('');
+  const [isMounting, setIsMounting] = useState(false);
+  const [mountError, setMountError] = useState<string | null>(null);
+  const [mountSuccess, setMountSuccess] = useState<string | null>(null);
+
+  // Compute which tyre IDs are already selected (for filtering from other dropdowns)
+  const selectedTyreIds = useMemo(() => new Set(Object.values(selections).filter(Boolean)), [selections]);
+
+  // Count of selections made
+  const selectionCount = useMemo(() => Object.values(selections).filter(Boolean).length, [selections]);
+
+  // --------------------------------------------------------------------------
+  // Fetch tyre positions
+  // --------------------------------------------------------------------------
+  const fetchPositions = useCallback(async () => {
+    if (!truckId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await tyresService.getTruckTyrePositions(truckId);
+
+      const rows: PositionRow[] = [];
+      for (const axle of data.axles) {
+        for (const pos of axle.positions) {
+          rows.push(mapPositionRow(axle, pos));
+        }
+      }
+
+      setPositions(rows);
+      setSummary({
+        total: data.summary.totalPositions,
+        occupied: data.summary.occupiedPositions,
+        empty: data.summary.emptyPositions,
       });
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to load tyre positions.';
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [truckId]);
+
+  // --------------------------------------------------------------------------
+  // Fetch available tyres from inventory
+  // --------------------------------------------------------------------------
+  const fetchAvailableTyres = useCallback(async () => {
+    setIsTyresLoading(true);
+    try {
+      const data = await assetsService.getAssets({
+        assetType: 'TYRE',
+        status: 'IN_INVENTORY',
+        limit: 200, // Fetch a large batch
+      });
+
+      const options: TyreOption[] = data.data.map((asset: AssetListItem) => ({
+        id: asset.id,
+        label: formatTyreLabel(asset),
+        serialNumber: asset.serialNumber ?? '',
+        size: asset.tyreSize ?? '',
+      }));
+
+      setAvailableTyres(options);
+    } catch {
+      // Non-critical – the user can still view positions, just can't mount
+      setAvailableTyres([]);
+    } finally {
+      setIsTyresLoading(false);
+    }
+  }, []);
+
+  // --------------------------------------------------------------------------
+  // Initial load
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    if (!open || !truckId) return;
+
+    let cancelled = false;
+
+    async function load() {
+      await Promise.all([
+        fetchPositions(),
+        fetchAvailableTyres(),
+      ]);
+      if (cancelled) return;
     }
 
-    const driveCount = parseInt(formData.driveAxles) || 2;
-    const tyresPerDriveAxle = formData.twinTyresOnDrive ? 2 : 1;
+    // Reset state
+    setSelections({});
+    setOdometerReading('');
+    setMountError(null);
+    setMountSuccess(null);
 
-    for (let axle = 0; axle < driveCount; axle++) {
-      for (let tyre = 0; tyre < tyresPerDriveAxle; tyre++) {
-        positions.push({
-          id: `drive-${axle}-${tyre}`,
-          name: `Drive Axle ${axle + 1}`,
-          row: `Drive Axle ${axle + 1}`,
-          side: tyresPerDriveAxle === 1 ? 'Single' : tyre === 0 ? 'Left' : 'Right',
-        });
-      }
-    }
+    load();
 
-    if (formData.liftAxlePresent) {
-      const liftCount = 2;
-      for (let i = 0; i < liftCount; i++) {
-        positions.push({
-          id: `lift-${i}`,
-          name: `Lift Axle`,
-          row: 'Lift Axle',
-          side: i === 0 ? 'Left' : 'Right',
-        });
-      }
-    }
+    return () => {
+      cancelled = true;
+    };
+  }, [open, truckId, fetchPositions, fetchAvailableTyres]);
 
-    return positions;
-  }, [
-    formData.steerAxles,
-    formData.driveAxles,
-    formData.liftAxlePresent,
-    formData.twinTyresOnDrive,
-  ]);
+  // --------------------------------------------------------------------------
+  // Handlers
+  // --------------------------------------------------------------------------
 
-  const filteredTyres = AVAILABLE_TYRES.filter(
-    (tyre) =>
-      tyre.code.includes(searchTerm.toUpperCase()) ||
-      tyre.brand.toUpperCase().includes(searchTerm.toUpperCase())
-  );
-
-  const handleAssignmentChange = (
-    positionId: string,
-    field: keyof TyreAssignment,
-    value: string
-  ) => {
-    setAssignments((prev) => {
-      const existing = prev.find((a) => a.positionId === positionId);
-      if (existing) {
-        return prev.map((a) =>
-          a.positionId === positionId ? { ...a, [field]: value } : a
-        );
+  const handleSelectTyre = useCallback((positionId: string, assetId: string) => {
+    setSelections((prev) => {
+      const next = { ...prev };
+      if (assetId) {
+        next[positionId] = assetId;
       } else {
-        return [...prev, { positionId, tyreId: '', currentTread: '', condition: '', estKilometers: '', notes: '', [field]: value }];
+        delete next[positionId];
       }
+      return next;
     });
-  };
+    // Clear any previous success message on new selection
+    setMountSuccess(null);
+  }, []);
 
-  const handleSave = () => {
-    // Validate that all positions have tyres assigned
-    const allAssigned = tyrePositions.every((pos) =>
-      assignments.some((a) => a.positionId === pos.id && a.tyreId)
-    );
+  const handleMount = useCallback(async () => {
+    setMountError(null);
+    setMountSuccess(null);
 
-    if (!allAssigned) {
-      alert('Please assign a tyre to all positions');
+    const odometer = parseInt(odometerReading, 10);
+    if (isNaN(odometer) || odometer < 0) {
+      setMountError('Please enter a valid odometer reading.');
       return;
     }
 
+    const mounts = Object.entries(selections)
+      .filter(([, assetId]) => Boolean(assetId))
+      .map(([positionId, assetId]) => ({
+        positionId,
+        assetId,
+      }));
+
+    if (mounts.length === 0) {
+      setMountError('Please select at least one tyre to mount.');
+      return;
+    }
+
+    setIsMounting(true);
+
+    try {
+      const result = await tyresService.mountTyres({
+        truckId,
+        odometerReading: odometer,
+        mounts,
+      });
+
+      setMountSuccess(
+        `Successfully mounted ${result.mountCount} tyre${result.mountCount !== 1 ? 's' : ''}.`,
+      );
+
+      // Reset selections and refresh positions
+      setSelections({});
+      await fetchPositions();
+      // Refresh available tyres (mounted ones are no longer available)
+      await fetchAvailableTyres();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to mount tyres.';
+      setMountError(message);
+    } finally {
+      setIsMounting(false);
+    }
+  }, [selections, odometerReading, truckId, fetchPositions, fetchAvailableTyres]);
+
+  const handleDone = useCallback(() => {
     onComplete();
-  };
+  }, [onComplete]);
 
   if (!open) return null;
+
+  // Check if there are any empty positions
+  const hasEmptyPositions = positions.some((p) => p.status === 'EMPTY');
 
   return (
     <>
@@ -122,153 +250,349 @@ export function TyreAssignmentDialog({
       />
 
       {/* Dialog */}
-      <div className="fixed inset-4 bg-white rounded-lg shadow-xl z-50 overflow-hidden flex flex-col max-w-4xl mx-auto">
+      <div className="fixed inset-4 bg-white rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Assign Tyres to Truck</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Tyre Positions
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              View positions and mount tyres from your inventory.
+            </p>
+          </div>
           <button
             onClick={() => onOpenChange(false)}
             className="p-2 hover:bg-gray-100 rounded-lg transition"
+            aria-label="Close"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5 text-gray-500" />
           </button>
         </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <FormInput
-                label="Search Available Tyres"
-                placeholder="Search by code or brand..."
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+              <Loader2 className="h-8 w-8 animate-spin mb-3" />
+              <p className="text-sm">Loading tyre positions…</p>
             </div>
-          </div>
+          )}
 
-          {/* Table */}
-          <div className="overflow-x-auto border border-gray-200 rounded-lg">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Tyre Position
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Tyre Selection
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Current Tread (mm)
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Condition
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Est. Km Used
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">
-                    Notes
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {tyrePositions.map((position) => {
-                  const assignment = assignments.find((a) => a.positionId === position.id);
-                  return (
-                    <tr key={position.id} className="border-b border-gray-200 hover:bg-gray-50">
-                      <td className="px-4 py-3 text-gray-700">
-                        <div className="font-medium">{position.name}</div>
-                        <div className="text-xs text-gray-500">
-                          {position.row} - {position.side}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <select
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={assignment?.tyreId || ''}
-                          onChange={(e) =>
-                            handleAssignmentChange(position.id, 'tyreId', e.target.value)
-                          }
+          {error && (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="rounded-lg bg-red-50 border border-red-200 p-6 max-w-md text-center">
+                <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-3" />
+                <p className="text-sm text-red-800 font-medium mb-1">
+                  Could not load positions
+                </p>
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {!isLoading && !error && (
+            <>
+              {/* Summary bar */}
+              <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 mb-6">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
+                  <span className="font-medium text-blue-900">
+                    {summary.total} position{summary.total !== 1 ? 's' : ''}
+                  </span>
+                  <span className="text-blue-700">
+                    {summary.empty} empty
+                  </span>
+                  <span className="text-blue-700">
+                    {summary.occupied} occupied
+                  </span>
+                </div>
+              </div>
+
+              {/* Mount success message */}
+              {mountSuccess && (
+                <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-600 shrink-0" />
+                  <p className="text-sm text-green-800">{mountSuccess}</p>
+                </div>
+              )}
+
+              {/* Mount error message */}
+              {mountError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 mb-4 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-red-500 shrink-0" />
+                  <p className="text-sm text-red-800">{mountError}</p>
+                </div>
+              )}
+
+              {/* Positions table */}
+              {positions.length > 0 ? (
+                <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-50 border-b border-gray-200">
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          Position
+                        </th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          Axle
+                        </th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          Side / Slot
+                        </th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          Tyre Size
+                        </th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          Status
+                        </th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">
+                          {hasEmptyPositions ? 'Tyre / Mount' : 'Current Tyre'}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {positions.map((pos) => (
+                        <tr
+                          key={pos.id}
+                          className="border-b border-gray-100 hover:bg-gray-50"
                         >
-                          <option value="">Select tyre...</option>
-                          {filteredTyres.map((tyre) => (
-                            <option key={tyre.id} value={tyre.id}>
-                              {tyre.code} - {tyre.brand} ({tyre.size})
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="number"
-                          placeholder="mm"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={assignment?.currentTread || ''}
-                          onChange={(e) =>
-                            handleAssignmentChange(position.id, 'currentTread', e.target.value)
-                          }
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <select
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={assignment?.condition || ''}
-                          onChange={(e) =>
-                            handleAssignmentChange(position.id, 'condition', e.target.value)
-                          }
-                        >
-                          <option value="">Select...</option>
-                          <option value="Good">Good</option>
-                          <option value="Fair">Fair</option>
-                          <option value="Poor">Poor</option>
-                        </select>
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="number"
-                          placeholder="km"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={assignment?.estKilometers || ''}
-                          onChange={(e) =>
-                            handleAssignmentChange(position.id, 'estKilometers', e.target.value)
-                          }
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          placeholder="Notes..."
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          value={assignment?.notes || ''}
-                          onChange={(e) =>
-                            handleAssignmentChange(position.id, 'notes', e.target.value)
-                          }
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                          <td className="px-4 py-3 font-medium text-gray-900">
+                            {pos.label}
+                          </td>
+                          <td className="px-4 py-3 text-gray-600">
+                            {pos.axleName}
+                          </td>
+                          <td className="px-4 py-3 text-gray-600">
+                            {pos.detail}
+                          </td>
+                          <td className="px-4 py-3 text-gray-600">
+                            {pos.tyreSize || '—'}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                pos.status === 'EMPTY'
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-green-100 text-green-800'
+                              }`}
+                            >
+                              {pos.status === 'EMPTY' ? 'Empty' : 'Occupied'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            {pos.status === 'OCCUPIED' ? (
+                              <span className="text-gray-600">
+                                {pos.currentTyre || '—'}
+                              </span>
+                            ) : (
+                              <TyreSelect
+                                positionId={pos.id}
+                                positionSize={pos.tyreSize}
+                                availableTyres={availableTyres}
+                                selectedTyreIds={selectedTyreIds}
+                                value={selections[pos.id] ?? ''}
+                                onChange={handleSelectTyre}
+                                isLoading={isTyresLoading}
+                                disabled={isMounting}
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-center text-gray-500 py-8">
+                  No tyre positions found for this truck.
+                </p>
+              )}
+
+              {/* Odometer + Mount section */}
+              {hasEmptyPositions && availableTyres.length > 0 && (
+                <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="flex-1 max-w-xs">
+                      <label
+                        htmlFor="odometer-reading"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Odometer Reading (km) <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="odometer-reading"
+                        type="number"
+                        min="0"
+                        value={odometerReading}
+                        onChange={(e) => {
+                          setOdometerReading(e.target.value);
+                          setMountError(null);
+                        }}
+                        placeholder="e.g. 45000"
+                        disabled={isMounting}
+                        className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleMount}
+                      disabled={selectionCount === 0 || isMounting}
+                      className="bg-[#020887] hover:bg-[#020887]/90 text-white shrink-0"
+                    >
+                      {isMounting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Mounting…
+                        </>
+                      ) : (
+                        `Mount ${selectionCount} Tyre${selectionCount !== 1 ? 's' : ''}`
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Help text when no tyres available */}
+              {hasEmptyPositions && availableTyres.length === 0 && !isTyresLoading && (
+                <div className="mt-6 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
+                  <p className="text-sm text-amber-800">
+                    No tyres found in inventory. Add tyres via the{' '}
+                    <strong>Inventory</strong> page before mounting.
+                  </p>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* Footer */}
         <div className="border-t border-gray-200 p-6 flex gap-3 justify-end">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Close
           </Button>
           <Button
-            onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleDone}
+            className="bg-[#020887] hover:bg-[#020887]/90 text-white"
           >
-            Save Assignments
+            Done
           </Button>
         </div>
       </div>
     </>
   );
+}
+
+// ---------------------------------------------------------------------------
+// TyreSelect – dropdown for picking a tyre for a position
+// ---------------------------------------------------------------------------
+
+interface TyreSelectProps {
+  positionId: string;
+  positionSize: string;
+  availableTyres: TyreOption[];
+  selectedTyreIds: Set<string>;
+  value: string;
+  onChange: (positionId: string, assetId: string) => void;
+  isLoading: boolean;
+  disabled: boolean;
+}
+
+function TyreSelect({
+  positionId,
+  positionSize,
+  availableTyres,
+  selectedTyreIds,
+  value,
+  onChange,
+  isLoading,
+  disabled,
+}: TyreSelectProps) {
+  // Filter: show tyres not already selected elsewhere (unless it's the current selection)
+  // Optionally prioritize matching tyre size
+  const options = useMemo(() => {
+    const matching: TyreOption[] = [];
+    const other: TyreOption[] = [];
+
+    for (const tyre of availableTyres) {
+      // Skip if already selected for another position
+      if (selectedTyreIds.has(tyre.id) && tyre.id !== value) continue;
+
+      if (positionSize && tyre.size === positionSize) {
+        matching.push(tyre);
+      } else {
+        other.push(tyre);
+      }
+    }
+
+    return { matching, other };
+  }, [availableTyres, selectedTyreIds, value, positionSize]);
+
+  if (isLoading) {
+    return <span className="text-xs text-gray-400">Loading…</span>;
+  }
+
+  if (availableTyres.length === 0) {
+    return <span className="text-xs text-gray-400">No tyres available</span>;
+  }
+
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(positionId, e.target.value)}
+      disabled={disabled}
+      className="w-full min-w-[200px] rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+    >
+      <option value="">Select tyre…</option>
+      {options.matching.length > 0 && (
+        <optgroup label={`Matching size (${positionSize})`}>
+          {options.matching.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.label}
+            </option>
+          ))}
+        </optgroup>
+      )}
+      {options.other.length > 0 && (
+        <optgroup label={options.matching.length > 0 ? 'Other sizes' : 'Available tyres'}>
+          {options.other.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.label}
+            </option>
+          ))}
+        </optgroup>
+      )}
+    </select>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function mapPositionRow(
+  axle: TyreAxlePositions,
+  pos: PositionSummary,
+): PositionRow {
+  const sideLabel = pos.side === 'LEFT' ? 'Left' : 'Right';
+  const slotLabel = pos.slot === 'OUTER' ? 'Outer' : 'Inner';
+
+  return {
+    id: pos.id,
+    label: pos.positionCode,
+    axleName: axle.axleName,
+    detail: `${sideLabel} · ${slotLabel}`,
+    tyreSize: axle.tyreSize,
+    status: pos.status,
+    currentTyre: pos.currentTyre
+      ? `${pos.currentTyre.serialNumber} (${pos.currentTyre.tyreBrand})`
+      : null,
+  };
+}
+
+function formatTyreLabel(asset: AssetListItem): string {
+  const parts: string[] = [];
+  if (asset.serialNumber) parts.push(asset.serialNumber);
+  const brandModel = [asset.tyreBrand, asset.tyreModel].filter(Boolean).join(' ');
+  if (brandModel) parts.push(brandModel);
+  if (asset.tyreSize) parts.push(asset.tyreSize);
+  return parts.join(' — ') || asset.name;
 }

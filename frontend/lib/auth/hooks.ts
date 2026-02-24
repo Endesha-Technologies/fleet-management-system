@@ -7,7 +7,7 @@
 // All hooks are client-only (`'use client'` directive).
 // ---------------------------------------------------------------------------
 
-import { useSyncExternalStore, useCallback, useMemo } from 'react';
+import { useSyncExternalStore, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authStore } from './auth-store';
 import type { AuthState } from './auth-store';
@@ -139,10 +139,14 @@ export function useRequireAuth(): UseAuth {
   const router = useRouter();
   const auth = useAuth();
 
-  // Redirect once loading completes and user is absent
-  if (!auth.isLoading && !auth.isAuthenticated) {
-    router.replace('/login');
-  }
+  // Redirect once loading completes and user is absent.
+  // Wrapped in useEffect to avoid calling setState (router.replace)
+  // during the render phase of another component.
+  useEffect(() => {
+    if (!auth.isLoading && !auth.isAuthenticated) {
+      router.replace('/login');
+    }
+  }, [auth.isLoading, auth.isAuthenticated, router]);
 
   return auth;
 }

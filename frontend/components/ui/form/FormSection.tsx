@@ -17,13 +17,13 @@ function FormSection({
   className,
 }: FormSectionProps) {
   return (
-    <fieldset className={cn("border-0 p-0 m-0 space-y-4", className)}>
-      <div>
-        <legend className="text-lg font-semibold leading-none tracking-tight">
+    <fieldset className={cn("border-0 p-0 m-0", className)}>
+      <div className="mb-4">
+        <legend className="contents text-base font-semibold text-gray-900 leading-none tracking-tight">
           {title}
         </legend>
         {description && (
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
         )}
       </div>
       <div className="space-y-4">{children}</div>

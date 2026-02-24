@@ -1,54 +1,338 @@
 import type { LucideIcon } from 'lucide-react';
+import type {
+  Truck as ApiTruck,
+  CreateTruckRequest,
+  AxleConfigInput,
+  BodyType,
+  FuelType,
+  TransmissionType,
+  DriveType,
+  OwnershipType,
+} from '@/api/trucks/trucks.types';
+import type { Truck as LegacyTruck } from '@/types/truck';
 
 // ─── Core Entity Types ────────────────────────────────────────────────────────
 
-/** Re-export Truck from the shared types module for domain convenience */
-export type { Truck, TruckFilters } from '@/types/truck';
+/** Re-export the API Truck type for convenience within this domain. */
+export type { Truck } from '@/api/trucks/trucks.types';
 
-import type { Truck } from '@/types/truck';
+/**
+ * Legacy truck type from `@/types/truck` used by detail pages that still
+ * consume MOCK_TRUCKS. Will be removed once the detail pages migrate to
+ * real API data.
+ * @deprecated Use the API `Truck` type instead.
+ */
+export type { Truck as LegacyTruck } from '@/types/truck';
 
 // ─── Form Types ───────────────────────────────────────────────────────────────
 
-export type FormStep = 'basic' | 'registration' | 'technical' | 'axle-tyre';
+export type FormStep = 'identity' | 'compliance' | 'technical' | 'axle-tyre';
+
+export const FORM_STEPS: { key: FormStep; label: string }[] = [
+  { key: 'identity', label: 'Vehicle Identity' },
+  { key: 'compliance', label: 'Registration & Compliance' },
+  { key: 'technical', label: 'Technical & Operational' },
+  { key: 'axle-tyre', label: 'Axle & Tyre Configuration' },
+];
+
+// ─── Dropdown Options ─────────────────────────────────────────────────────────
+
+export const BODY_TYPE_OPTIONS: { value: BodyType; label: string }[] = [
+  { value: 'TRACTOR', label: 'Tractor' },
+  { value: 'RIGID', label: 'Rigid' },
+  { value: 'TRAILER', label: 'Trailer' },
+  { value: 'TANKER', label: 'Tanker' },
+  { value: 'FLATBED', label: 'Flatbed' },
+  { value: 'TIPPER', label: 'Tipper' },
+  { value: 'REFRIGERATED', label: 'Refrigerated' },
+  { value: 'CURTAIN_SIDE', label: 'Curtain Side' },
+  { value: 'BOX_BODY', label: 'Box Body' },
+  { value: 'LOW_LOADER', label: 'Low Loader' },
+];
+
+export const FUEL_TYPE_OPTIONS: { value: FuelType; label: string }[] = [
+  { value: 'DIESEL', label: 'Diesel' },
+  { value: 'PETROL', label: 'Petrol' },
+  { value: 'CNG', label: 'CNG' },
+  { value: 'LNG', label: 'LNG' },
+];
+
+export const TRANSMISSION_OPTIONS: { value: TransmissionType; label: string }[] = [
+  { value: 'MANUAL', label: 'Manual' },
+  { value: 'AUTOMATIC', label: 'Automatic' },
+  { value: 'AMT', label: 'AMT (Automated Manual)' },
+];
+
+export const DRIVE_TYPE_OPTIONS: { value: DriveType; label: string }[] = [
+  { value: 'FOUR_BY_TWO', label: '4×2' },
+  { value: 'SIX_BY_TWO', label: '6×2' },
+  { value: 'SIX_BY_FOUR', label: '6×4' },
+  { value: 'EIGHT_BY_FOUR', label: '8×4' },
+];
+
+export const OWNERSHIP_OPTIONS: { value: OwnershipType; label: string }[] = [
+  { value: 'OWNED', label: 'Owned' },
+  { value: 'LEASED', label: 'Leased' },
+  { value: 'RENTED', label: 'Rented' },
+];
+
+// ─── Axle Configuration ───────────────────────────────────────────────────────
+
+export type AxleType = 'STEER' | 'DRIVE';
+
+export const AXLE_TYPE_OPTIONS: { value: AxleType; label: string }[] = [
+  { value: 'STEER', label: 'Steer' },
+  { value: 'DRIVE', label: 'Drive' },
+];
+
+export const POSITIONS_PER_SIDE_OPTIONS = [
+  { value: '1', label: '1 (Single)' },
+  { value: '2', label: '2 (Dual)' },
+];
+
+export interface AxleConfig {
+  /** Client-side unique key for React list rendering. */
+  key: string;
+  /** Human-readable name, e.g. "Front Steer", "Rear Drive 1". */
+  name: string;
+  /** Axle type determines position naming conventions. String (not AxleType) so form starts empty. */
+  type: string;
+  /** Number of tyre positions per side (left/right). Total = positionsPerSide × 2. */
+  positionsPerSide: string;
+  /** Tyre size spec, e.g. "295/80R22.5". */
+  tyreSize: string;
+  /** Maximum load in kilograms. */
+  maxLoad: string;
+}
+
+/** Creates a blank axle with a unique key. All fields start empty so the user fills them in. */
+export function createDefaultAxle(): AxleConfig {
+  return {
+    key: crypto.randomUUID(),
+    name: '',
+    type: '',
+    positionsPerSide: '',
+    tyreSize: '',
+    maxLoad: '',
+  };
+}
+
+// ─── Truck Form Data ──────────────────────────────────────────────────────────
+// All fields are strings so they bind directly to HTML inputs.
+// Converted to the API's CreateTruckRequest via buildCreateTruckRequest().
+// ─────────────────────────────────────────────────────────────────────────────
 
 export interface TruckFormData {
-  // Basic Identity
-  plateNumber: string;
+  // Step 1: Vehicle Identity
   make: string;
   model: string;
-  yearOfManufacture: string;
-  vinNumber: string;
+  year: string;
+  registrationNumber: string;
+  fleetNumber: string;
   color: string;
+  bodyType: string;
+
+  // Step 2: Registration & Compliance
+  vin: string;
+  engineNumber: string;
+  registrationDate: string;
+  registrationExpiry: string;
+  insurancePolicyNumber: string;
+  insuranceProvider: string;
+  insuranceExpiry: string;
+  inspectionExpiry: string;
+  operatingLicenseNumber: string;
+  operatingLicenseExpiry: string;
+
+  // Step 3: Technical & Operational
+  fuelType: string;
+  tankCapacityLiters: string;
+  engineCapacityCc: string;
+  horsepower: string;
+  transmissionType: string;
+  numberOfGears: string;
+  driveType: string;
+  grossVehicleMass: string;
+  tareWeight: string;
+  payloadCapacity: string;
+  currentOdometer: string;
+  engineHours: string;
+  ownershipType: string;
+  purchaseDate: string;
+  purchasePrice: string;
+  purchasedFrom: string;
+  notes: string;
+
+  // Step 4: Axle Configuration
+  axles: AxleConfig[];
+}
+
+export const EMPTY_TRUCK_FORM: TruckFormData = {
+  make: '',
+  model: '',
+  year: '',
+  registrationNumber: '',
+  fleetNumber: '',
+  color: '',
+  bodyType: '',
+  vin: '',
+  engineNumber: '',
+  registrationDate: '',
+  registrationExpiry: '',
+  insurancePolicyNumber: '',
+  insuranceProvider: '',
+  insuranceExpiry: '',
+  inspectionExpiry: '',
+  operatingLicenseNumber: '',
+  operatingLicenseExpiry: '',
+  fuelType: 'DIESEL',
+  tankCapacityLiters: '',
+  engineCapacityCc: '',
+  horsepower: '',
+  transmissionType: '',
+  numberOfGears: '',
+  driveType: '',
+  grossVehicleMass: '',
+  tareWeight: '',
+  payloadCapacity: '',
+  currentOdometer: '',
+  engineHours: '',
+  ownershipType: '',
+  purchaseDate: '',
+  purchasePrice: '',
+  purchasedFrom: '',
+  notes: '',
+  axles: [createDefaultAxle()],
+};
+
+// ─── Form → API Conversion ──────────────────────────────────────────────────
+
+function optionalStr(v: string): string | undefined {
+  return v.trim() || undefined;
+}
+
+function optionalInt(v: string): number | undefined {
+  const n = parseInt(v, 10);
+  return isNaN(n) ? undefined : n;
+}
+
+function optionalFloat(v: string): number | undefined {
+  const n = parseFloat(v);
+  return isNaN(n) ? undefined : n;
+}
+
+/** Convert the client-side form data into the API request payload. */
+export function buildCreateTruckRequest(form: TruckFormData): CreateTruckRequest {
+  const req: CreateTruckRequest = {
+    // Required fields
+    make: form.make.trim(),
+    model: form.model.trim(),
+    year: parseInt(form.year, 10),
+    registrationNumber: form.registrationNumber.trim(),
+  };
+
+  // Identity (optional)
+  if (form.fleetNumber.trim()) req.fleetNumber = form.fleetNumber.trim();
+  if (form.color.trim()) req.color = form.color.trim();
+  if (form.bodyType) req.bodyType = form.bodyType as BodyType;
 
   // Registration & Compliance
-  insuranceExpiryDate: string;
-  roadLicenceExpiryDate: string;
-  inspectionExpiryDate: string;
-  registrationNumber: string;
+  if (form.vin.trim()) req.vin = form.vin.trim();
+  if (form.engineNumber.trim()) req.engineNumber = form.engineNumber.trim();
+  req.registrationDate = optionalStr(form.registrationDate);
+  req.registrationExpiry = optionalStr(form.registrationExpiry);
+  req.insurancePolicyNumber = optionalStr(form.insurancePolicyNumber);
+  req.insuranceProvider = optionalStr(form.insuranceProvider);
+  req.insuranceExpiry = optionalStr(form.insuranceExpiry);
+  req.inspectionExpiry = optionalStr(form.inspectionExpiry);
+  req.operatingLicenseNumber = optionalStr(form.operatingLicenseNumber);
+  req.operatingLicenseExpiry = optionalStr(form.operatingLicenseExpiry);
 
-  // Technical Specifications
-  fuelType: string;
-  fuelTankCapacity: string;
-  engineNumber: string;
-  engineCapacity: string;
-  transmissionType: string;
-  odometerReadingAtEntry: string;
+  // Technical
+  if (form.fuelType) req.fuelType = form.fuelType as FuelType;
+  req.tankCapacityLiters = optionalInt(form.tankCapacityLiters);
+  req.engineCapacityCc = optionalInt(form.engineCapacityCc);
+  req.horsepower = optionalInt(form.horsepower);
+  if (form.transmissionType) req.transmissionType = form.transmissionType as TransmissionType;
+  req.numberOfGears = optionalInt(form.numberOfGears);
+  if (form.driveType) req.driveType = form.driveType as DriveType;
+  req.grossVehicleMass = optionalFloat(form.grossVehicleMass);
+  req.tareWeight = optionalFloat(form.tareWeight);
+  req.payloadCapacity = optionalFloat(form.payloadCapacity);
+  req.currentOdometer = optionalInt(form.currentOdometer);
+  req.engineHours = optionalInt(form.engineHours);
+  if (form.ownershipType) req.ownershipType = form.ownershipType as OwnershipType;
+  req.purchaseDate = optionalStr(form.purchaseDate);
+  req.purchasePrice = optionalFloat(form.purchasePrice);
+  req.purchasedFrom = optionalStr(form.purchasedFrom);
+  req.notes = optionalStr(form.notes);
 
-  // Axle & Tyre Configuration
-  steerAxles: string;
-  driveAxles: string;
-  liftAxlePresent: boolean;
-  twinTyresOnDrive: boolean;
+  // Axle configuration
+  if (form.axles.length > 0) {
+    req.axleConfig = form.axles.map<AxleConfigInput>((axle, index) => ({
+      axleName: axle.name.trim() || `Axle ${index + 1}`,
+      axleIndex: index,
+      axleType: axle.type as AxleType,
+      positionsPerSide: parseInt(axle.positionsPerSide, 10) || 1,
+      tyreSize: optionalStr(axle.tyreSize),
+      maxLoadKg: optionalInt(axle.maxLoad),
+    }));
+  }
+
+  return req;
+}
+
+/** Populate form from an existing API Truck (for edit mode). */
+export function truckToFormData(truck: ApiTruck): TruckFormData {
+  return {
+    make: truck.make,
+    model: truck.model,
+    year: String(truck.year),
+    registrationNumber: truck.registrationNumber,
+    fleetNumber: truck.fleetNumber ?? '',
+    color: truck.color ?? '',
+    bodyType: truck.bodyType ?? '',
+    vin: truck.vin ?? '',
+    engineNumber: truck.engineNumber ?? '',
+    registrationDate: truck.registrationDate ?? '',
+    registrationExpiry: truck.registrationExpiry ?? '',
+    insurancePolicyNumber: truck.insurancePolicyNumber ?? '',
+    insuranceProvider: truck.insuranceProvider ?? '',
+    insuranceExpiry: truck.insuranceExpiry ?? '',
+    inspectionExpiry: truck.inspectionExpiry ?? '',
+    operatingLicenseNumber: truck.operatingLicenseNumber ?? '',
+    operatingLicenseExpiry: truck.operatingLicenseExpiry ?? '',
+    fuelType: truck.fuelType ?? 'DIESEL',
+    tankCapacityLiters: truck.tankCapacityLiters != null ? String(truck.tankCapacityLiters) : '',
+    engineCapacityCc: truck.engineCapacityCc != null ? String(truck.engineCapacityCc) : '',
+    horsepower: truck.horsepower != null ? String(truck.horsepower) : '',
+    transmissionType: truck.transmissionType ?? '',
+    numberOfGears: truck.numberOfGears != null ? String(truck.numberOfGears) : '',
+    driveType: truck.driveType ?? '',
+    grossVehicleMass: truck.grossVehicleMass != null ? String(truck.grossVehicleMass) : '',
+    tareWeight: truck.tareWeight != null ? String(truck.tareWeight) : '',
+    payloadCapacity: truck.payloadCapacity != null ? String(truck.payloadCapacity) : '',
+    currentOdometer: truck.currentOdometer != null ? String(truck.currentOdometer) : '',
+    engineHours: truck.engineHours != null ? String(truck.engineHours) : '',
+    ownershipType: truck.ownershipType ?? '',
+    purchaseDate: truck.purchaseDate ?? '',
+    purchasePrice: truck.purchasePrice != null ? String(truck.purchasePrice) : '',
+    purchasedFrom: truck.purchasedFrom ?? '',
+    notes: truck.notes ?? '',
+    axles: truck.truckAxles?.length
+      ? truck.truckAxles.map((a) => ({
+          key: crypto.randomUUID(),
+          name: a.axleName,
+          type: a.axleType as AxleType,
+          positionsPerSide: String(a.positionsPerSide),
+          tyreSize: a.tyreSize ?? '',
+          maxLoad: a.maxLoadKg != null ? String(a.maxLoadKg) : '',
+        }))
+      : [createDefaultAxle()],
+  };
 }
 
 // ─── Tyre-Related Types ───────────────────────────────────────────────────────
-
-export interface TyrePosition {
-  id: string;
-  name: string;
-  row: string;
-  side: string;
-}
 
 export interface TyreAssignment {
   positionId: string;
@@ -84,14 +368,13 @@ export interface ReplacementItem {
 export interface AddTruckDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialTruck?: Truck | null;
+  initialTruck?: ApiTruck | null;
   onAddComplete?: () => void;
 }
 
 export interface TruckTableProps {
-  trucks: Truck[];
-  onView?: (truck: Truck) => void;
-  onEdit?: (truck: Truck) => void;
+  onView?: (truck: ApiTruck) => void;
+  onEdit?: (truck: ApiTruck) => void;
 }
 
 export interface StatsCardProps {
@@ -102,28 +385,14 @@ export interface StatsCardProps {
   color: string;
 }
 
-export interface BasicIdentityStepProps {
+export interface FormStepProps {
   formData: TruckFormData;
   setFormData: (data: TruckFormData) => void;
 }
 
-export interface RegistrationComplianceStepProps {
-  formData: TruckFormData;
-  setFormData: (data: TruckFormData) => void;
-}
-
-export interface TechnicalSpecificationsStepProps {
-  formData: TruckFormData;
-  setFormData: (data: TruckFormData) => void;
-}
-
-export interface AxleTyreConfigStepProps {
-  formData: TruckFormData;
-  setFormData: (data: TruckFormData) => void;
-}
-
+/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface TruckOverviewProps {
-  truck: Truck;
+  truck: LegacyTruck;
 }
 
 export interface AlertCardProps {
@@ -141,20 +410,23 @@ export interface TruckFuelProps {
   truckId: string;
 }
 
+/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface TruckTyresProps {
-  truck: Truck;
+  truck: LegacyTruck;
 }
 
+/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface RotateTyresDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  truck: Truck;
+  truck: LegacyTruck;
 }
 
+/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface ReplaceTyreDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  truck: Truck;
+  truck: LegacyTruck;
 }
 
 export interface PostReplacementDialogProps {
@@ -169,7 +441,7 @@ export interface PostReplacementDialogProps {
 export interface TyreAssignmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: TruckFormData;
+  truckId: string;
   onComplete: () => void;
 }
 
