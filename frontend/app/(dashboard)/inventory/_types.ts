@@ -92,20 +92,18 @@ export interface InventoryTableProps {
 
 // ---------- Asset drawer / tab types ----------
 
-/** Asset type discriminator for the Add Asset form */
-export type AssetType = 'Tyre' | 'Spare Part' | 'Consumable' | 'Tool';
-
 /** Props for the AddAssetDrawer */
 export interface AddAssetDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  asset?: import('@/types/asset').Asset | null;
+  /** Existing asset to edit (API type). When set, the drawer is in edit mode. */
+  asset?: import('@/api/assets/assets.types').Asset | null;
+  /** Called after a successful create or update to refresh the parent list. */
+  onSuccess?: () => void;
 }
 
-/** Props for the AssetTable component */
-export interface AssetTableProps {
-  assets: import('@/types/asset').Asset[];
-}
+// AssetTableProps is now exported directly from AssetTable.tsx with controlled filter/search props.
+// See: app/(dashboard)/inventory/_components/AssetTable.tsx
 
 /** Props for the AssignAssetDrawer */
 export interface AssignAssetDrawerProps {
