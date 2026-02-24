@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -35,24 +35,38 @@ export interface UserFormSheetProps {
 
 const TYPE_OPTIONS: FormSelectOption[] = [
   { value: 'SYSTEM', label: 'System' },
-  { value: 'ADMIN', label: 'Administrator' },
-  { value: 'MANAGER', label: 'Manager' },
   { value: 'DRIVER', label: 'Driver' },
   { value: 'TURN_BOY', label: 'Turn Boy' },
+  { value: 'MECHANIC', label: 'Mechanic' },
 ];
+
+/** Contextual descriptions shown below user type selector. */
+const TYPE_DESCRIPTIONS: Record<UserType, string> = {
+  SYSTEM: 'System users have dashboard access with email login, passwords, and assigned roles.',
+  DRIVER: 'Drivers are field personnel. They need a valid license to operate vehicles.',
+  TURN_BOY: 'Turn boys assist drivers during trips and deliveries.',
+  MECHANIC: 'Mechanics handle vehicle maintenance and repairs.',
+};
 
 const EMPTY_FORM: UserFormData = {
   email: '',
   firstName: '',
   lastName: '',
   phone: '',
-  type: 'ADMIN',
+  type: 'DRIVER',
   roleIds: [],
   password: '',
   confirmPassword: '',
   licenseNumber: '',
   licenseExpiry: '',
 };
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const isSystemUser = (type: UserType): boolean => type === 'SYSTEM';
+const isDriverUser = (type: UserType): boolean => type === 'DRIVER';
 
 // ---------------------------------------------------------------------------
 // Validation
@@ -63,27 +77,30 @@ function validate(data: UserFormData, isCreate: boolean): UserFormErrors {
 
   if (!data.firstName.trim()) errors.firstName = 'First name is required';
   if (!data.lastName.trim()) errors.lastName = 'Last name is required';
-
-  if (!data.email.trim()) {
-    errors.email = 'Email is required';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = 'Invalid email format';
-  }
-
   if (!data.phone.trim()) errors.phone = 'Phone number is required';
 
-  if (isCreate) {
-    if (!data.password) {
-      errors.password = 'Password is required';
-    } else if (data.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
+  // Email & password only required for SYSTEM users
+  if (isSystemUser(data.type)) {
+    if (!data.email.trim()) {
+      errors.email = 'Email is required for system users';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      errors.email = 'Invalid email format';
     }
-    if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+
+    if (isCreate) {
+      if (!data.password) {
+        errors.password = 'Password is required';
+      } else if (data.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+      }
+      if (data.password !== data.confirmPassword) {
+        errors.confirmPassword = 'Passwords do not match';
+      }
     }
   }
 
-  if (data.type === 'DRIVER') {
+  // License only required for DRIVER users
+  if (isDriverUser(data.type)) {
     if (!data.licenseNumber.trim()) {
       errors.licenseNumber = 'License number is required for drivers';
     }
@@ -153,6 +170,29 @@ export function UserFormSheet({
     []
   );
 
+  // Handle user type change — clear type-specific fields & errors
+  const handleTypeChange = useCallback(
+    (newType: UserType) => {
+      setField('type', newType);
+
+      // Clear type-specific errors when switching types
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (!isSystemUser(newType)) {
+          delete next.email;
+          delete next.password;
+          delete next.confirmPassword;
+        }
+        if (!isDriverUser(newType)) {
+          delete next.licenseNumber;
+          delete next.licenseExpiry;
+        }
+        return next;
+      });
+    },
+    [setField]
+  );
+
   // Role toggle
   const toggleRole = useCallback((roleId: string) => {
     setForm((prev) => {
@@ -182,16 +222,16 @@ export function UserFormSheet({
     try {
       if (isCreate) {
         const payload: CreateUserRequest = {
-          email: form.email.trim(),
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
           phone: form.phone.trim(),
           type: form.type as CreateUserRequest['type'],
-          roleIds: form.roleIds,
-          password: form.password,
+          roleIds: isSystemUser(form.type) ? form.roleIds : [],
+          email: isSystemUser(form.type) ? form.email.trim() : '',
+          password: isSystemUser(form.type) ? form.password : '',
         };
 
-        if (form.type === 'DRIVER') {
+        if (isDriverUser(form.type)) {
           payload.licenseNumber = form.licenseNumber.trim();
           payload.licenseExpiry = form.licenseExpiry;
         }
@@ -199,15 +239,15 @@ export function UserFormSheet({
         await usersService.createUser(payload);
       } else {
         const payload: UpdateUserRequest = {
-          email: form.email.trim(),
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
           phone: form.phone.trim(),
           type: form.type as UpdateUserRequest['type'],
-          roleIds: form.roleIds,
+          roleIds: isSystemUser(form.type) ? form.roleIds : [],
+          email: isSystemUser(form.type) ? form.email.trim() : undefined,
         };
 
-        if (form.type === 'DRIVER') {
+        if (isDriverUser(form.type)) {
           payload.licenseNumber = form.licenseNumber.trim();
           payload.licenseExpiry = form.licenseExpiry;
         }
@@ -250,8 +290,26 @@ export function UserFormSheet({
           onSubmit={handleSubmit}
           className="flex flex-1 flex-col gap-6 py-6"
         >
-          {/* ── Basic info ──────────────────────────────────────── */}
-          <FormSection title="Basic Information">
+          {/* ── Step 1: User type (always first) ─────────────────── */}
+          <FormSection title="User Type">
+            <FormSelect
+              label="Select the type of user"
+              required
+              options={TYPE_OPTIONS}
+              value={form.type}
+              onChange={(e) => handleTypeChange(e.target.value as UserType)}
+              placeholder="Select type…"
+            />
+
+            {/* Contextual hint about what this user type means */}
+            <div className="flex items-start gap-2 rounded-md bg-gray-50 px-3 py-2.5 text-sm text-gray-600">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+              <span>{TYPE_DESCRIPTIONS[form.type]}</span>
+            </div>
+          </FormSection>
+
+          {/* ── Step 2: Personal information (all types) ──────────── */}
+          <FormSection title="Personal Information">
             <div className="grid gap-4 sm:grid-cols-2">
               <FormInput
                 label="First Name"
@@ -272,61 +330,59 @@ export function UserFormSheet({
             </div>
 
             <FormInput
-              label="Email"
-              required
-              type="email"
-              value={form.email}
-              onChange={(e) => setField('email', e.target.value)}
-              error={errors.email}
-              placeholder="john@example.com"
-            />
-
-            <FormInput
               label="Phone"
               required
               type="tel"
               value={form.phone}
               onChange={(e) => setField('phone', e.target.value)}
               error={errors.phone}
-              placeholder="+254 712 345 678"
-            />
-
-            <FormSelect
-              label="User Type"
-              required
-              options={TYPE_OPTIONS}
-              value={form.type}
-              onChange={(e) => setField('type', e.target.value as UserType)}
-              placeholder="Select type…"
+              placeholder="+256 700 123 456"
             />
           </FormSection>
 
-          {/* ── Password (create only) ──────────────────────────── */}
-          {isCreate && (
-            <FormSection title="Password">
+          {/* ── Step 3: Account credentials (SYSTEM only) ─────────── */}
+          {isSystemUser(form.type) && (
+            <FormSection
+              title="Account Credentials"
+              description="System users sign in with email and password."
+            >
               <FormInput
-                label="Password"
+                label="Email"
                 required
-                type="password"
-                value={form.password}
-                onChange={(e) => setField('password', e.target.value)}
-                error={errors.password}
-                placeholder="Minimum 8 characters"
+                type="email"
+                value={form.email}
+                onChange={(e) => setField('email', e.target.value)}
+                error={errors.email}
+                placeholder="john@example.com"
               />
-              <FormInput
-                label="Confirm Password"
-                required
-                type="password"
-                value={form.confirmPassword}
-                onChange={(e) => setField('confirmPassword', e.target.value)}
-                error={errors.confirmPassword}
-                placeholder="Re-enter password"
-              />
+
+              {isCreate && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <FormInput
+                    label="Password"
+                    required
+                    type="password"
+                    value={form.password}
+                    onChange={(e) => setField('password', e.target.value)}
+                    error={errors.password}
+                    placeholder="Min. 8 characters"
+                  />
+                  <FormInput
+                    label="Confirm Password"
+                    required
+                    type="password"
+                    value={form.confirmPassword}
+                    onChange={(e) => setField('confirmPassword', e.target.value)}
+                    error={errors.confirmPassword}
+                    placeholder="Re-enter password"
+                  />
+                </div>
+              )}
             </FormSection>
           )}
 
-          {/* ── Driver-specific fields ──────────────────────────── */}
-          {form.type === 'DRIVER' && (
+          {/* ── Step 4: Driver-specific fields ────────────────────── */}
+          {isDriverUser(form.type) && (
             <FormSection
               title="Driver Details"
               description="Additional information required for driver accounts."
@@ -349,45 +405,47 @@ export function UserFormSheet({
             </FormSection>
           )}
 
-          {/* ── Role assignment ──────────────────────────────────── */}
-          <FormSection
-            title="Roles"
-            description="Assign one or more roles to this user."
-          >
-            {roles.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                No roles available. Create roles first.
-              </p>
-            ) : (
-              <div className="grid gap-2 sm:grid-cols-2">
-                {roles.map((role) => {
-                  const isChecked = form.roleIds.includes(role.id);
-                  return (
-                    <label
-                      key={role.id}
-                      className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors ${
-                        isChecked
-                          ? 'border-primary bg-primary/5 text-foreground'
-                          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-primary accent-primary"
-                        checked={isChecked}
-                        onChange={() => toggleRole(role.id)}
-                      />
-                      <span className="font-medium">{role.name}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            )}
-          </FormSection>
+          {/* ── Step 5: Role assignment (SYSTEM only) ─────────────── */}
+          {isSystemUser(form.type) && (
+            <FormSection
+              title="Roles"
+              description="Assign one or more roles to control what this user can access."
+            >
+              {roles.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No roles available. Create roles first.
+                </p>
+              ) : (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {roles.map((role) => {
+                    const isChecked = form.roleIds.includes(role.id);
+                    return (
+                      <label
+                        key={role.id}
+                        className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors ${
+                          isChecked
+                            ? 'border-gray-400 bg-gray-50 text-foreground'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-gray-300 text-gray-900 accent-gray-900"
+                          checked={isChecked}
+                          onChange={() => toggleRole(role.id)}
+                        />
+                        <span className="font-medium">{role.name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </FormSection>
+          )}
         </form>
 
         {/* ── Footer ──────────────────────────────────────────────── */}
-        <SheetFooter className="shrink-0 border-t pt-4">
+        <SheetFooter className="shrink-0 border-t border-gray-200 pt-4">
           <Button
             type="button"
             variant="outline"

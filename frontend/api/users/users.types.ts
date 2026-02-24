@@ -9,7 +9,7 @@ import type { RoleSummary, RolePermission } from '../roles/roles.types';
 
 // ---- Enums / union types --------------------------------------------------
 
-export type UserType = 'SYSTEM' | 'ADMIN' | 'DRIVER' | 'MANAGER';
+export type UserType = 'SYSTEM' | 'DRIVER' | 'TURN_BOY' | 'MECHANIC';
 export type UserStatus = 'ACTIVE' | 'INACTIVE';
 
 // ---- Driver profile -------------------------------------------------------

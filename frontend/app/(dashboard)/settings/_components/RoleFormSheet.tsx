@@ -228,7 +228,7 @@ export function RoleFormSheet({
         </form>
 
         {/* ── Footer ──────────────────────────────────────────────── */}
-        <SheetFooter className="shrink-0 border-t pt-4">
+        <SheetFooter className="shrink-0 border-t border-gray-200 pt-4">
           <Button
             type="button"
             variant="outline"

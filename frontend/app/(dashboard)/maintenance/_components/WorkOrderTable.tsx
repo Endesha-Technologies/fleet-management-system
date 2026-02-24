@@ -1,6 +1,7 @@
 'use client';
 
-import { DataTable, DataTableColumn, DataTableBadge, DataTableCellLink } from '@/components/ui/data-table';
+import { DataTable, DataTableBadge, DataTableCellLink } from '@/components/ui/data-table';
+import type { ColumnDef } from '@/components/ui/data-table';
 import { Eye, Edit, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import type { WorkOrder } from '@/types/maintenance';
@@ -33,9 +34,11 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
     });
   };
 
-  const columns: DataTableColumn<WorkOrder>[] = [
+  const columns: ColumnDef<WorkOrder>[] = [
     {
+      id: 'workOrder',
       header: 'Work Order',
+      accessorKey: 'id',
       cell: (wo) => (
         <DataTableCellLink href={`/maintenance/work-orders/${wo.id}`}>
           <div className="font-medium text-gray-900">{wo.id}</div>
@@ -46,7 +49,9 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
       ),
     },
     {
+      id: 'vehicle',
       header: 'Vehicle',
+      accessorKey: 'vehiclePlate',
       cell: (wo) => (
         <div>
           <div className="font-medium text-gray-900">{wo.vehiclePlate}</div>
@@ -55,11 +60,15 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
       ),
     },
     {
+      id: 'type',
       header: 'Type',
+      accessorKey: 'type',
       cell: (wo) => <span className="capitalize text-gray-900">{wo.type}</span>,
     },
     {
+      id: 'status',
       header: 'Status',
+      accessorKey: 'status',
       align: 'center',
       cell: (wo) => (
         <DataTableBadge variant={getStatusVariant(wo.status)}>
@@ -68,7 +77,9 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
       ),
     },
     {
+      id: 'priority',
       header: 'Priority',
+      accessorKey: 'priority',
       cell: (wo) => (
         <span className={`capitalize font-medium ${getPriorityColor(wo.priority)}`}>
           {wo.priority}
@@ -76,16 +87,22 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
       ),
     },
     {
+      id: 'assignedTo',
       header: 'Assigned To',
+      accessorKey: 'assignedTo',
       cell: (wo) => <span className="text-gray-900">{wo.assignedTo || '-'}</span>,
     },
     {
+      id: 'dueDate',
       header: 'Due Date',
+      accessorKey: 'dueDate',
       cell: (wo) => <span className="text-gray-900">{formatDate(wo.dueDate)}</span>,
     },
     {
+      id: 'actions',
       header: 'Actions',
       align: 'center',
+      searchable: false,
       cell: (wo) => (
         <div className="flex items-center justify-center gap-2">
           <Link
@@ -163,12 +180,13 @@ export function WorkOrderTable({ workOrders }: WorkOrderTableProps) {
 
   return (
     <DataTable
-      data={workOrders}
       columns={columns}
+      data={workOrders}
+      getRowId={(row) => row.id}
       mobileCard={mobileCard}
       emptyState={{
-        icon: <Wrench className="h-12 w-12 mx-auto mb-2 text-gray-400" />,
-        message: 'No work orders found',
+        icon: Wrench,
+        title: 'No work orders found',
       }}
     />
   );

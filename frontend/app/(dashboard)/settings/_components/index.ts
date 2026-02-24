@@ -1,4 +1,5 @@
 export { SettingsPageHeader } from './SettingsPageHeader';
+export { SettingsNav } from './SettingsNav';
 
 // New user-management components (redesign)
 export { UserTable } from './UserTable';

@@ -172,7 +172,13 @@ async function request<T>(
     // Refresh failed or retry still returned non-2xx
     clearTokens();
 
+    // Clear persisted user data so the auth store stays in sync
     if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('fleet_auth_user');
+      } catch {
+        // Best-effort
+      }
       window.location.href = '/login';
     }
 

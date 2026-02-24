@@ -104,11 +104,10 @@ export default function UsersPage() {
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6">
       <SettingsPageHeader
         title="Users & Access"
         description="Manage system users, drivers, and turn boys"
-        backHref="/settings"
         action={
           <Button onClick={handleAddUser}>
             <Plus className="mr-2 h-4 w-4" />

@@ -127,12 +127,11 @@ export default function RolesPage() {
   }, [fetchData]);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6">
       {/* Header */}
       <SettingsPageHeader
         title="Roles & Permissions"
         description="Configure roles and manage access control"
-        backHref="/settings"
         action={
           <Button onClick={handleAddRole}>
             <Plus className="mr-2 h-4 w-4" />

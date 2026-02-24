@@ -17,7 +17,7 @@ function FormSection({
   className,
 }: FormSectionProps) {
   return (
-    <fieldset className={cn("space-y-4", className)}>
+    <fieldset className={cn("border-0 p-0 m-0 space-y-4", className)}>
       <div>
         <legend className="text-lg font-semibold leading-none tracking-tight">
           {title}

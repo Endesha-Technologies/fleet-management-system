@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
 export default function RootPage() {
-  redirect('/login');
+  // Middleware will redirect to /login if not authenticated
+  redirect('/dashboard');
 }

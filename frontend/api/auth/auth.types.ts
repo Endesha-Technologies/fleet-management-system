@@ -7,7 +7,7 @@
 import type { ApiResponse } from '../types';
 
 /** User type discriminator returned by the backend. */
-export type UserType = 'SYSTEM' | 'ADMIN' | 'DRIVER' | 'MANAGER';
+export type UserType = 'SYSTEM' | 'DRIVER' | 'TURN_BOY' | 'MECHANIC';
 
 /** Authenticated user profile. */
 export interface AuthUser {

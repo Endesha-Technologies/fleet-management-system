@@ -23,23 +23,21 @@ export interface SettingsCategory {
 // ---------------------------------------------------------------------------
 // User types (unified — includes drivers, turnboys, admins, etc.)
 // ---------------------------------------------------------------------------
-export type UserType = 'SYSTEM' | 'ADMIN' | 'MANAGER' | 'DRIVER' | 'TURN_BOY';
+export type UserType = 'SYSTEM' | 'DRIVER' | 'TURN_BOY' | 'MECHANIC';
 
 export const USER_TYPE_LABELS: Record<UserType, string> = {
   SYSTEM: 'System',
-  ADMIN: 'Administrator',
-  MANAGER: 'Manager',
   DRIVER: 'Driver',
   TURN_BOY: 'Turn Boy',
+  MECHANIC: 'Mechanic',
 };
 
 export const USER_TYPE_OPTIONS: { value: UserType | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'All Types' },
   { value: 'SYSTEM', label: 'System' },
-  { value: 'ADMIN', label: 'Administrator' },
-  { value: 'MANAGER', label: 'Manager' },
   { value: 'DRIVER', label: 'Driver' },
   { value: 'TURN_BOY', label: 'Turn Boy' },
+  { value: 'MECHANIC', label: 'Mechanic' },
 ];
 
 export interface SettingsUser {

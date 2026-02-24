@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormInput, FormCheckbox } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { authService } from "@/api/auth/auth.service";
+import { useAuthActions } from "@/lib/auth/AuthProvider";
 import type { LoginFormState, LoginFormErrors } from "../_types";
 
 // ---------------------------------------------------------------------------
@@ -16,6 +16,9 @@ const INITIAL_STATE: LoginFormState = {
   password: "",
   rememberMe: false,
 };
+
+/** Default destination after successful login. */
+const DEFAULT_REDIRECT = "/dashboard";
 
 // ---------------------------------------------------------------------------
 // Validation
@@ -45,9 +48,15 @@ function validate(values: LoginFormState): LoginFormErrors {
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login } = useAuthActions();
+
   const [formData, setFormData] = React.useState<LoginFormState>(INITIAL_STATE);
   const [errors, setErrors] = React.useState<LoginFormErrors>({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  // Redirect destination: honour the `callbackUrl` query param set by middleware
+  const callbackUrl = searchParams.get("callbackUrl") || DEFAULT_REDIRECT;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,11 +86,15 @@ export function LoginForm() {
       setErrors({});
 
       try {
-        await authService.login({
+        // Authenticate via the AuthProvider action – this persists tokens and
+        // hydrates the auth store in one call.
+        await login({
           email: formData.email,
           password: formData.password,
         });
-        router.push("/dashboard");
+
+        // Redirect to the original page or the default dashboard
+        router.push(callbackUrl);
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Login failed. Please try again.";
@@ -90,11 +103,17 @@ export function LoginForm() {
         setIsSubmitting(false);
       }
     },
-    [formData, router],
+    [formData, router, login, callbackUrl],
   );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      {errors.form && (
+        <p className="text-sm text-red-500 text-center" role="alert">
+          {errors.form}
+        </p>
+      )}
+
       <FormInput
         label="Email address"
         name="email"
@@ -131,12 +150,6 @@ export function LoginForm() {
           />
         </div>
       </div>
-
-      {errors.form && (
-        <p className="text-sm text-red-500 text-center" role="alert">
-          {errors.form}
-        </p>
-      )}
 
       <Button
         type="submit"
