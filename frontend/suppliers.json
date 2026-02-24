@@ -1,0 +1,76 @@
+{
+  "update_supplier": {
+    "url": "/api/suppliers/{id}",
+    "method": "PUT",
+    "request_body": {
+      "name": "Treadline Tyres Uganda",
+      "contactPerson": "James Okello",
+      "email": "james@treadline.co.ug",
+      "phone": "+256-700-123456",
+      "address": "Plot 42, Industrial Area, Kampala",
+      "notes": "Primary tyre supplier for Continental and Bridgestone brands"
+    },
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "e6bb5ab4-e1d3-497e-b71e-9d54ffea8590",
+        "name": "Treadline Tyres Uganda",
+        "contactPerson": "James Okello",
+        "email": "james@treadline.co.ug",
+        "phone": "+256-700-123456",
+        "address": "Plot 42, Industrial Area, Kampala",
+        "notes": "Primary tyre supplier for Continental and Bridgestone brands",
+        "isActive": true,
+        "createdAt": "2026-02-24T19:31:44.658Z",
+        "updatedAt": "2026-02-24T19:37:20.949Z"
+      }
+    }
+  },
+  "deactivate_supplier": {
+    "url": "/api/suppliers/{id}",
+    "method": "PUT",
+    "request_body": {
+      "isActive": false
+    },
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "e6bb5ab4-e1d3-497e-b71e-9d54ffea8590",
+        "name": "Treadline Tyres Uganda",
+        "contactPerson": "James Okello",
+        "email": "james@treadline.co.ug",
+        "phone": "+256-700-123456",
+        "address": "Plot 42, Industrial Area, Kampala",
+        "notes": "Primary tyre supplier for Continental and Bridgestone brands",
+        "isActive": true,
+        "createdAt": "2026-02-24T19:31:44.658Z",
+        "updatedAt": "2026-02-24T19:37:20.949Z"
+      }
+    }
+  },
+  "activate_supplier": {
+    "url": "/api/suppliers/{id}",
+    "method": "PUT",
+    "request_body": {
+      "isActive": true
+    },
+    "response": {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "id": "e6bb5ab4-e1d3-497e-b71e-9d54ffea8590",
+        "name": "Treadline Tyres Uganda",
+        "contactPerson": "James Okello",
+        "email": "james@treadline.co.ug",
+        "phone": "+256-700-123456",
+        "address": "Plot 42, Industrial Area, Kampala",
+        "notes": "Primary tyre supplier for Continental and Bridgestone brands",
+        "isActive": true,
+        "createdAt": "2026-02-24T19:31:44.658Z",
+        "updatedAt": "2026-02-24T19:37:20.949Z"
+      }
+    }
+  }
+}

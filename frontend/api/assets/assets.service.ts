@@ -22,6 +22,8 @@ import type {
   AssetListData,
   AssetStockSummary,
   AssetTransaction,
+  BulkCreateAssetsRequest,
+  BulkCreateAssetsResponse,
   CheckoutToolRequest,
   CreateAssetRequest,
   CreatePurchaseRequest,
@@ -36,6 +38,7 @@ import type {
   Supplier,
   SupplierListItem,
   UpdateAssetRequest,
+  UpdateSupplierRequest,
 } from './assets.types';
 
 // ---- Query-param interfaces -----------------------------------------------
@@ -82,6 +85,17 @@ export const assetsService = {
     return res.data;
   },
 
+  /** Bulk-create multiple assets in a single request. */
+  async bulkCreateAssets(
+    data: BulkCreateAssetsRequest,
+  ): Promise<BulkCreateAssetsResponse> {
+    const res = await apiClient.post<BulkCreateAssetsResponse>(
+      ENDPOINTS.ASSETS.BULK_CREATE,
+      data,
+    );
+    return res.data;
+  },
+
   /** Update an existing asset. */
   async updateAsset(id: string, data: UpdateAssetRequest): Promise<Asset> {
     const res = await apiClient.put<Asset>(ENDPOINTS.ASSETS.UPDATE(id), data);
@@ -102,6 +116,18 @@ export const assetsService = {
   async createSupplier(data: CreateSupplierRequest): Promise<Supplier> {
     const res = await apiClient.post<Supplier>(
       ENDPOINTS.ASSETS.SUPPLIERS_CREATE,
+      data,
+    );
+    return res.data;
+  },
+
+  /** Update an existing supplier (also used to activate / deactivate). */
+  async updateSupplier(
+    id: string,
+    data: UpdateSupplierRequest,
+  ): Promise<Supplier> {
+    const res = await apiClient.put<Supplier>(
+      ENDPOINTS.ASSETS.SUPPLIERS_UPDATE(id),
       data,
     );
     return res.data;

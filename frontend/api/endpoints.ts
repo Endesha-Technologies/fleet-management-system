@@ -67,10 +67,12 @@ export const ENDPOINTS = {
   ASSETS: {
     LIST: '/assets',
     CREATE: '/assets',
+    BULK_CREATE: '/assets/bulk',
     DETAIL: (id: string) => `/assets/${id}` as const,
     UPDATE: (id: string) => `/assets/${id}` as const,
     SUPPLIERS_LIST: '/assets/suppliers',
     SUPPLIERS_CREATE: '/assets/suppliers',
+    SUPPLIERS_UPDATE: (id: string) => `/assets/suppliers/${id}` as const,
     PURCHASES_LIST: '/assets/purchases',
     PURCHASES_CREATE: '/assets/purchases',
     INSTALL: '/assets/install',

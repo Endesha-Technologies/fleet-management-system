@@ -39,6 +39,7 @@ export type {
   Supplier,
   SupplierListItem,
   CreateSupplierRequest,
+  UpdateSupplierRequest,
 
   // Purchases
   PurchaseItemInput,
@@ -74,6 +75,10 @@ export type {
   // Tool checkout / return
   CheckoutToolRequest,
   ReturnToolRequest,
+
+  // Bulk creation
+  BulkCreateAssetsRequest,
+  BulkCreateAssetsResponse,
 
   // Request / Response aliases
   CreateAssetRequest,

@@ -20,6 +20,7 @@ import {
   Fuel,
   Bell,
   Settings2,
+  Building2,
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -56,8 +57,16 @@ const NAV_ITEMS: NavItem[] = [
     icon: Shield,
     href: '/settings/roles',
     enabled: true,
-  }
-
+  },
+  {
+    id: 'suppliers',
+    label: 'Suppliers',
+    shortLabel: 'Suppliers',
+    description: 'Manage parts and asset suppliers',
+    icon: Building2,
+    href: '/settings/suppliers',
+    enabled: true,
+  },
 ];
 
 // ---------------------------------------------------------------------------

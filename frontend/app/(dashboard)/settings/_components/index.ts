@@ -11,3 +11,8 @@ export { RoleTable } from './RoleTable';
 export { PermissionMatrix } from './PermissionMatrix';
 export { RoleFormSheet } from './RoleFormSheet';
 export { DeleteRoleDialog } from './DeleteRoleDialog';
+
+// Supplier-management components
+export { SupplierTable } from './SupplierTable';
+export { SupplierFormSheet } from './SupplierFormSheet';
+export { DeactivateSupplierDialog } from './DeactivateSupplierDialog';

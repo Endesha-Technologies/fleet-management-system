@@ -114,23 +114,12 @@ export interface AssignAssetDrawerProps {
 
 /** Props for the DisposeAssetDrawer */
 export interface DisposeAssetDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  asset?: import('@/types/asset').Asset | null;
-  stockUnits?: import('@/types/asset').StockUnit[];
-  allAssets?: import('@/types/asset').Asset[];
-  allStockUnits?: import('@/types/asset').StockUnit[];
-}
-
-/** Line item in a disposal transaction */
-export interface DisposeLineItem {
-  id: string;
-  assetId: string;
-  assetName: string;
-  tracking: string;
-  quantity: number;
-  maxQuantity: number;
-  selectedSerialIds: Set<string>;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Pre-fill a single asset by ID (from detail page). */
+  initialAssetId?: string;
+  /** Called after a successful disposal to refresh the parent list. */
+  onSuccess?: () => void;
 }
 
 /** Props for the LowStockBanner component */
@@ -138,11 +127,23 @@ export interface LowStockBannerProps {
   alerts: import('@/types/asset').LowStockAlert[];
 }
 
+/** Minimal asset info for pre-filling purchase line items. */
+export interface PurchaseAssetInfo {
+  id: string;
+  name: string;
+  assetType: import('@/api/assets/assets.types').AssetType;
+}
+
 /** Props for the PurchaseStockDrawer */
 export interface PurchaseStockDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Pre-fill a single asset by ID (fetched from API). */
   initialAssetId?: string;
+  /** Pre-fill multiple assets directly (e.g. after bulk creation). */
+  initialAssets?: PurchaseAssetInfo[];
+  /** Called after a successful purchase to refresh the parent list. */
+  onSuccess?: () => void;
 }
 
 /** Line item in a purchase transaction */
@@ -167,26 +168,12 @@ export interface RemoveAssetDrawerProps {
 
 /** Props for the SellAssetDrawer */
 export interface SellAssetDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  asset?: import('@/types/asset').Asset | null;
-  stockUnits?: import('@/types/asset').StockUnit[];
-  allAssets?: import('@/types/asset').Asset[];
-  allStockUnits?: import('@/types/asset').StockUnit[];
-}
-
-/** Line item in a sale transaction */
-export interface SaleLineItem {
-  id: string;
-  assetId: string;
-  assetName: string;
-  tracking: string;
-  quantity: number;
-  maxQuantity: number;
-  selectedSerialIds: Set<string>;
-  unitPrices: Record<string, number>;
-  unitPrice: number;
-  total: number;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Pre-fill a single asset by ID (fetched from API). */
+  initialAssetId?: string;
+  /** Called after a successful sale to refresh the parent list. */
+  onSuccess?: () => void;
 }
 
 // ---------- Tab component props ----------
@@ -204,6 +191,8 @@ export interface MovementsTabProps {
 /** Props for OverviewTab */
 export interface OverviewTabProps {
   asset: import('@/types/asset').Asset;
+  /** Number of disposed units — sourced from stock summary API. */
+  disposedCount?: number;
 }
 
 /** Props for StockUnitsTab */

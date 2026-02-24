@@ -252,18 +252,21 @@ export default function AssetInventoryPage() {
       <PurchaseStockDrawer
         open={isPurchaseStockOpen}
         onOpenChange={setIsPurchaseStockOpen}
+        onSuccess={fetchAssets}
       />
 
       {/* ── Sell Asset drawer ────────────────────────────────────── */}
       <SellAssetDrawer
-        isOpen={isSellAssetOpen}
-        onClose={() => setIsSellAssetOpen(false)}
+        open={isSellAssetOpen}
+        onOpenChange={setIsSellAssetOpen}
+        onSuccess={fetchAssets}
       />
 
       {/* ── Dispose Asset drawer ─────────────────────────────────── */}
       <DisposeAssetDrawer
-        isOpen={isDisposeAssetOpen}
-        onClose={() => setIsDisposeAssetOpen(false)}
+        open={isDisposeAssetOpen}
+        onOpenChange={setIsDisposeAssetOpen}
+        onSuccess={fetchAssets}
       />
     </div>
   );

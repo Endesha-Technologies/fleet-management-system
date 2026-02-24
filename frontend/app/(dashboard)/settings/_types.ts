@@ -110,6 +110,36 @@ export interface RoleFormErrors {
 }
 
 // ---------------------------------------------------------------------------
+// Supplier types
+// ---------------------------------------------------------------------------
+export interface SettingsSupplier {
+  id: string;
+  name: string;
+  contactPerson: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  notes: string | null;
+  isActive: boolean;
+  purchaseOrderCount: number;
+  assetCount: number;
+  createdAt: string;
+}
+
+export interface SupplierFormData {
+  name: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+}
+
+export interface SupplierFormErrors {
+  [key: string]: string | undefined;
+}
+
+// ---------------------------------------------------------------------------
 // Page header
 // ---------------------------------------------------------------------------
 export interface SettingsPageHeaderProps {

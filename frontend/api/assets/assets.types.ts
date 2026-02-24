@@ -58,7 +58,7 @@ export type TransactionAction =
 
 export type PurchaseOrderStatus = 'PENDING' | 'RECEIVED' | 'CANCELLED';
 
-export type DisposalType = 'RESALE' | 'SCRAP' | 'WRITE_OFF' | 'DONATION';
+export type DisposalType = 'SCRAP' | 'RESALE' | 'WARRANTY_CLAIM';
 
 export type LowStockSeverity = 'CRITICAL' | 'WARNING' | 'INFO';
 
@@ -265,6 +265,17 @@ export interface CreateAssetRequest {
 
 export type UpdateAssetRequest = Partial<CreateAssetRequest>;
 
+// ---- Bulk creation --------------------------------------------------------
+
+export interface BulkCreateAssetsRequest {
+  assets: CreateAssetRequest[];
+}
+
+export interface BulkCreateAssetsResponse {
+  count: number;
+  assets: Asset[];
+}
+
 // ---- Suppliers ------------------------------------------------------------
 
 export interface Supplier {
@@ -294,6 +305,16 @@ export interface CreateSupplierRequest {
   phone?: string;
   address?: string;
   notes?: string;
+}
+
+export interface UpdateSupplierRequest {
+  name?: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  notes?: string;
+  isActive?: boolean;
 }
 
 // ---- Purchases ------------------------------------------------------------
