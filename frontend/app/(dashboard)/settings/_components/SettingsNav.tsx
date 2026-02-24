@@ -56,43 +56,8 @@ const NAV_ITEMS: NavItem[] = [
     icon: Shield,
     href: '/settings/roles',
     enabled: true,
-  },
-  {
-    id: 'vehicle-categories',
-    label: 'Vehicle Categories',
-    shortLabel: 'Vehicles',
-    description: 'Manage truck types and categories',
-    icon: Truck,
-    href: '/settings/vehicle-categories',
-    enabled: false,
-  },
-  {
-    id: 'fuel',
-    label: 'Fuel Configuration',
-    shortLabel: 'Fuel',
-    description: 'Set up fuel types and pricing',
-    icon: Fuel,
-    href: '/settings/fuel-config',
-    enabled: false,
-  },
-  {
-    id: 'notifications',
-    label: 'Notifications',
-    shortLabel: 'Alerts',
-    description: 'Configure alerts and preferences',
-    icon: Bell,
-    href: '/settings/notifications',
-    enabled: false,
-  },
-  {
-    id: 'system',
-    label: 'System',
-    shortLabel: 'System',
-    description: 'General system preferences',
-    icon: Settings2,
-    href: '/settings/system',
-    enabled: false,
-  },
+  }
+
 ];
 
 // ---------------------------------------------------------------------------
