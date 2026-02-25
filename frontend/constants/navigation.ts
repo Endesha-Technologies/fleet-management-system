@@ -41,11 +41,11 @@ export const NAV_ITEMS = [
     icon: Truck,
   },
 
-  // {
-  //   name: 'Maintenance',
-  //   href: '/maintenance',
-  //   icon: Wrench,
-  // },
+  {
+    name: 'Maintenance',
+    href: '/maintenance',
+    icon: Wrench,
+  },
   // {
   //   name: 'Tyres',
   //   href: '/tyres',
