@@ -7,10 +7,10 @@ import { FormDateInput, FormNumberInput } from '@/components/ui/form';
 import { PostReplacementDialog } from './PostReplacementDialog';
 import type { ReplaceTyreDrawerProps, ReplacementItem } from '../../_types';
 
-export function ReplaceTyreDrawer({ open, onOpenChange, truck }: ReplaceTyreDrawerProps) {
+export function ReplaceTyreDrawer({ open, onOpenChange, truckId, registrationNumber, currentOdometer, tyrePositions, onComplete }: ReplaceTyreDrawerProps) {
   const [replaceDate, setReplaceDate] = useState(new Date().toISOString().split('T')[0]);
-  const [odometer, setOdometer] = useState(truck.currentOdometer?.toString() || '');
-  const [engineHours, setEngineHours] = useState(truck.engineHours?.toString() || '');
+  const [odometer, setOdometer] = useState(currentOdometer?.toString() || '');
+  const [engineHours, setEngineHours] = useState('');
   const [showPostDialog, setShowPostDialog] = useState(false);
 
   // Mock data

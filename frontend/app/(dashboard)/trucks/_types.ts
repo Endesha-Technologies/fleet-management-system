@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import type {
   Truck as ApiTruck,
+  TruckDetail,
   CreateTruckRequest,
   AxleConfigInput,
   BodyType,
@@ -9,20 +10,13 @@ import type {
   DriveType,
   OwnershipType,
 } from '@/api/trucks/trucks.types';
-import type { Truck as LegacyTruck } from '@/types/truck';
+import type { TruckTyrePositionsData } from '@/api/tyres/tyres.types';
+import type { TruckMaintenanceHistoryData } from '@/api/maintenance/maintenance.types';
 
 // ─── Core Entity Types ────────────────────────────────────────────────────────
 
 /** Re-export the API Truck type for convenience within this domain. */
-export type { Truck } from '@/api/trucks/trucks.types';
-
-/**
- * Legacy truck type from `@/types/truck` used by detail pages that still
- * consume MOCK_TRUCKS. Will be removed once the detail pages migrate to
- * real API data.
- * @deprecated Use the API `Truck` type instead.
- */
-export type { Truck as LegacyTruck } from '@/types/truck';
+export type { Truck, TruckDetail } from '@/api/trucks/trucks.types';
 
 // ─── Form Types ───────────────────────────────────────────────────────────────
 
@@ -390,9 +384,90 @@ export interface FormStepProps {
   setFormData: (data: TruckFormData) => void;
 }
 
-/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
+// ─── Trip Types (backend: GET /trucks/:id/trips) ─────────────────────────────
+
+export type TripStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
+export interface TruckTrip {
+  id: string;
+  tripNumber: string;
+  truckId: string;
+  routeName: string;
+  origin: string;
+  destination: string;
+  distanceKm: number;
+  fuelUsedLiters: number;
+  driverName: string;
+  turnBoyName: string | null;
+  departureDate: string;
+  arrivalDate: string | null;
+  status: TripStatus;
+  startOdometer: number;
+  endOdometer: number | null;
+  notes: string | null;
+  createdAt: string;
+}
+
+// ─── Fuel Log Types (backend: GET /trucks/:id/fuel-logs) ─────────────────────
+
+export interface TruckFuelLog {
+  id: string;
+  truckId: string;
+  date: string;
+  liters: number;
+  costPerLiter: number;
+  totalCost: number;
+  odometerReading: number;
+  fuelType: string;
+  station: string;
+  location: string | null;
+  receiptNumber: string | null;
+  driverName: string;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface TruckFuelSummary {
+  totalLiters: number;
+  totalCost: number;
+  avgConsumption: number; // L/100km
+  avgCostPerLiter: number;
+  lastRefuelDate: string | null;
+  totalDistance: number;
+  fuelLogCount: number;
+}
+
+// ─── Document Types (backend: GET /trucks/:id/documents) ─────────────────────
+
+export type DocumentType =
+  | 'REGISTRATION'
+  | 'INSURANCE'
+  | 'INSPECTION'
+  | 'OPERATING_LICENSE'
+  | 'SERVICE_RECORD'
+  | 'PHOTO'
+  | 'OTHER';
+
+export interface TruckDocument {
+  id: string;
+  truckId: string;
+  name: string;
+  type: DocumentType;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+  expiryDate: string | null;
+  uploadedBy: string;
+  uploaderName: string;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ─── Detail Page Component Props ─────────────────────────────────────────────
+
 export interface TruckOverviewProps {
-  truck: LegacyTruck;
+  truck: TruckDetail;
 }
 
 export interface AlertCardProps {
@@ -410,23 +485,43 @@ export interface TruckFuelProps {
   truckId: string;
 }
 
-/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface TruckTyresProps {
-  truck: LegacyTruck;
+  truckId: string;
+  truck: TruckDetail;
+  tyrePositions: TruckTyrePositionsData | null;
+  isLoading: boolean;
+  onRefresh: () => void;
 }
 
-/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
+export interface TruckMaintenanceProps {
+  truckId: string;
+  maintenanceData: TruckMaintenanceHistoryData | null;
+  isLoading: boolean;
+  onRefresh: () => void;
+}
+
+export interface TruckDocumentsProps {
+  truckId: string;
+}
+
 export interface RotateTyresDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  truck: LegacyTruck;
+  truckId: string;
+  registrationNumber: string;
+  currentOdometer: number;
+  tyrePositions: TruckTyrePositionsData | null;
+  onComplete: () => void;
 }
 
-/** @deprecated Uses LegacyTruck — update when detail pages migrate to API data. */
 export interface ReplaceTyreDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  truck: LegacyTruck;
+  truckId: string;
+  registrationNumber: string;
+  currentOdometer: number;
+  tyrePositions: TruckTyrePositionsData | null;
+  onComplete: () => void;
 }
 
 export interface PostReplacementDialogProps {

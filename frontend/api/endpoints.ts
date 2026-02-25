@@ -100,9 +100,34 @@ export const ENDPOINTS = {
       `/maintenance/trucks/${truckId}/history` as const,
   },
 
+  // ---- Trips ---------------------------------------------------------------
+  TRIPS: {
+    LIST: '/trips',
+    CREATE: '/trips',
+    DETAIL: (id: string) => `/trips/${id}` as const,
+    UPDATE: (id: string) => `/trips/${id}` as const,
+    DELETE: (id: string) => `/trips/${id}` as const,
+    TRUCK_TRIPS: (truckId: string) => `/trucks/${truckId}/trips` as const,
+  },
+
+  // ---- Fuel Logs -----------------------------------------------------------
+  FUEL: {
+    LIST: '/fuel-logs',
+    CREATE: '/fuel-logs',
+    DETAIL: (id: string) => `/fuel-logs/${id}` as const,
+    TRUCK_FUEL_LOGS: (truckId: string) => `/trucks/${truckId}/fuel-logs` as const,
+    TRUCK_FUEL_SUMMARY: (truckId: string) => `/trucks/${truckId}/fuel-summary` as const,
+  },
+
+  // ---- Documents -----------------------------------------------------------
+  DOCUMENTS: {
+    TRUCK_DOCUMENTS: (truckId: string) => `/trucks/${truckId}/documents` as const,
+    UPLOAD: (truckId: string) => `/trucks/${truckId}/documents` as const,
+    DOWNLOAD: (documentId: string) => `/documents/${documentId}/download` as const,
+    DELETE: (documentId: string) => `/documents/${documentId}` as const,
+  },
+
   // ---- Future domains (uncomment / add as the backend ships them) ---------
   // DRIVERS: { … },
-  // TRIPS:   { … },
   // ROUTES:  { … },
-  // FUEL:    { … },
 } as const;

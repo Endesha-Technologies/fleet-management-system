@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { FormDateInput, FormSelect, FormNumberInput, FormTextarea } from '@/components/ui/form';
 import type { RotateTyresDrawerProps, RotationScheme, RotationItem } from '../../_types';
 
-export function RotateTyresDrawer({ open, onOpenChange, truck }: RotateTyresDrawerProps) {
+export function RotateTyresDrawer({ open, onOpenChange, truckId, registrationNumber, currentOdometer, tyrePositions, onComplete }: RotateTyresDrawerProps) {
   const [rotationDate, setRotationDate] = useState(new Date().toISOString().split('T')[0]);
-  const [odometer, setOdometer] = useState(truck.currentOdometer?.toString() || '');
-  const [engineHours, setEngineHours] = useState(truck.engineHours?.toString() || '');
+  const [odometer, setOdometer] = useState(currentOdometer?.toString() || '');
+  const [engineHours, setEngineHours] = useState('');
   const [scheme, setScheme] = useState<RotationScheme>('Standard Cross');
   const [notes, setNotes] = useState('');
 
@@ -79,7 +79,7 @@ export function RotateTyresDrawer({ open, onOpenChange, truck }: RotateTyresDraw
 
     // Mock Submission
     console.log('Submitting Rotation:', {
-      truckId: truck.id,
+      truckId,
       date: rotationDate,
       odometer,
       engineHours,
