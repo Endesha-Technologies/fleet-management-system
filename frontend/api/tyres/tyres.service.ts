@@ -5,8 +5,17 @@
 import { apiClient } from '../client';
 import { ENDPOINTS } from '../endpoints';
 import type {
+  // List / detail
+  TyreListParams,
+  TyreListData,
+  TyreDetail,
   // Positions
   TruckTyrePositionsData,
+  // Activity
+  TruckTyreActivityData,
+  // Events
+  TyreEventFilterType,
+  TruckTyreEventsData,
   // Mount
   MountTyresRequest,
   MountTyresResult,
@@ -31,12 +40,48 @@ import type {
 // Service methods
 // ---------------------------------------------------------------------------
 
+/** List / search tyre assets with optional filters & pagination. */
+async function listTyres(params?: TyreListParams): Promise<TyreListData> {
+  const res = await apiClient.get<TyreListData>(ENDPOINTS.TYRES.LIST, {
+    params: params as Record<string, string | number | boolean | undefined>,
+  });
+  return res.data;
+}
+
+/** Get a single tyre by ID (includes current position, purchase info, etc.). */
+async function getTyreById(tyreId: string): Promise<TyreDetail> {
+  const res = await apiClient.get<TyreDetail>(ENDPOINTS.TYRES.DETAIL(tyreId));
+  return res.data;
+}
+
 /** Get all tyre positions for a truck (organised by axle). */
 async function getTruckTyrePositions(
   truckId: string,
 ): Promise<TruckTyrePositionsData> {
   const res = await apiClient.get<TruckTyrePositionsData>(
     ENDPOINTS.TYRES.TRUCK_POSITIONS(truckId),
+  );
+  return res.data;
+}
+
+/** Get the aggregated tyre activity feed for a truck. */
+async function getTruckTyreActivity(
+  truckId: string,
+): Promise<TruckTyreActivityData> {
+  const res = await apiClient.get<TruckTyreActivityData>(
+    ENDPOINTS.TYRES.TRUCK_ACTIVITY(truckId),
+  );
+  return res.data;
+}
+
+/** Get tyre events for a truck, optionally filtered by event type. */
+async function getTruckTyreEvents(
+  truckId: string,
+  type?: TyreEventFilterType,
+): Promise<TruckTyreEventsData> {
+  const res = await apiClient.get<TruckTyreEventsData>(
+    ENDPOINTS.TYRES.TRUCK_EVENTS(truckId),
+    { params: type ? { type } : undefined },
   );
   return res.data;
 }
@@ -115,7 +160,11 @@ async function getPositionHistory(
 // ---------------------------------------------------------------------------
 
 export const tyresService = {
+  listTyres,
+  getTyreById,
   getTruckTyrePositions,
+  getTruckTyreActivity,
+  getTruckTyreEvents,
   mountTyres,
   dismountTyres,
   rotateTyres,

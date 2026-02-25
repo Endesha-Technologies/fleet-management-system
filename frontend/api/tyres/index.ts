@@ -14,6 +14,8 @@ export type {
   TyrePositionSide,
   TyrePositionSlot,
   TyrePositionStatus,
+  TyreActivityEvent,
+  TyreConditionLevel,
 
   // Shared references
   TruckRef,
@@ -22,11 +24,31 @@ export type {
   TyreAssetSummary,
   TyreAssetRef,
 
+  // Tyre list / detail
+  TyreListParams,
+  TyreListItem,
+  TyreListData,
+  TyreDetail,
+
   // Truck tyre positions
   PositionSummary,
   TyreAxlePositions,
   TyrePositionsSummary,
   TruckTyrePositionsData,
+
+  // Truck tyre activity
+  TyreActivityEntry,
+  TyreActivitySummary,
+  TruckTyreActivityData,
+
+  // Truck tyre events (grouped by date)
+  TyreEventFilterType,
+  TyreEventPosition,
+  TyreEventPreviousPosition,
+  TyreEventInspection,
+  TyreEvent,
+  TyreEventGroup,
+  TruckTyreEventsData,
 
   // Mount
   MountInput,
@@ -81,4 +103,8 @@ export type {
   TyreHistoryResponse,
   TyreMileageResponse,
   PositionHistoryResponse,
+  TyreListResponse,
+  TyreDetailResponse,
+  TruckTyreActivityResponse,
+  TruckTyreEventsResponse,
 } from './tyres.types';

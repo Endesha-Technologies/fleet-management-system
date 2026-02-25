@@ -232,9 +232,44 @@ export function TyreAssignmentDialog({
     }
   }, [selections, odometerReading, truckId, fetchPositions, fetchAvailableTyres]);
 
-  const handleDone = useCallback(() => {
+  const handleDone = useCallback(async () => {
+    // If there are pending selections, mount them first before completing
+    const mounts = Object.entries(selections)
+      .filter(([, assetId]) => Boolean(assetId))
+      .map(([positionId, assetId]) => ({
+        positionId,
+        assetId,
+      }));
+
+    if (mounts.length > 0) {
+      const odometer = parseInt(odometerReading, 10);
+      if (isNaN(odometer) || odometer < 0) {
+        setMountError('Please enter a valid odometer reading before completing.');
+        return;
+      }
+
+      setIsMounting(true);
+      setMountError(null);
+
+      try {
+        await tyresService.mountTyres({
+          truckId,
+          odometerReading: odometer,
+          mounts,
+        });
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Failed to mount tyres.';
+        setMountError(message);
+        setIsMounting(false);
+        return;
+      } finally {
+        setIsMounting(false);
+      }
+    }
+
     onComplete();
-  }, [onComplete]);
+  }, [onComplete, selections, odometerReading, truckId]);
 
   if (!open) return null;
 
@@ -249,21 +284,21 @@ export function TyreAssignmentDialog({
         onClick={() => onOpenChange(false)}
       />
 
-      {/* Dialog */}
-      <div className="fixed inset-4 bg-white rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-w-4xl mx-auto">
+      {/* Dialog — full-screen on mobile, centered card on larger screens */}
+      <div className="fixed inset-0 sm:inset-4 bg-white sm:rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col sm:max-w-4xl sm:mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">
+        <div className="flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 border-b border-gray-200">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
               Tyre Positions
             </h2>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
               View positions and mount tyres from your inventory.
             </p>
           </div>
           <button
             onClick={() => onOpenChange(false)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-gray-100 rounded-lg transition ml-2 shrink-0"
             aria-label="Close"
           >
             <X className="h-5 w-5 text-gray-500" />
@@ -271,7 +306,7 @@ export function TyreAssignmentDialog({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500">
               <Loader2 className="h-8 w-8 animate-spin mb-3" />
@@ -281,7 +316,7 @@ export function TyreAssignmentDialog({
 
           {error && (
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="rounded-lg bg-red-50 border border-red-200 p-6 max-w-md text-center">
+              <div className="rounded-lg bg-red-50 border border-red-200 p-4 sm:p-6 max-w-md text-center">
                 <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-3" />
                 <p className="text-sm text-red-800 font-medium mb-1">
                   Could not load positions
@@ -294,8 +329,8 @@ export function TyreAssignmentDialog({
           {!isLoading && !error && (
             <>
               {/* Summary bar */}
-              <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 mb-6">
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
+              <div className="rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 sm:px-4 sm:py-3 mb-4 sm:mb-6">
+                <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1 text-xs sm:text-sm">
                   <span className="font-medium text-blue-900">
                     {summary.total} position{summary.total !== 1 ? 's' : ''}
                   </span>
@@ -310,112 +345,171 @@ export function TyreAssignmentDialog({
 
               {/* Mount success message */}
               {mountSuccess && (
-                <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
+                <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 sm:px-4 sm:py-3 mb-4 flex items-center gap-2">
                   <Check className="h-4 w-4 text-green-600 shrink-0" />
-                  <p className="text-sm text-green-800">{mountSuccess}</p>
+                  <p className="text-xs sm:text-sm text-green-800">{mountSuccess}</p>
                 </div>
               )}
 
               {/* Mount error message */}
               {mountError && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 mb-4 flex items-center gap-2">
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 sm:px-4 sm:py-3 mb-4 flex items-center gap-2">
                   <AlertCircle className="h-4 w-4 text-red-500 shrink-0" />
-                  <p className="text-sm text-red-800">{mountError}</p>
+                  <p className="text-xs sm:text-sm text-red-800">{mountError}</p>
                 </div>
               )}
 
-              {/* Positions table */}
+              {/* Positions — table on desktop, cards on mobile */}
               {positions.length > 0 ? (
-                <div className="overflow-x-auto border border-gray-200 rounded-lg">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          Position
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          Axle
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          Side / Slot
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          Tyre Size
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          Status
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-gray-700">
-                          {hasEmptyPositions ? 'Tyre / Mount' : 'Current Tyre'}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {positions.map((pos) => (
-                        <tr
-                          key={pos.id}
-                          className="border-b border-gray-100 hover:bg-gray-50"
-                        >
-                          <td className="px-4 py-3 font-medium text-gray-900">
-                            {pos.label}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {pos.axleName}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {pos.detail}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {pos.tyreSize || '—'}
-                          </td>
-                          <td className="px-4 py-3">
-                            <span
-                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                                pos.status === 'EMPTY'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-green-100 text-green-800'
-                              }`}
-                            >
-                              {pos.status === 'EMPTY' ? 'Empty' : 'Occupied'}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            {pos.status === 'OCCUPIED' ? (
-                              <span className="text-gray-600">
-                                {pos.currentTyre || '—'}
-                              </span>
-                            ) : (
-                              <TyreSelect
-                                positionId={pos.id}
-                                positionSize={pos.tyreSize}
-                                availableTyres={availableTyres}
-                                selectedTyreIds={selectedTyreIds}
-                                value={selections[pos.id] ?? ''}
-                                onChange={handleSelectTyre}
-                                isLoading={isTyresLoading}
-                                disabled={isMounting}
-                              />
-                            )}
-                          </td>
+                <>
+                  {/* Desktop table (hidden on small screens) */}
+                  <div className="hidden sm:block overflow-x-auto border border-gray-200 rounded-lg">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-200">
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            Position
+                          </th>
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            Axle
+                          </th>
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            Side / Slot
+                          </th>
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            Tyre Size
+                          </th>
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            Status
+                          </th>
+                          <th className="px-4 py-3 text-left font-medium text-gray-700">
+                            {hasEmptyPositions ? 'Tyre / Mount' : 'Current Tyre'}
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {positions.map((pos) => (
+                          <tr
+                            key={pos.id}
+                            className="border-b border-gray-100 hover:bg-gray-50"
+                          >
+                            <td className="px-4 py-3 font-medium text-gray-900">
+                              {pos.label}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">
+                              {pos.axleName}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">
+                              {pos.detail}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">
+                              {pos.tyreSize || '—'}
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                  pos.status === 'EMPTY'
+                                    ? 'bg-yellow-100 text-yellow-800'
+                                    : 'bg-green-100 text-green-800'
+                                }`}
+                              >
+                                {pos.status === 'EMPTY' ? 'Empty' : 'Occupied'}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              {pos.status === 'OCCUPIED' ? (
+                                <span className="text-gray-600">
+                                  {pos.currentTyre || '—'}
+                                </span>
+                              ) : (
+                                <TyreSelect
+                                  positionId={pos.id}
+                                  positionSize={pos.tyreSize}
+                                  availableTyres={availableTyres}
+                                  selectedTyreIds={selectedTyreIds}
+                                  value={selections[pos.id] ?? ''}
+                                  onChange={handleSelectTyre}
+                                  isLoading={isTyresLoading}
+                                  disabled={isMounting}
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile card layout (visible only on small screens) */}
+                  <div className="sm:hidden space-y-3">
+                    {positions.map((pos) => (
+                      <div
+                        key={pos.id}
+                        className={`rounded-lg border p-3 ${
+                          pos.status === 'EMPTY'
+                            ? 'border-yellow-200 bg-yellow-50/30'
+                            : 'border-gray-200 bg-white'
+                        }`}
+                      >
+                        {/* Card header */}
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-semibold text-gray-900">
+                            {pos.label}
+                          </span>
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                              pos.status === 'EMPTY'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-green-100 text-green-800'
+                            }`}
+                          >
+                            {pos.status === 'EMPTY' ? 'Empty' : 'Occupied'}
+                          </span>
+                        </div>
+
+                        {/* Card details */}
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-2">
+                          <span>{pos.axleName}</span>
+                          <span>{pos.detail}</span>
+                          {pos.tyreSize && <span>{pos.tyreSize}</span>}
+                        </div>
+
+                        {/* Tyre select or current tyre */}
+                        {pos.status === 'OCCUPIED' ? (
+                          <div className="text-xs text-gray-700 bg-gray-50 rounded px-2 py-1.5">
+                            🛞 {pos.currentTyre || '—'}
+                          </div>
+                        ) : (
+                          <TyreSelect
+                            positionId={pos.id}
+                            positionSize={pos.tyreSize}
+                            availableTyres={availableTyres}
+                            selectedTyreIds={selectedTyreIds}
+                            value={selections[pos.id] ?? ''}
+                            onChange={handleSelectTyre}
+                            isLoading={isTyresLoading}
+                            disabled={isMounting}
+                            isMobile
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
               ) : (
-                <p className="text-center text-gray-500 py-8">
+                <p className="text-center text-gray-500 py-8 text-sm">
                   No tyre positions found for this truck.
                 </p>
               )}
 
               {/* Odometer + Mount section */}
               {hasEmptyPositions && availableTyres.length > 0 && (
-                <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="flex-1 max-w-xs">
+                <div className="mt-4 sm:mt-6 rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
+                  <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="flex-1 sm:max-w-xs">
                       <label
                         htmlFor="odometer-reading"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-xs sm:text-sm font-medium text-gray-700 mb-1"
                       >
                         Odometer Reading (km) <span className="text-red-500">*</span>
                       </label>
@@ -430,13 +524,13 @@ export function TyreAssignmentDialog({
                         }}
                         placeholder="e.g. 45000"
                         disabled={isMounting}
-                        className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex h-9 sm:h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </div>
                     <Button
                       onClick={handleMount}
                       disabled={selectionCount === 0 || isMounting}
-                      className="bg-[#020887] hover:bg-[#020887]/90 text-white shrink-0"
+                      className="bg-[#020887] hover:bg-[#020887]/90 text-white shrink-0 w-full sm:w-auto"
                     >
                       {isMounting ? (
                         <>
@@ -453,8 +547,8 @@ export function TyreAssignmentDialog({
 
               {/* Help text when no tyres available */}
               {hasEmptyPositions && availableTyres.length === 0 && !isTyresLoading && (
-                <div className="mt-6 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
-                  <p className="text-sm text-amber-800">
+                <div className="mt-4 sm:mt-6 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 sm:px-4 sm:py-3">
+                  <p className="text-xs sm:text-sm text-amber-800">
                     No tyres found in inventory. Add tyres via the{' '}
                     <strong>Inventory</strong> page before mounting.
                   </p>
@@ -465,13 +559,13 @@ export function TyreAssignmentDialog({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 p-6 flex gap-3 justify-end">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <div className="border-t border-gray-200 p-4 sm:p-6 flex gap-3 justify-end">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1 sm:flex-initial">
             Close
           </Button>
           <Button
             onClick={handleDone}
-            className="bg-[#020887] hover:bg-[#020887]/90 text-white"
+            className="bg-[#020887] hover:bg-[#020887]/90 text-white flex-1 sm:flex-initial"
           >
             Done
           </Button>
@@ -494,6 +588,8 @@ interface TyreSelectProps {
   onChange: (positionId: string, assetId: string) => void;
   isLoading: boolean;
   disabled: boolean;
+  /** When true, renders full-width without min-width constraint */
+  isMobile?: boolean;
 }
 
 function TyreSelect({
@@ -505,6 +601,7 @@ function TyreSelect({
   onChange,
   isLoading,
   disabled,
+  isMobile = false,
 }: TyreSelectProps) {
   // Filter: show tyres not already selected elsewhere (unless it's the current selection)
   // Optionally prioritize matching tyre size
@@ -539,7 +636,9 @@ function TyreSelect({
       value={value}
       onChange={(e) => onChange(positionId, e.target.value)}
       disabled={disabled}
-      className="w-full min-w-[200px] rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+      className={`w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 ${
+        isMobile ? '' : 'min-w-[200px]'
+      }`}
     >
       <option value="">Select tyre…</option>
       {options.matching.length > 0 && (

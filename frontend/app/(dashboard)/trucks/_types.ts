@@ -464,6 +464,23 @@ export interface TruckDocument {
   updatedAt: string;
 }
 
+// ─── Tyre Activity Types (re-exported from API layer) ────────────────────────
+
+export type {
+  TyreActivityEvent,
+  TyreConditionLevel,
+  TyreActivityEntry,
+  TyreActivitySummary,
+  TruckTyreActivityData,
+  TyreEventFilterType,
+  TyreEventPosition,
+  TyreEventPreviousPosition,
+  TyreEventInspection,
+  TyreEvent,
+  TyreEventGroup,
+  TruckTyreEventsData,
+} from '@/api/tyres/tyres.types';
+
 // ─── Detail Page Component Props ─────────────────────────────────────────────
 
 export interface TruckOverviewProps {
@@ -533,6 +550,25 @@ export interface PostReplacementDialogProps {
   onComplete: () => void;
 }
 
+export interface InspectTyresDrawerProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  truckId: string;
+  registrationNumber: string;
+  tyrePositions: TruckTyrePositionsData | null;
+  onComplete: () => void;
+}
+
+export interface DismountTyresDrawerProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  truckId: string;
+  registrationNumber: string;
+  currentOdometer: number;
+  tyrePositions: TruckTyrePositionsData | null;
+  onComplete: () => void;
+}
+
 export interface TyreAssignmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -546,3 +582,5 @@ export interface AssignLaterDialogProps {
   onAssignNow: () => void;
   onAssignLater: () => void;
 }
+
+

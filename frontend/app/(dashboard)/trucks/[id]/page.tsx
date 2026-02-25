@@ -7,9 +7,6 @@ import {
   Map,
   Edit2,
   RefreshCw,
-  Gauge,
-  Clock,
-  Droplet,
   Wrench,
   MoreVertical,
   Power,
@@ -20,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { StatsCard } from '../_components/StatsCard';
 import { TruckDetailSkeleton } from '../_components/details/TruckDetailSkeleton';
 import { TruckOverview } from '../_components/details/TruckOverview';
 import { TruckTrips } from '../_components/details/TruckTrips';
@@ -223,38 +219,6 @@ export default function TruckDetailsPage() {
         </div>
       </div>
 
-      {/* ── Stats Overview ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard
-          icon={Gauge}
-          label="Odometer"
-          value={`${truck.currentOdometer.toLocaleString()} km`}
-          subtext={`Updated ${new Date(truck.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`}
-          color="blue"
-        />
-        <StatsCard
-          icon={Clock}
-          label="Engine Hours"
-          value={`${truck.engineHours.toLocaleString()} hrs`}
-          subtext="Total run time"
-          color="green"
-        />
-        <StatsCard
-          icon={Map}
-          label="Total Trips"
-          value={String(truck._count.trips)}
-          subtext={`${truck._count.fuelLogs} fuel logs`}
-          color="purple"
-        />
-        <StatsCard
-          icon={Droplet}
-          label="Fuel Tank"
-          value={truck.tankCapacityLiters ? `${truck.tankCapacityLiters} L` : '—'}
-          subtext={truck.fuelType}
-          color="orange"
-        />
-      </div>
-
       {/* ── Tabs ──────────────────────────────────────────────────────── */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="flex w-full md:w-auto md:inline-flex bg-gray-100 p-1 rounded-lg overflow-x-auto">
@@ -303,7 +267,7 @@ export default function TruckDetailsPage() {
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger
+          {/* <TabsTrigger
             value="documents"
             className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm whitespace-nowrap"
           >
@@ -313,7 +277,7 @@ export default function TruckDetailsPage() {
                 {truck._count.documents}
               </span>
             )}
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
 
         <div className="mt-6">

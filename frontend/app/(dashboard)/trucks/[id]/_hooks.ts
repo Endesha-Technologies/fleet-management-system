@@ -14,7 +14,7 @@ import { maintenanceService } from '@/api/maintenance/maintenance.service';
 import { apiClient } from '@/api/client';
 import { ENDPOINTS } from '@/api/endpoints';
 import type { TruckDetail } from '@/api/trucks/trucks.types';
-import type { TruckTyrePositionsData } from '@/api/tyres/tyres.types';
+import type { TruckTyrePositionsData, TruckTyreActivityData, TruckTyreEventsData, TyreEventFilterType } from '@/api/tyres/tyres.types';
 import type { TruckMaintenanceHistoryData } from '@/api/maintenance/maintenance.types';
 import type {
   TruckTrip,
@@ -157,5 +157,30 @@ export function useTruckDocuments(truckId: string) {
       return res.data;
     },
     [truckId],
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tyre activity (backend endpoint: GET /tyres/trucks/:truckId/activity)
+// ---------------------------------------------------------------------------
+
+export function useTruckTyreActivity(truckId: string) {
+  return useAsyncData<TruckTyreActivityData>(
+    () => tyresService.getTruckTyreActivity(truckId),
+    [truckId],
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tyre events – grouped by date (GET /tyres/trucks/:truckId/events?type=…)
+// ---------------------------------------------------------------------------
+
+export function useTruckTyreEvents(
+  truckId: string,
+  type?: TyreEventFilterType,
+) {
+  return useAsyncData<TruckTyreEventsData>(
+    () => tyresService.getTruckTyreEvents(truckId, type),
+    [truckId, type],
   );
 }

@@ -53,13 +53,29 @@ export const ENDPOINTS = {
 
   // ---- Tyres --------------------------------------------------------------
   TYRES: {
+    /** GET  /tyres              – list / search tyre assets */
+    LIST: '/tyres',
+    /** GET  /tyres/:id          – single tyre detail */
+    DETAIL: (id: string) => `/tyres/${id}` as const,
+    /** GET  /tyres/trucks/:truckId/positions – positions by axle */
     TRUCK_POSITIONS: (truckId: string) => `/tyres/trucks/${truckId}/positions` as const,
+    /** GET  /tyres/trucks/:truckId/activity  – aggregated event feed */
+    TRUCK_ACTIVITY: (truckId: string) => `/tyres/trucks/${truckId}/activity` as const,
+    /** GET  /tyres/trucks/:truckId/events?type=mounts|dismounts|inspections|rotations */
+    TRUCK_EVENTS: (truckId: string) => `/tyres/trucks/${truckId}/events` as const,
+    /** POST /tyres/mount */
     MOUNT: '/tyres/mount',
+    /** POST /tyres/dismount */
     DISMOUNT: '/tyres/dismount',
+    /** POST /tyres/rotate */
     ROTATE: '/tyres/rotate',
+    /** POST /tyres/:id/inspect */
     INSPECT: (id: string) => `/tyres/${id}/inspect` as const,
+    /** GET  /tyres/:id/history */
     HISTORY: (id: string) => `/tyres/${id}/history` as const,
+    /** GET  /tyres/:id/mileage */
     MILEAGE: (id: string) => `/tyres/${id}/mileage` as const,
+    /** GET  /tyres/positions/:positionId/history */
     POSITION_HISTORY: (positionId: string) => `/tyres/positions/${positionId}/history` as const,
   },
 

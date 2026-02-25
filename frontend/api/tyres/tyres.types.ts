@@ -404,6 +404,199 @@ export interface PositionHistoryData {
 }
 
 // ========================================================================
+// 9. GET /tyres  (list / search tyre assets)
+// ========================================================================
+
+export interface TyreListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: TyreAssetStatus;
+  type?: TyreType;
+  brand?: string;
+  size?: string;
+  /** Only tyres that are not currently mounted on any truck. */
+  availableOnly?: boolean;
+}
+
+/** A single tyre in the list view. */
+export interface TyreListItem {
+  id: string;
+  serialNumber: string;
+  name: string;
+  tyreBrand: string;
+  tyreModel: string;
+  tyreSize: string;
+  tyreType: TyreType;
+  tyreTreadDepth: number | null;
+  tyreTotalMileage: number;
+  status: TyreAssetStatus;
+  /** If installed, the truck it's on. */
+  currentTruck: TruckRef | null;
+  /** If installed, the position code. */
+  currentPositionCode: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Paginated response shape for GET /tyres. */
+export interface TyreListData {
+  items: TyreListItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// ========================================================================
+// 10. GET /tyres/:id  (single tyre detail)
+// ========================================================================
+
+export interface TyreDetail {
+  id: string;
+  serialNumber: string;
+  name: string;
+  tyreBrand: string;
+  tyreModel: string;
+  tyreSize: string;
+  tyreType: TyreType;
+  tyreTreadDepth: number | null;
+  tyreTotalMileage: number;
+  status: TyreAssetStatus;
+  currentTruck: TruckRef | null;
+  currentPosition: TyreCurrentPosition | null;
+  purchaseDate: string | null;
+  purchasePrice: number | null;
+  supplier: string | null;
+  warrantyExpiry: string | null;
+  maxMileage: number | null;
+  minTreadDepth: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ========================================================================
+// 11. GET /tyres/trucks/:truckId/activity  (truck-wide event feed)
+// ========================================================================
+
+export type TyreActivityEvent = 'MOUNTED' | 'DISMOUNTED' | 'ROTATED' | 'INSPECTED';
+
+export type TyreConditionLevel = 'good' | 'fair' | 'poor';
+
+/** A single activity entry in the truck-wide feed. */
+export interface TyreActivityEntry {
+  id: string;
+  event: TyreActivityEvent;
+  tyreId: string;
+  tyreSerialNumber: string;
+  tyreBrand: string;
+  tyreModel: string;
+  tyreSize: string;
+  positionCode: string;
+  axleName: string;
+  side: TyrePositionSide;
+  odometerReading: number | null;
+  treadDepthMm: number | null;
+  mileageAccrued: number | null;
+  rotationMethod: RotationMethod | null;
+  /** For rotations — the target position */
+  toPositionCode: string | null;
+  toAxleName: string | null;
+  /** For inspections */
+  pressure: number | null;
+  visualCondition: TyreConditionLevel | null;
+  passed: boolean | null;
+  notes: string | null;
+  performedBy: string;
+  performerName: string;
+  createdAt: string;
+}
+
+export interface TyreActivitySummary {
+  totalEvents: number;
+  mountCount: number;
+  dismountCount: number;
+  rotationCount: number;
+  inspectionCount: number;
+}
+
+/** Payload for GET /tyres/trucks/:truckId/activity. */
+export interface TruckTyreActivityData {
+  truckId: string;
+  summary: TyreActivitySummary;
+  activity: TyreActivityEntry[];
+}
+
+// ========================================================================
+// 12. GET /tyres/trucks/:truckId/events?type=mounts|dismounts|inspections|rotations
+// ========================================================================
+
+/** Query parameter for the events endpoint type filter. */
+export type TyreEventFilterType = 'mounts' | 'dismounts' | 'inspections' | 'rotations';
+
+/** Position with axle config, as nested in event objects. */
+export interface TyreEventPosition {
+  id: string;
+  positionCode: string;
+  side: TyrePositionSide;
+  slot: TyrePositionSlot;
+  status: TyrePositionStatus;
+  axleConfig: AxleConfigRef;
+}
+
+/** Previous position reference (present on ROTATED events). */
+export interface TyreEventPreviousPosition {
+  id: string;
+  positionCode: string;
+  side: TyrePositionSide;
+  slot: TyrePositionSlot;
+  axleConfig: AxleConfigRef;
+}
+
+/** Inspection details nested in INSPECTED events. */
+export interface TyreEventInspection {
+  id: string;
+  treadDepth: number;
+  pressure: number;
+  visualCondition: TyreCondition;
+  passed: boolean;
+  inspectorName: string;
+}
+
+/** A single event returned by the truck events endpoint. */
+export interface TyreEvent {
+  id: string;
+  event: TyreHistoryEvent;
+  createdAt: string;
+  odometerReading: number | null;
+  treadDepthMm: number | null;
+  mileageAccrued: number | null;
+  tyreMileageAtEvent: number;
+  rotationMethod: RotationMethod | null;
+  notes: string | null;
+  tyre: TyreAssetSummary;
+  position: TyreEventPosition;
+  previousPosition?: TyreEventPreviousPosition;
+  performedBy: PerformerRef;
+  inspection?: TyreEventInspection;
+}
+
+/** A date-grouped bucket of events. */
+export interface TyreEventGroup {
+  date: string;
+  count: number;
+  events: TyreEvent[];
+}
+
+/** Payload for GET /tyres/trucks/:truckId/events. */
+export interface TruckTyreEventsData {
+  truck: TruckRef;
+  totalEvents: number;
+  groups: TyreEventGroup[];
+}
+
+// ========================================================================
 // Response aliases
 // ========================================================================
 
@@ -415,3 +608,7 @@ export type InspectTyreResponse = ApiResponse<TyreInspection>;
 export type TyreHistoryResponse = ApiResponse<TyreHistoryData>;
 export type TyreMileageResponse = ApiResponse<TyreMileageData>;
 export type PositionHistoryResponse = ApiResponse<PositionHistoryData>;
+export type TyreListResponse = ApiResponse<TyreListData>;
+export type TyreDetailResponse = ApiResponse<TyreDetail>;
+export type TruckTyreActivityResponse = ApiResponse<TruckTyreActivityData>;
+export type TruckTyreEventsResponse = ApiResponse<TruckTyreEventsData>;

@@ -12,6 +12,8 @@ export { TruckMaintenance } from './details/TruckMaintenance';
 export { TruckDocuments } from './details/TruckDocuments';
 export { TruckDetailSkeleton, TabContentSkeleton } from './details/TruckDetailSkeleton';
 export { RotateTyresDrawer } from './details/RotateTyresDrawer';
+export { InspectTyresDrawer } from './details/InspectTyresDrawer';
+export { DismountTyresDrawer } from './details/DismountTyresDrawer';
 export { ReplaceTyreDrawer } from './details/ReplaceTyreDrawer';
 export { PostReplacementDialog } from './details/PostReplacementDialog';
 
