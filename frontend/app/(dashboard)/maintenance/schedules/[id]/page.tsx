@@ -23,6 +23,7 @@ import {
   Loader2,
   FileText,
   Truck,
+  Pencil,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -199,21 +200,29 @@ export default function ScheduleDetailPage() {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          onClick={toggleActive}
-          disabled={toggling}
-          className="gap-2"
-        >
-          {toggling ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : schedule.isActive ? (
-            <ToggleRight className="h-4 w-4" />
-          ) : (
-            <ToggleLeft className="h-4 w-4" />
-          )}
-          {schedule.isActive ? 'Deactivate' : 'Activate'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Link href={`/maintenance/schedules/${id}/edit`}>
+            <Button variant="outline" className="gap-2">
+              <Pencil className="h-4 w-4" />
+              Edit
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={toggleActive}
+            disabled={toggling}
+            className="gap-2"
+          >
+            {toggling ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : schedule.isActive ? (
+              <ToggleRight className="h-4 w-4" />
+            ) : (
+              <ToggleLeft className="h-4 w-4" />
+            )}
+            {schedule.isActive ? 'Deactivate' : 'Activate'}
+          </Button>
+        </div>
       </div>
 
       {/* ---- Details card ---- */}

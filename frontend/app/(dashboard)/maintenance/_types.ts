@@ -41,6 +41,7 @@ export type {
   ServiceLogListItem,
   ServiceLogDetail,
 
+  MaintenanceAlertTruckRef,
   MaintenanceAlertsData,
   MaintenanceAlertsSummary,
   MaintenanceAlertItem,

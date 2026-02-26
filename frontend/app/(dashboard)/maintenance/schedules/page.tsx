@@ -13,6 +13,7 @@ import {
   Plus,
   Search,
   Eye,
+  Pencil,
   CalendarClock,
   Wrench,
   ClipboardCheck,
@@ -315,6 +316,11 @@ export default function SchedulesListPage() {
                       {s._count.plans}
                     </td>
                     <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <Link href={`/maintenance/schedules/${s.id}/edit`}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Pencil className="h-4 w-4 text-gray-500" />
+                        </Button>
+                      </Link>
                       <Link href={`/maintenance/schedules/${s.id}`}>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
                           <Eye className="h-4 w-4 text-gray-500" />
@@ -348,7 +354,15 @@ export default function SchedulesListPage() {
                     </Badge>
                   </div>
                 </div>
-                <Eye className="h-4 w-4 text-gray-400 shrink-0 mt-1" />
+                <div className="flex items-center gap-1 shrink-0 mt-1">
+                  <Link
+                    href={`/maintenance/schedules/${s.id}/edit`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Pencil className="h-4 w-4 text-gray-400" />
+                  </Link>
+                  <Eye className="h-4 w-4 text-gray-400" />
+                </div>
               </div>
 
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-500">

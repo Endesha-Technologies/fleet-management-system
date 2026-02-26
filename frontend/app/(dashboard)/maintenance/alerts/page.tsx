@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 import { useAlerts } from '../_hooks';
-import type { MaintenancePlanListItem, MaintenanceTaskType } from '../_types';
+import type { MaintenanceAlertItem, MaintenanceTaskType } from '../_types';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -45,16 +45,17 @@ function fmtOdometer(km: number | null | undefined): string {
   return `${km.toLocaleString()} km`;
 }
 
-/** Days overdue (positive = past due). */
-function daysOverdue(nextServiceDate: string | null): number {
-  if (!nextServiceDate) return 0;
-  return Math.floor((Date.now() - new Date(nextServiceDate).getTime()) / 86400000);
-}
-
-/** Days until due (positive = still upcoming). */
-function daysUntilDue(nextServiceDate: string | null): number {
-  if (!nextServiceDate) return 0;
-  return Math.ceil((new Date(nextServiceDate).getTime() - Date.now()) / 86400000);
+/** Format a delta (days or km) for display. */
+function fmtDelta(item: MaintenanceAlertItem, mode: 'overdue' | 'dueSoon'): string {
+  if (item.delta.days != null) {
+    const d = Math.abs(item.delta.days);
+    return `${d} ${d === 1 ? 'day' : 'days'}`;
+  }
+  if (item.delta.km != null) {
+    const km = Math.abs(item.delta.km);
+    return `${km.toLocaleString()} km`;
+  }
+  return '—';
 }
 
 // ---------------------------------------------------------------------------
@@ -142,7 +143,7 @@ function AlertTable({
   items,
   mode,
 }: {
-  items: MaintenancePlanListItem[];
+  items: MaintenanceAlertItem[];
   mode: 'overdue' | 'dueSoon';
 }) {
   return (
@@ -156,18 +157,13 @@ function AlertTable({
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Service Odo</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Odo</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {mode === 'overdue' ? 'Days Overdue' : 'Days Until Due'}
+              {mode === 'overdue' ? 'Overdue By' : 'Due In'}
             </th>
             <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
           {items.map((item) => {
-            const daysDiff =
-              mode === 'overdue'
-                ? daysOverdue(item.nextServiceDate)
-                : daysUntilDue(item.nextServiceDate);
-
             return (
               <tr key={item.id} className="transition-colors hover:bg-gray-50">
                 {/* Truck */}
@@ -222,7 +218,7 @@ function AlertTable({
                     ) : (
                       <Clock className="h-3 w-3" />
                     )}
-                    {daysDiff} {daysDiff === 1 ? 'day' : 'days'}
+                    {fmtDelta(item, mode)}
                   </Badge>
                 </td>
 
@@ -251,17 +247,12 @@ function AlertCards({
   items,
   mode,
 }: {
-  items: MaintenancePlanListItem[];
+  items: MaintenanceAlertItem[];
   mode: 'overdue' | 'dueSoon';
 }) {
   return (
     <div className="space-y-3">
       {items.map((item) => {
-        const daysDiff =
-          mode === 'overdue'
-            ? daysOverdue(item.nextServiceDate)
-            : daysUntilDue(item.nextServiceDate);
-
         return (
           <Link
             key={item.id}
@@ -291,7 +282,7 @@ function AlertCards({
                 ) : (
                   <Clock className="h-3 w-3" />
                 )}
-                {daysDiff}d
+                {fmtDelta(item, mode)}
               </Badge>
             </div>
 

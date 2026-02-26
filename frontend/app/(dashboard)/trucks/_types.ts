@@ -3,6 +3,7 @@ import type {
   Truck as ApiTruck,
   TruckDetail,
   CreateTruckRequest,
+  UpdateTruckRequest,
   AxleConfigInput,
   BodyType,
   FuelType,
@@ -276,6 +277,91 @@ export function buildCreateTruckRequest(form: TruckFormData): CreateTruckRequest
   return req;
 }
 
+/**
+ * Compare two TruckFormData snapshots and return only the fields that changed,
+ * converted to the API's UpdateTruckRequest format (Partial<CreateTruckRequest>).
+ * Returns an empty object when nothing has changed.
+ */
+export function buildUpdateTruckRequest(
+  original: TruckFormData,
+  current: TruckFormData,
+): UpdateTruckRequest {
+  const req: UpdateTruckRequest = {};
+
+  // Helper: include a field only when the raw form string has changed
+  function ifChanged<K extends keyof UpdateTruckRequest>(
+    field: keyof TruckFormData,
+    apiKey: K,
+    convert: (v: string) => UpdateTruckRequest[K],
+  ) {
+    if ((original[field] as string) !== (current[field] as string)) {
+      req[apiKey] = convert(current[field] as string);
+    }
+  }
+
+  // ── Required string fields (use .trim()) ────────────────────────────────
+  ifChanged('make', 'make', (v) => v.trim());
+  ifChanged('model', 'model', (v) => v.trim());
+  ifChanged('registrationNumber', 'registrationNumber', (v) => v.trim());
+
+  // ── Required number field ───────────────────────────────────────────────
+  ifChanged('year', 'year', (v) => parseInt(v, 10));
+
+  // ── Optional string fields (use optionalStr) ───────────────────────────
+  ifChanged('fleetNumber', 'fleetNumber', optionalStr);
+  ifChanged('color', 'color', optionalStr);
+  ifChanged('vin', 'vin', optionalStr);
+  ifChanged('engineNumber', 'engineNumber', optionalStr);
+  ifChanged('registrationDate', 'registrationDate', optionalStr);
+  ifChanged('registrationExpiry', 'registrationExpiry', optionalStr);
+  ifChanged('insurancePolicyNumber', 'insurancePolicyNumber', optionalStr);
+  ifChanged('insuranceProvider', 'insuranceProvider', optionalStr);
+  ifChanged('insuranceExpiry', 'insuranceExpiry', optionalStr);
+  ifChanged('inspectionExpiry', 'inspectionExpiry', optionalStr);
+  ifChanged('operatingLicenseNumber', 'operatingLicenseNumber', optionalStr);
+  ifChanged('operatingLicenseExpiry', 'operatingLicenseExpiry', optionalStr);
+  ifChanged('purchaseDate', 'purchaseDate', optionalStr);
+  ifChanged('purchasedFrom', 'purchasedFrom', optionalStr);
+  ifChanged('notes', 'notes', optionalStr);
+
+  // ── Enum fields ─────────────────────────────────────────────────────────
+  ifChanged('bodyType', 'bodyType', (v) => v as BodyType);
+  ifChanged('fuelType', 'fuelType', (v) => v as FuelType);
+  ifChanged('transmissionType', 'transmissionType', (v) => v as TransmissionType);
+  ifChanged('driveType', 'driveType', (v) => v as DriveType);
+  ifChanged('ownershipType', 'ownershipType', (v) => v as OwnershipType);
+
+  // ── Optional integer fields ─────────────────────────────────────────────
+  ifChanged('tankCapacityLiters', 'tankCapacityLiters', optionalInt);
+  ifChanged('engineCapacityCc', 'engineCapacityCc', optionalInt);
+  ifChanged('horsepower', 'horsepower', optionalInt);
+  ifChanged('numberOfGears', 'numberOfGears', optionalInt);
+  ifChanged('currentOdometer', 'currentOdometer', optionalInt);
+  ifChanged('engineHours', 'engineHours', optionalInt);
+
+  // ── Optional float fields ───────────────────────────────────────────────
+  ifChanged('grossVehicleMass', 'grossVehicleMass', optionalFloat);
+  ifChanged('tareWeight', 'tareWeight', optionalFloat);
+  ifChanged('payloadCapacity', 'payloadCapacity', optionalFloat);
+  ifChanged('purchasePrice', 'purchasePrice', optionalFloat);
+
+  // ── Axles: deep-compare by JSON; include full array if changed ──────────
+  const originalAxles = original.axles.map(({ key: _k, ...rest }) => rest);
+  const currentAxles = current.axles.map(({ key: _k, ...rest }) => rest);
+  if (JSON.stringify(originalAxles) !== JSON.stringify(currentAxles)) {
+    req.axleConfig = current.axles.map<AxleConfigInput>((axle, index) => ({
+      axleName: axle.name.trim() || `Axle ${index + 1}`,
+      axleIndex: index,
+      axleType: axle.type as AxleType,
+      positionsPerSide: parseInt(axle.positionsPerSide, 10) || 1,
+      tyreSize: optionalStr(axle.tyreSize),
+      maxLoadKg: optionalInt(axle.maxLoad),
+    }));
+  }
+
+  return req;
+}
+
 /** Populate form from an existing API Truck (for edit mode). */
 export function truckToFormData(truck: ApiTruck): TruckFormData {
   return {
@@ -508,6 +594,7 @@ export interface TruckTyresProps {
   tyrePositions: TruckTyrePositionsData | null;
   isLoading: boolean;
   onRefresh: () => void;
+  readOnly?: boolean;
 }
 
 export interface TruckMaintenanceProps {
@@ -515,6 +602,7 @@ export interface TruckMaintenanceProps {
   maintenanceData: TruckMaintenanceHistoryData | null;
   isLoading: boolean;
   onRefresh: () => void;
+  readOnly?: boolean;
 }
 
 export interface TruckDocumentsProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +23,7 @@ import {
   EMPTY_TRUCK_FORM,
   truckToFormData,
   buildCreateTruckRequest,
+  buildUpdateTruckRequest,
 } from '../_types';
 
 // ---------------------------------------------------------------------------
@@ -63,6 +64,7 @@ export function AddTruckDrawer({
 
   const [currentStep, setCurrentStep] = useState<FormStep>('identity');
   const [formData, setFormData] = useState<TruckFormData>(getInitialFormData(initialTruck));
+  const initialFormRef = useRef<TruckFormData>(getInitialFormData(initialTruck));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -74,7 +76,9 @@ export function AddTruckDrawer({
   // Reset when drawer opens
   useEffect(() => {
     if (open) {
-      setFormData(getInitialFormData(initialTruck));
+      const initial = getInitialFormData(initialTruck);
+      setFormData(initial);
+      initialFormRef.current = initial;
       setCurrentStep('identity');
       setIsSubmitting(false);
       setSubmitError(null);
@@ -109,15 +113,22 @@ export function AddTruckDrawer({
     setSubmitError(null);
 
     try {
-      const payload = buildCreateTruckRequest(formData);
-
       if (isEditMode && initialTruck) {
-        // Edit mode — update truck
+        // Edit mode — only send changed fields
+        const payload = buildUpdateTruckRequest(initialFormRef.current, formData);
+
+        // Skip API call if nothing changed
+        if (Object.keys(payload).length === 0) {
+          onOpenChange(false);
+          return;
+        }
+
         await trucksService.updateTruck(initialTruck.id, payload);
         onOpenChange(false);
         onAddComplete?.();
       } else {
         // Create mode — create truck, then prompt for tyre assignment
+        const payload = buildCreateTruckRequest(formData);
         const createdTruck = await trucksService.createTruck(payload);
         setCreatedTruckId(createdTruck.id);
         onOpenChange(false); // Close the drawer

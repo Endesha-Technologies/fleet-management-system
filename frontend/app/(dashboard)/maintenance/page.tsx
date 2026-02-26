@@ -24,7 +24,7 @@ import {
 
 import { useSchedules, usePlans, useServiceLogs, useAlerts } from './_hooks';
 import type {
-  MaintenancePlanListItem,
+  MaintenanceAlertItem,
   ServiceLogListItem,
 } from './_types';
 
@@ -89,7 +89,7 @@ function AlertCard({
   item,
   variant,
 }: {
-  item: MaintenancePlanListItem;
+  item: MaintenanceAlertItem;
   variant: 'overdue' | 'dueSoon';
 }) {
   const isOverdue = variant === 'overdue';

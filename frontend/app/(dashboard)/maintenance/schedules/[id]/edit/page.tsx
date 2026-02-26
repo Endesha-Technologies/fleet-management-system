@@ -1,22 +1,25 @@
 'use client';
 
 // ---------------------------------------------------------------------------
-// Create Maintenance Schedule — form page
+// Edit Maintenance Schedule — form page
 // ---------------------------------------------------------------------------
-// Submits a new schedule rule via maintenanceService.createSchedules().
+// Loads an existing schedule, pre-populates the form, and only sends changed
+// fields to the API via maintenanceService.updateSchedule().
 // ---------------------------------------------------------------------------
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  Loader2,
-} from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { maintenanceService } from '@/api/maintenance';
-import type { CreateScheduleInput, MaintenanceTaskType } from '../../_types';
+import { useScheduleDetail } from '../../../_hooks';
+import type {
+  MaintenanceTaskType,
+  UpdateScheduleRequest,
+  MaintenanceScheduleDetail,
+} from '../../../_types';
 
 // ---------------------------------------------------------------------------
 // Form state
@@ -32,67 +35,185 @@ interface FormState {
   notes: string;
 }
 
-const INITIAL: FormState = {
-  name: '',
-  taskType: 'PREVENTIVE',
-  intervalKm: '',
-  intervalDays: '',
-  estimatedDurationHours: '',
-  applicableTruckMakes: '',
-  notes: '',
-};
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function scheduleToForm(s: MaintenanceScheduleDetail): FormState {
+  return {
+    name: s.name,
+    taskType: s.taskType,
+    intervalKm: s.intervalKm != null ? String(s.intervalKm) : '',
+    intervalDays: s.intervalDays != null ? String(s.intervalDays) : '',
+    estimatedDurationHours:
+      s.estimatedDurationHours != null
+        ? String(s.estimatedDurationHours)
+        : '',
+    applicableTruckMakes: s.applicableTruckMakes ?? '',
+    notes: s.notes ?? '',
+  };
+}
+
+function buildDiff(
+  original: FormState,
+  current: FormState,
+): UpdateScheduleRequest {
+  const diff: UpdateScheduleRequest = {};
+
+  if (current.name.trim() !== original.name.trim()) {
+    diff.name = current.name.trim();
+  }
+  if (current.taskType !== original.taskType) {
+    diff.taskType = current.taskType;
+  }
+  if (current.intervalKm !== original.intervalKm) {
+    diff.intervalKm = current.intervalKm ? Number(current.intervalKm) : undefined;
+  }
+  if (current.intervalDays !== original.intervalDays) {
+    diff.intervalDays = current.intervalDays
+      ? Number(current.intervalDays)
+      : undefined;
+  }
+  if (current.estimatedDurationHours !== original.estimatedDurationHours) {
+    diff.estimatedDurationHours = current.estimatedDurationHours
+      ? Number(current.estimatedDurationHours)
+      : undefined;
+  }
+  if (
+    current.applicableTruckMakes.trim() !==
+    original.applicableTruckMakes.trim()
+  ) {
+    diff.applicableTruckMakes =
+      current.applicableTruckMakes.trim() || undefined;
+  }
+  if (current.notes.trim() !== original.notes.trim()) {
+    diff.notes = current.notes.trim() || undefined;
+  }
+
+  return diff;
+}
+
+// ---------------------------------------------------------------------------
+// Skeleton (loading state)
+// ---------------------------------------------------------------------------
+
+function PulseLine({ className = '' }: { className?: string }) {
+  return <div className={`animate-pulse rounded bg-gray-200 ${className}`} />;
+}
+
+function EditSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header skeleton */}
+      <div className="flex items-center gap-3">
+        <PulseLine className="h-8 w-8 rounded-md" />
+        <div className="space-y-2">
+          <PulseLine className="h-6 w-48" />
+          <PulseLine className="h-4 w-64" />
+        </div>
+      </div>
+      {/* Form card skeleton */}
+      <div className="rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="space-y-2">
+            <PulseLine className="h-4 w-24" />
+            <PulseLine className="h-10 w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export default function CreateSchedulePage() {
+export default function EditSchedulePage() {
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [form, setForm] = useState<FormState>(INITIAL);
+  const { data: schedule, isLoading, error: fetchError } = useScheduleDetail(id);
+
+  const [form, setForm] = useState<FormState | null>(null);
+  const initialFormRef = useRef<FormState | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Pre-populate form when schedule loads
+  useEffect(() => {
+    if (schedule && !initialFormRef.current) {
+      const initial = scheduleToForm(schedule);
+      initialFormRef.current = initial;
+      setForm({ ...initial });
+    }
+  }, [schedule]);
+
   // Generic change handler
   function onChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm((prev) =>
+      prev ? { ...prev, [e.target.name]: e.target.value } : prev,
+    );
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
+    if (!form || !initialFormRef.current) return;
+
     if (!form.name.trim()) {
       setError('Name is required.');
       return;
     }
 
-    const payload: CreateScheduleInput = {
-      name: form.name.trim(),
-      taskType: form.taskType,
-    };
+    const diff = buildDiff(initialFormRef.current, form);
 
-    if (form.intervalKm) payload.intervalKm = Number(form.intervalKm);
-    if (form.intervalDays) payload.intervalDays = Number(form.intervalDays);
-    if (form.estimatedDurationHours)
-      payload.estimatedDurationHours = Number(form.estimatedDurationHours);
-    if (form.applicableTruckMakes.trim())
-      payload.applicableTruckMakes = form.applicableTruckMakes.trim();
-    if (form.notes.trim()) payload.notes = form.notes.trim();
+    // Nothing changed — just go back
+    if (Object.keys(diff).length === 0) {
+      router.push(`/maintenance/schedules/${id}`);
+      return;
+    }
 
     try {
       setSubmitting(true);
-      await maintenanceService.createSchedules({ schedules: [payload] });
-      router.push('/maintenance/schedules');
+      await maintenanceService.updateSchedule(id, diff);
+      router.push(`/maintenance/schedules/${id}`);
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'Failed to create schedule.';
+        err instanceof Error ? err.message : 'Failed to update schedule.';
       setError(message);
     } finally {
       setSubmitting(false);
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Loading / error states
+  // ---------------------------------------------------------------------------
+
+  if (isLoading) return <EditSkeleton />;
+
+  if (fetchError) {
+    return (
+      <div className="space-y-4">
+        <Link
+          href="/maintenance/schedules"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Schedules
+        </Link>
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {fetchError}
+        </div>
+      </div>
+    );
+  }
+
+  if (!form) return null;
 
   // ---------------------------------------------------------------------------
   // Field styling helpers
@@ -115,10 +236,10 @@ export default function CreateSchedulePage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Create Schedule
+            Edit Schedule
           </h1>
           <p className="text-sm text-gray-500">
-            Define a new maintenance rule template.
+            Update the details of this maintenance rule.
           </p>
         </div>
       </div>
@@ -243,7 +364,9 @@ export default function CreateSchedulePage() {
             disabled={submitting}
             className={inputCls}
           />
-          <p className="mt-1 text-xs text-gray-400">Comma-separated list of makes</p>
+          <p className="mt-1 text-xs text-gray-400">
+            Comma-separated list of makes
+          </p>
         </div>
 
         {/* Notes */}
@@ -265,14 +388,14 @@ export default function CreateSchedulePage() {
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-3 pt-2">
-          <Link href="/maintenance/schedules">
+          <Link href={`/maintenance/schedules/${id}`}>
             <Button type="button" variant="outline" disabled={submitting}>
               Cancel
             </Button>
           </Link>
           <Button type="submit" disabled={submitting}>
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {submitting ? 'Creating…' : 'Create Schedule'}
+            {submitting ? 'Saving…' : 'Save Changes'}
           </Button>
         </div>
       </form>

@@ -1,22 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Map,
   Edit2,
   RefreshCw,
-  Wrench,
-  MoreVertical,
   Power,
-  Trash2,
-  FileText,
+  Loader2,
   Truck as TruckIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
 import { TruckDetailSkeleton } from '../_components/details/TruckDetailSkeleton';
 import { TruckOverview } from '../_components/details/TruckOverview';
 import { TruckTrips } from '../_components/details/TruckTrips';
@@ -25,6 +29,8 @@ import { TruckTyres } from '../_components/details/TruckTyres';
 import { TruckMaintenance } from '../_components/details/TruckMaintenance';
 import { TruckDocuments } from '../_components/details/TruckDocuments';
 import { AddTruckDrawer } from '../_components/AddTruckDrawer';
+import { trucksService } from '@/api/trucks/trucks.service';
+import type { TruckStatus } from '@/api/trucks/trucks.types';
 import {
   useTruckDetail,
   useTruckTyrePositions,
@@ -46,6 +52,122 @@ function formatBodyType(bt: string): string {
   return bt
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// ---------------------------------------------------------------------------
+// ChangeStatusDialog
+// ---------------------------------------------------------------------------
+
+function ChangeStatusDialog({
+  open,
+  onOpenChange,
+  truckId,
+  currentStatus,
+  onComplete,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  truckId: string;
+  currentStatus: string;
+  onComplete: () => void;
+}) {
+  const [selectedStatus, setSelectedStatus] = useState(currentStatus);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      setSelectedStatus(currentStatus);
+      setError(null);
+    }
+  }, [open, currentStatus]);
+
+  const statuses = [
+    { value: 'ACTIVE', label: 'Active', description: 'Truck is operational and available for trips', color: 'bg-green-500' },
+    { value: 'INACTIVE', label: 'Inactive', description: 'Truck is temporarily out of service', color: 'bg-gray-400' },
+    { value: 'IN_MAINTENANCE', label: 'In Maintenance', description: 'Truck is undergoing maintenance or repairs', color: 'bg-yellow-500' },
+    { value: 'DECOMMISSIONED', label: 'Decommissioned', description: 'Truck has been permanently retired', color: 'bg-red-500' },
+  ];
+
+  async function handleSubmit() {
+    if (selectedStatus === currentStatus) return;
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await trucksService.updateTruckStatus(truckId, { status: selectedStatus as TruckStatus });
+      onOpenChange(false);
+      onComplete();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update status');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Change Truck Status</SheetTitle>
+          <SheetDescription>Select the new status for this truck.</SheetDescription>
+        </SheetHeader>
+
+        {error && (
+          <div className="mx-0 mt-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+            <p className="text-sm text-red-800">{error}</p>
+          </div>
+        )}
+
+        <div className="mt-6 space-y-3">
+          {statuses.map((s) => (
+            <button
+              key={s.value}
+              onClick={() => setSelectedStatus(s.value)}
+              disabled={s.value === currentStatus}
+              className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                selectedStatus === s.value
+                  ? 'border-blue-500 bg-blue-50'
+                  : s.value === currentStatus
+                  ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`h-3 w-3 rounded-full ${s.color}`} />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{s.label}</p>
+                  <p className="text-xs text-gray-500">{s.description}</p>
+                </div>
+                {s.value === currentStatus && (
+                  <Badge variant="outline" className="ml-auto text-xs">Current</Badge>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-6 flex gap-3 justify-end">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={handleSubmit}
+            disabled={isSubmitting || selectedStatus === currentStatus}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Updating…
+              </>
+            ) : (
+              'Confirm Status Change'
+            )}
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -73,7 +195,7 @@ export default function TruckDetailsPage() {
   // ---- Local UI state ----
   const [activeTab, setActiveTab] = useState('overview');
   const [showEditDrawer, setShowEditDrawer] = useState(false);
-  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
 
   // ---- Loading state ----
   if (isLoading) return <TruckDetailSkeleton />;
@@ -109,6 +231,7 @@ export default function TruckDetailsPage() {
 
   // ---- Derived values ----
   const status = statusConfig[truck.status] ?? statusConfig.INACTIVE;
+  const isOperational = truck.status === 'ACTIVE' || truck.status === 'IN_MAINTENANCE';
 
   return (
     <div className="space-y-6">
@@ -141,81 +264,36 @@ export default function TruckDetailsPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-blue-600 text-blue-600 hover:bg-blue-50"
-          >
-            <Map className="h-4 w-4 mr-1.5" />
-            Start Trip
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowEditDrawer(true)}
-          >
-            <Edit2 className="h-4 w-4 mr-1.5" />
-            Edit
-          </Button>
-
-          {/* More actions dropdown */}
-          <div className="relative">
+          {isOperational && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-blue-600 text-blue-600 hover:bg-blue-50"
+              >
+                <Map className="h-4 w-4 mr-1.5" />
+                Start Trip
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEditDrawer(true)}
+              >
+                <Edit2 className="h-4 w-4 mr-1.5" />
+                Edit
+              </Button>
+            </>
+          )}
+          {truck.status !== 'DECOMMISSIONED' && (
             <Button
               variant="outline"
               size="sm"
-              className="h-9 w-9 p-0"
-              onClick={() => setShowActionsMenu((v) => !v)}
+              onClick={() => setShowStatusDialog(true)}
             >
-              <MoreVertical className="h-4 w-4" />
+              <Power className="h-4 w-4 mr-1.5" />
+              Change Status
             </Button>
-            {showActionsMenu && (
-              <>
-                {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowActionsMenu(false)}
-                />
-                <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1">
-                  <MenuAction
-                    icon={RefreshCw}
-                    label="Rotate Tyres"
-                    onClick={() => {
-                      setShowActionsMenu(false);
-                      setActiveTab('tyres');
-                    }}
-                  />
-                  <MenuAction
-                    icon={Wrench}
-                    label="Log Maintenance"
-                    onClick={() => {
-                      setShowActionsMenu(false);
-                      setActiveTab('maintenance');
-                    }}
-                  />
-                  <MenuAction
-                    icon={FileText}
-                    label="Upload Document"
-                    onClick={() => {
-                      setShowActionsMenu(false);
-                      setActiveTab('documents');
-                    }}
-                  />
-                  <hr className="my-1 border-gray-100" />
-                  <MenuAction
-                    icon={Power}
-                    label="Change Status"
-                    onClick={() => setShowActionsMenu(false)}
-                  />
-                  <MenuAction
-                    icon={Trash2}
-                    label="Delete Truck"
-                    onClick={() => setShowActionsMenu(false)}
-                    danger
-                  />
-                </div>
-              </>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
@@ -300,6 +378,7 @@ export default function TruckDetailsPage() {
               tyrePositions={tyrePositions}
               isLoading={tyresLoading}
               onRefresh={refetchTyres}
+              readOnly={!isOperational}
             />
           </TabsContent>
 
@@ -309,6 +388,7 @@ export default function TruckDetailsPage() {
               maintenanceData={maintenanceData}
               isLoading={maintenanceLoading}
               onRefresh={refetchMaintenance}
+              readOnly={!isOperational}
             />
           </TabsContent>
 
@@ -328,35 +408,15 @@ export default function TruckDetailsPage() {
           refetchTruck();
         }}
       />
+
+      {/* ── Change Status Dialog ─────────────────────────────────────── */}
+      <ChangeStatusDialog
+        open={showStatusDialog}
+        onOpenChange={setShowStatusDialog}
+        truckId={truck.id}
+        currentStatus={truck.status}
+        onComplete={refetchTruck}
+      />
     </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Helper components
-// ---------------------------------------------------------------------------
-
-function MenuAction({
-  icon: Icon,
-  label,
-  onClick,
-  danger = false,
-}: {
-  icon: React.ElementType;
-  label: string;
-  onClick: () => void;
-  danger?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors
-        ${danger ? 'text-red-600 hover:bg-red-50' : 'text-gray-700 hover:bg-gray-50'}
-      `}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </button>
   );
 }

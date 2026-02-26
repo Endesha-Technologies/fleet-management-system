@@ -35,6 +35,7 @@ export type {
   ServiceLogDetail,
 
   // Alerts
+  MaintenanceAlertTruckRef,
   MaintenanceAlertsSummary,
   MaintenanceAlertItem,
   MaintenanceAlertsData,
@@ -42,6 +43,9 @@ export type {
   // Truck maintenance history
   MaintenanceTruckDetail,
   TruckHistoryPlan,
+  TruckHistoryPlanStatus,
+  TruckHistoryPlanDelta,
+  TruckMaintenanceStatusSummary,
   TruckHistoryServiceLog,
   TruckMaintenanceHistoryData,
 

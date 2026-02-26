@@ -10,7 +10,7 @@ import type { ApiResponse } from '../types';
 
 // ---- Enums / union types --------------------------------------------------
 
-export type MaintenanceTaskType = 'PREVENTIVE' | 'INSPECTION';
+export type MaintenanceTaskType = 'PREVENTIVE' | 'CORRECTIVE' | 'EMERGENCY' | 'INSPECTION';
 
 // ---- Schedules (maintenance rules) ----------------------------------------
 
@@ -86,14 +86,14 @@ export interface MaintenanceTruckRef {
 export interface MaintenanceScheduleRef {
   id: string;
   name: string;
-  description?: string;
+  description?: string | null;
   taskType?: MaintenanceTaskType;
   intervalKm?: number | null;
   intervalDays?: number | null;
-  estimatedDurationHours?: number;
-  applicableTruckMakes?: string;
+  estimatedDurationHours?: number | null;
+  applicableTruckMakes?: string | null;
   isActive?: boolean;
-  notes?: string;
+  notes?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -205,15 +205,32 @@ export interface ServiceLogDetail extends ServiceLog {
 
 // ---- Alerts ---------------------------------------------------------------
 
+/** Truck reference in alert items. */
+export interface MaintenanceAlertTruckRef {
+  id: string;
+  registrationNumber: string;
+  make: string;
+  model: string;
+  currentOdometer: number;
+  status: string;
+}
+
+/** A single alert item — a plan with its truck, schedule, computed status & delta. */
+export interface MaintenanceAlertItem extends MaintenancePlan {
+  truck: MaintenanceAlertTruckRef;
+  schedule: MaintenanceScheduleRef;
+  status: TruckHistoryPlanStatus;
+  delta: TruckHistoryPlanDelta;
+}
+
+/** Summary counts for alerts. */
 export interface MaintenanceAlertsSummary {
   overdueCount: number;
   dueSoonCount: number;
   totalAlerts: number;
 }
 
-/** Overdue and dueSoon items share the same shape as plan list items. */
-export type MaintenanceAlertItem = MaintenancePlanListItem;
-
+/** Response shape from the getAlerts endpoint. */
 export interface MaintenanceAlertsData {
   summary: MaintenanceAlertsSummary;
   overdue: MaintenanceAlertItem[];
@@ -275,12 +292,32 @@ export interface MaintenanceTruckDetail {
   updatedAt: string;
 }
 
+/** Computed status for a plan in the truck history response. */
+export type TruckHistoryPlanStatus = 'overdue' | 'due_soon' | 'on_track' | 'completed';
+
+/** Delta (time/distance) until next service for a plan. */
+export interface TruckHistoryPlanDelta {
+  days: number | null;
+  km: number | null;
+}
+
+/** Aggregated status counts for all plans on a truck. */
+export interface TruckMaintenanceStatusSummary {
+  overdue: number;
+  dueSoon: number;
+  onTrack: number;
+  completed: number;
+  total: number;
+}
+
 /** Plan item inside truck maintenance history. */
 export interface TruckHistoryPlan extends MaintenancePlan {
   schedule: MaintenanceScheduleRef;
   _count: {
     serviceLogs: number;
   };
+  status: TruckHistoryPlanStatus;
+  delta: TruckHistoryPlanDelta;
 }
 
 /** Service log item inside truck maintenance history. */
@@ -293,6 +330,7 @@ export interface TruckHistoryServiceLog extends ServiceLog {
 export interface TruckMaintenanceHistoryData {
   truck: MaintenanceTruckDetail;
   plans: TruckHistoryPlan[];
+  statusSummary: TruckMaintenanceStatusSummary;
   serviceLogs: TruckHistoryServiceLog[];
 }
 

@@ -125,6 +125,7 @@ export function TruckTyres({
   tyrePositions,
   isLoading,
   onRefresh,
+  readOnly,
 }: TruckTyresProps) {
   const [activeFilter, setActiveFilter] = useState<ActivityFilter>('MOUNTED');
   const [activeTab, setActiveTab] = useState<InnerTab>('positions');
@@ -158,33 +159,35 @@ export function TruckTyres({
           <SummaryPill icon={Circle} label="Empty" value={summary.emptyPositions} color="text-gray-400" />
           <SummaryPill icon={AlertCircle} label="Total" value={summary.totalPositions} color="text-blue-600" />
         </div>
-        <div className="flex flex-wrap gap-2">
-          {summary.occupiedPositions > 0 ? (
-            <>
-              <Button variant="outline" size="sm" onClick={() => setInspectDrawerOpen(true)}>
-                <Search className="h-4 w-4 mr-1.5" />
-                Inspect
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => setMountDialogOpen(true)}>
+        {!readOnly && (
+          <div className="flex flex-wrap gap-2">
+            {summary.occupiedPositions > 0 ? (
+              <>
+                <Button variant="outline" size="sm" onClick={() => setInspectDrawerOpen(true)}>
+                  <Search className="h-4 w-4 mr-1.5" />
+                  Inspect
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setMountDialogOpen(true)}>
+                  <ArrowDownToLine className="h-4 w-4 mr-1.5" />
+                  Mount
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setDismountDrawerOpen(true)}>
+                  <ArrowUpFromLine className="h-4 w-4 mr-1.5" />
+                  Dismount
+                </Button>
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setRotateDrawerOpen(true)}>
+                  <RefreshCw className="h-4 w-4 mr-1.5" />
+                  Rotate
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setMountDialogOpen(true)}>
                 <ArrowDownToLine className="h-4 w-4 mr-1.5" />
-                Mount
+                Mount Tyres
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setDismountDrawerOpen(true)}>
-                <ArrowUpFromLine className="h-4 w-4 mr-1.5" />
-                Dismount
-              </Button>
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setRotateDrawerOpen(true)}>
-                <RefreshCw className="h-4 w-4 mr-1.5" />
-                Rotate
-              </Button>
-            </>
-          ) : (
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setMountDialogOpen(true)}>
-              <ArrowDownToLine className="h-4 w-4 mr-1.5" />
-              Mount Tyres
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Mini Tabs ──────────────────────────────────────────────── */}

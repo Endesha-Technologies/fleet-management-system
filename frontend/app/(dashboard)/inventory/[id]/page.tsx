@@ -486,9 +486,6 @@ export default function AssetDetailsPage() {
     switch (apiDetail.assetType) {
       case 'TYRE':
         actions.push(purchaseBtn);
-        // For serialized assets: show mount only if not mounted, dismount only if mounted
-        if (!hasInstalled && hasStock) actions.push(assignBtn);
-        if (hasInstalled) actions.push(removeBtn);
         if (hasStock) actions.push(sellBtn, disposeBtn);
         break;
 
