@@ -99,7 +99,7 @@ export const ENDPOINTS = {
     DISPOSE: (id: string) => `/assets/${id}/dispose` as const,
     LOW_STOCK: '/assets/low-stock',
     TOOLS_CHECKOUT: '/assets/tools/checkout',
-    TOOLS_RETURN: (id: string) => `/tools/${id}/return` as const,
+    TOOLS_RETURN: (id: string) => `/assets/tools/${id}/return` as const,
   },
 
   // ---- Maintenance --------------------------------------------------------
