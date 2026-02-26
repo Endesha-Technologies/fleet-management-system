@@ -2,15 +2,29 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/constants/navigation';
 import { Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { authService } from '@/api/auth';
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+    try {
+      await authService.logout();
+    } catch {
+      // Even if the API call fails, we still want to redirect to login
+    } finally {
+      router.push('/login');
+    }
+  }
 
   return (
     <aside 
@@ -75,16 +89,18 @@ export function Sidebar() {
             {!isCollapsed && "Settings"}
           </Button>
         </Link>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className={cn(
             "w-full text-red-400 hover:bg-red-900/20 hover:text-red-300",
             isCollapsed ? "justify-center px-2" : "justify-start"
           )}
           title={isCollapsed ? "Logout" : undefined}
+          onClick={handleLogout}
+          disabled={isLoggingOut}
         >
           <LogOut className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
-          {!isCollapsed && "Logout"}
+          {!isCollapsed && (isLoggingOut ? "Logging out…" : "Logout")}
         </Button>
       </div>
     </aside>
