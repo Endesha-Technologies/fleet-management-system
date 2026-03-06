@@ -1,70 +1,205 @@
 'use client';
 
-import { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { Plus, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { RouteTable } from './_components/RouteTable';
-import { RouteCard } from './_components/RouteCard';
+import { RouteTable, EMPTY_FILTERS, type RouteFilterValues } from './_components/RouteTable';
 import { CreateRouteDrawer } from './_components/CreateRouteDrawer';
-import { RouteDetailsDrawer } from './_components/RouteDetailsDrawer';
 import { EditRouteDrawer } from './_components/EditRouteDrawer';
-import { DeleteRouteDialog } from './_components/DeleteRouteDialog';
-import { MOCK_ROUTES } from '@/constants/routes';
-import type { Route, RouteFormData } from './_types';
+import { ToggleRouteStatusDialog } from './_components/DeleteRouteDialog';
+import { routesService } from '@/api/routes';
+import type { RouteWithCount, RouteListParams } from '@/api/routes';
+import type { Route } from './_types';
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const DEFAULT_PAGE_SIZE = 20;
+
+// ---------------------------------------------------------------------------
+// Helpers — Transform API data to UI format
+// ---------------------------------------------------------------------------
+
+function formatDuration(minutes: number): string {
+  if (!minutes || minutes === 0) return '—';
+  const hours = Math.floor(minutes / 60);
+  const mins = Math.round(minutes % 60);
+  if (hours === 0) return `${mins}m`;
+  if (mins === 0) return `${hours}h`;
+  return `${hours}h ${mins}m`;
+}
+
+function formatDistance(km: number): string {
+  if (!km || km === 0) return '—';
+  return `${km.toFixed(1)} km`;
+}
+
+function mapApiRouteToUiRoute(apiRoute: RouteWithCount): Route {
+  return {
+    id: apiRoute.id,
+    code: apiRoute.code,
+    name: apiRoute.name,
+    type: apiRoute.type,
+    origin: {
+      name: apiRoute.originName,
+      lat: apiRoute.originLat,
+      lon: apiRoute.originLng,
+    },
+    destination: {
+      name: apiRoute.destinationName,
+      lat: apiRoute.destinationLat,
+      lon: apiRoute.destinationLng,
+    },
+    distance: formatDistance(apiRoute.estimatedDistanceKm),
+    distanceKm: apiRoute.estimatedDistanceKm,
+    estimatedDuration: formatDuration(apiRoute.estimatedDurationMin),
+    estimatedDurationMin: apiRoute.estimatedDurationMin,
+    deviationThresholdKm: apiRoute.deviationThresholdKm,
+    speedLimitKmh: apiRoute.speedLimitKmh,
+    status: apiRoute.status,
+    tripCount: apiRoute._count?.trips ?? 0,
+    isAdHoc: apiRoute.isAdHoc,
+    notes: apiRoute.notes,
+    createdAt: apiRoute.createdAt,
+    updatedAt: apiRoute.updatedAt,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Page component
+// ---------------------------------------------------------------------------
 
 export default function RoutesPage() {
+  const router = useRouter();
+
+  // ---- Search (debounced) -------------------------------------------------
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // ---- Pagination ---------------------------------------------------------
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+
+  // ---- Filters ------------------------------------------------------------
+  const [filters, setFilters] = useState<RouteFilterValues>(EMPTY_FILTERS);
+
+  // ---- Data ---------------------------------------------------------------
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // ---- UI state -----------------------------------------------------------
   const [showCreateDrawer, setShowCreateDrawer] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
-  const [showDetailsDrawer, setShowDetailsDrawer] = useState(false);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
 
-  const filteredRoutes = MOCK_ROUTES.filter((route) =>
-    route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.origin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    route.destination.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // ---- Debounce search input → API param ----------------------------------
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // ---- Fetch routes from API ----------------------------------------------
+  const fetchRoutes = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const params: RouteListParams = { page, limit: pageSize };
+
+      if (debouncedSearch.trim()) {
+        params.search = debouncedSearch.trim();
+      }
+
+      // Apply filters
+      if (filters.status !== 'all') {
+        params.status = filters.status as 'ACTIVE' | 'INACTIVE';
+      }
+      if (filters.type !== 'all') {
+        params.type = filters.type as 'SHORT_HAUL' | 'LONG_HAUL' | 'REGIONAL' | 'INTERNATIONAL';
+      }
+
+      const result = await routesService.getRoutes(params);
+      const mappedRoutes = result.data.map(mapApiRouteToUiRoute);
+      setRoutes(mappedRoutes);
+      setTotal(result.pagination.total);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Failed to load routes';
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, pageSize, debouncedSearch, filters]);
+
+  useEffect(() => {
+    fetchRoutes();
+  }, [fetchRoutes]);
+
+  // ---- Handlers -----------------------------------------------------------
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+  }, []);
+
+  const handleFiltersChange = useCallback((newFilters: RouteFilterValues) => {
+    setFilters(newFilters);
+    setPage(1); // Reset to first page on filter change
+  }, []);
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const handlePageSizeChange = useCallback((newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1); // Reset to first page on page size change
+  }, []);
 
   const handleViewRoute = (route: Route) => {
-    setSelectedRoute(route);
-    setShowDetailsDrawer(true);
+    router.push(`/routes/${route.id}`);
   };
 
   const handleEditRoute = (route: Route) => {
-    setShowDetailsDrawer(false);
     setSelectedRoute(route);
     setShowEditDrawer(true);
   };
 
-  const handleDeleteRoute = (route: Route) => {
-    setShowDetailsDrawer(false);
+  const handleToggleStatus = (route: Route) => {
     setSelectedRoute(route);
-    setShowDeleteDialog(true);
+    setShowStatusDialog(true);
   };
 
-  const handleConfirmDelete = (route: Route) => {
-    console.log('Deleting route:', route);
-    // TODO: Integrate with backend API to delete
-    setShowDeleteDialog(false);
+  const handleStatusChangeSuccess = useCallback(() => {
+    setShowStatusDialog(false);
     setSelectedRoute(null);
-  };
+    fetchRoutes();
+  }, [fetchRoutes]);
 
-  const handleSaveRoute = (routeData: RouteFormData) => {
-    console.log('Route saved:', routeData);
-    // TODO: Integrate with backend API
-  };
-
-  const handleUpdateRoute = (updatedRoute: Route) => {
-    console.log('Route updated:', updatedRoute);
-    // TODO: Integrate with backend API to update
+  const handleEditSuccess = useCallback(() => {
     setShowEditDrawer(false);
     setSelectedRoute(null);
-  };
+    fetchRoutes();
+  }, [fetchRoutes]);
+
+  const handleCreateSuccess = useCallback(() => {
+    fetchRoutes();
+  }, [fetchRoutes]);
+
+  // =========================================================================
+  // Render
+  // =========================================================================
 
   return (
     <div className="space-y-6">
+      {/* ── Page header ──────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Routes</h1>
@@ -81,64 +216,60 @@ export default function RoutesPage() {
         </Button>
       </div>
 
-      <div className="flex items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search routes..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+      {/* ── Error state ──────────────────────────────────────────── */}
+      {error && (
+        <div className="rounded-md border border-red-200 bg-red-50 p-4">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-red-500" />
+            <span className="text-sm text-red-700">{error}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={fetchRoutes}
+              className="ml-auto"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Retry
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
+      {/* ── Data table (handled by DataTable, includes mobile cards) */}
       <RouteTable 
-        routes={filteredRoutes} 
+        routes={routes}
+        isLoading={isLoading}
+        pagination={{ page, pageSize, total }}
+        filters={filters}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        onFiltersChange={handleFiltersChange}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
         onViewRoute={handleViewRoute}
         onEditRoute={handleEditRoute}
-        onDeleteRoute={handleDeleteRoute}
+        onToggleStatus={handleToggleStatus}
       />
-      
-      <div className="md:hidden">
-        {filteredRoutes.map((route) => (
-          <RouteCard 
-            key={route.id} 
-            route={route} 
-            onViewRoute={handleViewRoute}
-            onEditRoute={handleEditRoute}
-            onDeleteRoute={handleDeleteRoute}
-          />
-        ))}
-      </div>
 
+      {/* ── Drawers & dialogs ────────────────────────────────────── */}
       <CreateRouteDrawer
         open={showCreateDrawer}
         onOpenChange={setShowCreateDrawer}
-        onSave={handleSaveRoute}
-      />
-
-      <RouteDetailsDrawer
-        route={selectedRoute}
-        open={showDetailsDrawer}
-        onOpenChange={setShowDetailsDrawer}
-        onEdit={handleEditRoute}
-        onDelete={handleDeleteRoute}
+        onSuccess={handleCreateSuccess}
       />
 
       <EditRouteDrawer
         route={selectedRoute}
         open={showEditDrawer}
         onOpenChange={setShowEditDrawer}
-        onSave={handleUpdateRoute}
+        onSuccess={handleEditSuccess}
       />
 
-      <DeleteRouteDialog
+      <ToggleRouteStatusDialog
         route={selectedRoute}
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={handleConfirmDelete}
+        open={showStatusDialog}
+        onOpenChange={setShowStatusDialog}
+        onSuccess={handleStatusChangeSuccess}
       />
     </div>
   );

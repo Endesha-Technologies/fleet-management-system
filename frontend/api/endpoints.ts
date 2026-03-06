@@ -143,7 +143,18 @@ export const ENDPOINTS = {
     DELETE: (documentId: string) => `/documents/${documentId}` as const,
   },
 
+  // ---- Routes --------------------------------------------------------------
+  ROUTES: {
+    LIST: '/routes',
+    CREATE: '/routes',
+    DETAIL: (id: string) => `/routes/${id}` as const,
+    UPDATE: (id: string) => `/routes/${id}` as const,
+    DEACTIVATE: (id: string) => `/routes/${id}/deactivate` as const,
+    ACTIVATE: (id: string) => `/routes/${id}/activate` as const,
+    SUGGEST: '/routes/suggest',
+    RECALCULATE: (id: string) => `/routes/${id}/recalculate` as const,
+  },
+
   // ---- Future domains (uncomment / add as the backend ships them) ---------
   // DRIVERS: { … },
-  // ROUTES:  { … },
 } as const;

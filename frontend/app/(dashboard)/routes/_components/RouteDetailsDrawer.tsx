@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, Calendar, Clock, Navigation, AlertTriangle, Edit, Trash2 } from 'lucide-react';
+import { MapPin, Calendar, Clock, Navigation, AlertTriangle, Edit, Power, PowerOff } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -17,7 +17,7 @@ export function RouteDetailsDrawer({
   open, 
   onOpenChange,
   onEdit,
-  onDelete 
+  onToggleStatus 
 }: RouteDetailsDrawerProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<unknown>(null);
@@ -174,11 +174,10 @@ export function RouteDetailsDrawer({
               <SheetTitle className="text-lg truncate">{route.name}</SheetTitle>
               <SheetDescription className="mt-1">
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                  ${route.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                    route.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 
-                    route.status === 'Scheduled' ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-gray-100 text-gray-800'}`}>
-                  {route.status}
+                  ${route.status === 'ACTIVE' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-gray-100 text-gray-800'}`}>
+                  {route.status === 'ACTIVE' ? 'Active' : 'Inactive'}
                 </span>
               </SheetDescription>
             </div>
@@ -196,11 +195,16 @@ export function RouteDetailsDrawer({
             <Button 
               variant="outline"
               size="sm"
-              className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-              onClick={() => onDelete?.(route)}
+              className={`h-8 ${route.status === 'ACTIVE' 
+                ? 'text-amber-600 hover:text-amber-700 hover:bg-amber-50 border-amber-200'
+                : 'text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200'}`}
+              onClick={() => onToggleStatus?.(route)}
             >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              {route.status === 'ACTIVE' ? (
+                <><PowerOff className="h-4 w-4 mr-2" />Deactivate</>
+              ) : (
+                <><Power className="h-4 w-4 mr-2" />Activate</>
+              )}
             </Button>
           </div>
         </SheetHeader>
@@ -262,7 +266,7 @@ export function RouteDetailsDrawer({
                 <AlertTriangle className="h-3 w-3 text-orange-500" />
                 <p className="text-xs font-medium text-gray-500">Deviation</p>
               </div>
-              <p className="text-base font-semibold">{route.deviationThreshold}m</p>
+              <p className="text-base font-semibold">{route.deviationThresholdKm} km</p>
             </div>
           </div>
 

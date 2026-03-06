@@ -276,3 +276,31 @@ export type {
   TruckHistoryServiceLog,
   TruckMaintenanceHistoryData,
 } from './maintenance';
+
+// Routes
+export { routesService } from './routes';
+export type {
+  // Enums / unions
+  RouteType,
+  RouteStatus,
+
+  // Entities
+  Waypoint,
+  RouteStep,
+  Route,
+  RouteWithCount,
+  RouteDetail,
+
+  // Request DTOs
+  CreateRouteRequest,
+  UpdateRouteRequest,
+
+  // Suggest Route
+  ExistingRouteMatch,
+  ORSSuggestion,
+  SuggestRouteResponse,
+  SuggestRouteParams,
+
+  // List params
+  RouteListParams,
+} from './routes';

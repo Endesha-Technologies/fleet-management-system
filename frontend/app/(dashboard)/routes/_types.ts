@@ -1,7 +1,7 @@
 import type { Route } from '@/types/route';
 
 // Re-export domain types for convenience
-export type { Route, RouteLocation, RouteStatus } from '@/types/route';
+export type { Route, RouteLocation, RouteStatus, RouteType } from '@/types/route';
 
 // ---------- Shared ----------
 
@@ -12,7 +12,9 @@ export interface LocationSuggestion {
   lon: string;
 }
 
-export interface RouteFormData {
+// Note: RouteFormData is now defined in RouteFormFields.tsx for the API-aligned form
+// This legacy version is kept for backward compatibility
+export interface LegacyRouteFormData {
   name: string;
   origin: string;
   originLat: number | null;
@@ -38,38 +40,42 @@ export interface RouteFormProps {
   isEditing?: boolean;
 }
 
+// Updated to match new API-aligned components
 export interface CreateRouteDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave?: (routeData: RouteFormData) => void;
+  onSuccess?: () => void;
 }
 
 export interface EditRouteDrawerProps {
   route: Route | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave?: (routeData: Route) => void;
+  onSuccess?: () => void;
 }
 
-export interface DeleteRouteDialogProps {
+export interface ToggleRouteStatusDialogProps {
   route: Route | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm?: (route: Route) => void;
+  onSuccess?: () => void;
 }
+
+// Alias for backward compatibility
+export type DeleteRouteDialogProps = ToggleRouteStatusDialogProps;
 
 export interface RouteTableProps {
   routes: Route[];
   onViewRoute?: (route: Route) => void;
   onEditRoute?: (route: Route) => void;
-  onDeleteRoute?: (route: Route) => void;
+  onToggleStatus?: (route: Route) => void;
 }
 
 export interface RouteCardProps {
   route: Route;
   onViewRoute?: (route: Route) => void;
   onEditRoute?: (route: Route) => void;
-  onDeleteRoute?: (route: Route) => void;
+  onToggleStatus?: (route: Route) => void;
 }
 
 export interface RouteDetailsProps {
@@ -81,5 +87,5 @@ export interface RouteDetailsDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onEdit?: (route: Route) => void;
-  onDelete?: (route: Route) => void;
+  onToggleStatus?: (route: Route) => void;
 }
