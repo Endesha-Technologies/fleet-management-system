@@ -14,6 +14,7 @@ import type {
   FleetOverview,
   ComplianceAlertsData,
   ComplianceAlertsParams,
+  WialonUnit,
 } from './trucks.types';
 
 // ---------------------------------------------------------------------------
@@ -97,6 +98,14 @@ async function getComplianceAlerts(
   return res.data;
 }
 
+/** Fetch all available Wialon tracking units for linking to a truck. */
+async function getWialonUnits(): Promise<WialonUnit[]> {
+  const res = await apiClient.get<WialonUnit[]>(
+    ENDPOINTS.TRUCKS.WIALON_UNITS,
+  );
+  return res.data;
+}
+
 // ---------------------------------------------------------------------------
 // Export
 // ---------------------------------------------------------------------------
@@ -110,4 +119,5 @@ export const trucksService = {
   updateTruckStatus,
   getFleetOverview,
   getComplianceAlerts,
+  getWialonUnits,
 } as const;

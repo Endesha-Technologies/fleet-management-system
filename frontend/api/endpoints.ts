@@ -49,6 +49,7 @@ export const ENDPOINTS = {
     STATUS: (id: string) => `/trucks/${id}/status` as const,
     FLEET_OVERVIEW: '/fleet/overview',
     COMPLIANCE_ALERTS: '/trucks/compliance-alerts',
+    WIALON_UNITS: '/trucks/wialon-units',
   },
 
   // ---- Tyres --------------------------------------------------------------

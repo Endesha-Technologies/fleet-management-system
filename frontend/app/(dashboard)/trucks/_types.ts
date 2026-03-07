@@ -140,6 +140,7 @@ export interface TruckFormData {
   operatingLicenseExpiry: string;
 
   // Step 3: Technical & Operational
+  wialonUnitId: string;
   fuelType: string;
   tankCapacityLiters: string;
   engineCapacityCc: string;
@@ -180,6 +181,7 @@ export const EMPTY_TRUCK_FORM: TruckFormData = {
   inspectionExpiry: '',
   operatingLicenseNumber: '',
   operatingLicenseExpiry: '',
+  wialonUnitId: '',
   fuelType: 'DIESEL',
   tankCapacityLiters: '',
   engineCapacityCc: '',
@@ -242,6 +244,9 @@ export function buildCreateTruckRequest(form: TruckFormData): CreateTruckRequest
   req.inspectionExpiry = optionalStr(form.inspectionExpiry);
   req.operatingLicenseNumber = optionalStr(form.operatingLicenseNumber);
   req.operatingLicenseExpiry = optionalStr(form.operatingLicenseExpiry);
+
+  // Wialon tracking
+  req.wialonUnitId = optionalStr(form.wialonUnitId);
 
   // Technical
   if (form.fuelType) req.fuelType = form.fuelType as FuelType;
@@ -324,6 +329,9 @@ export function buildUpdateTruckRequest(
   ifChanged('purchasedFrom', 'purchasedFrom', optionalStr);
   ifChanged('notes', 'notes', optionalStr);
 
+  // ── Wialon unit ─────────────────────────────────────────────────────────
+  ifChanged('wialonUnitId', 'wialonUnitId', optionalStr);
+
   // ── Enum fields ─────────────────────────────────────────────────────────
   ifChanged('bodyType', 'bodyType', (v) => v as BodyType);
   ifChanged('fuelType', 'fuelType', (v) => v as FuelType);
@@ -382,6 +390,7 @@ export function truckToFormData(truck: ApiTruck): TruckFormData {
     inspectionExpiry: truck.inspectionExpiry ?? '',
     operatingLicenseNumber: truck.operatingLicenseNumber ?? '',
     operatingLicenseExpiry: truck.operatingLicenseExpiry ?? '',
+    wialonUnitId: truck.wialonUnitId ?? '',
     fuelType: truck.fuelType ?? 'DIESEL',
     tankCapacityLiters: truck.tankCapacityLiters != null ? String(truck.tankCapacityLiters) : '',
     engineCapacityCc: truck.engineCapacityCc != null ? String(truck.engineCapacityCc) : '',

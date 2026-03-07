@@ -4,6 +4,7 @@ import React from 'react';
 import { FormInput, FormSelect } from '@/components/ui/form';
 import { BODY_TYPE_OPTIONS } from '../../_types';
 import type { FormStepProps, TruckFormData } from '../../_types';
+import { WialonUnitSelect } from './WialonUnitSelect';
 
 export function BasicIdentityStep({ formData, setFormData }: FormStepProps) {
   const handleChange = (field: keyof TruckFormData, value: string) => {
@@ -28,6 +29,13 @@ export function BasicIdentityStep({ formData, setFormData }: FormStepProps) {
           onChange={(e) => handleChange('fleetNumber', e.target.value)}
         />
       </div>
+
+      {/* Wialon Tracking Unit */}
+      <WialonUnitSelect
+        value={formData.wialonUnitId}
+        onChange={(id) => handleChange('wialonUnitId', id)}
+        description="Link this truck to a Wialon GPS tracking unit for live location and telemetry."
+      />
 
       {/* Make & Model */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

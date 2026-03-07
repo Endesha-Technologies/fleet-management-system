@@ -45,7 +45,12 @@ export type {
   ComplianceAlertsData,
   ComplianceAlertsParams,
 
+  // Wialon units
+  WialonLastPosition,
+  WialonUnit,
+
   // Response aliases
+  WialonUnitsResponse,
   TruckListResponse,
   TruckDetailResponse,
   CreateTruckResponse,

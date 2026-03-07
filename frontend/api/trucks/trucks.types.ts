@@ -316,8 +316,32 @@ export interface ComplianceAlertsParams {
   warningDays?: number;
 }
 
+// ---- Wialon units ---------------------------------------------------------
+
+/** Last known position of a Wialon-tracked unit. */
+export interface WialonLastPosition {
+  lat: number;
+  lng: number;
+  speed: number;
+  course: number;
+  timestamp: string;
+}
+
+/** A Wialon tracking unit that can be linked to a truck. */
+export interface WialonUnit {
+  wialonId: number;
+  name: string;
+  imei: string | null;
+  hwType: string | null;
+  phoneNumber: string | null;
+  lastPosition: WialonLastPosition | null;
+  lastMessageTime: string | null;
+  isOnline: boolean;
+}
+
 // ---- Response aliases -----------------------------------------------------
 
+export type WialonUnitsResponse = ApiResponse<WialonUnit[]>;
 export type TruckListResponse = ApiResponse<PaginatedData<Truck>>;
 export type TruckDetailResponse = ApiResponse<TruckDetail>;
 export type CreateTruckResponse = ApiResponse<Truck>;
