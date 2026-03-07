@@ -6,6 +6,7 @@ import {
   Package, 
   Wrench, 
   Disc,
+  Radar,
 } from 'lucide-react';
 
 export const NAV_ITEMS = [
@@ -24,6 +25,11 @@ export const NAV_ITEMS = [
     name: 'Trips',
     href: '/trips',
     icon: Truck,
+  },
+  {
+    name: 'Monitor',
+    href: '/monitor',
+    icon: Radar,
   },
   // {
   //   name: 'Fuel',

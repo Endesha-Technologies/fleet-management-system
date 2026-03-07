@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Edit,
@@ -92,13 +92,10 @@ function mapApiToUiRoute(api: RouteDetail): Route {
 // Page Component
 // ---------------------------------------------------------------------------
 
-interface RouteDetailsPageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default function RouteDetailsPage({ params }: RouteDetailsPageProps) {
+export default function RouteDetailsPage() {
   const router = useRouter();
-  const [routeId, setRouteId] = useState<string | null>(null);
+  const params = useParams();
+  const routeId = params.id as string | undefined;
   const [route, setRoute] = useState<Route | null>(null);
   const [trips, setTrips] = useState<unknown[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,11 +106,6 @@ export default function RouteDetailsPage({ params }: RouteDetailsPageProps) {
   // UI State
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
-
-  // Resolve params
-  useEffect(() => {
-    params.then((p) => setRouteId(p.id));
-  }, [params]);
 
   // Fetch route data
   const fetchRoute = useCallback(async () => {

@@ -1,5 +1,15 @@
 import { TruckLocation } from '@/types/tracking';
 
+// Trip colors for map visualization
+export const TRIP_COLORS = [
+  { trail: '#3b82f6', marker: '#2563eb' }, // Blue
+  { trail: '#10b981', marker: '#059669' }, // Green
+  { trail: '#f59e0b', marker: '#d97706' }, // Amber
+  { trail: '#8b5cf6', marker: '#7c3aed' }, // Purple
+  { trail: '#ef4444', marker: '#dc2626' }, // Red
+  { trail: '#06b6d4', marker: '#0891b2' }, // Cyan
+] as const;
+
 // Mock GPS data for active trucks in Uganda
 export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
   {
@@ -16,13 +26,11 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     startLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
     endLocation: { lat: -0.6069, lng: 30.6632, name: 'Mbarara' },
     routeWaypoints: [
-      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() }, // Start
-      { lat: 0.1500, lng: 32.4000, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString() },
-      { lat: 0.0000, lng: 31.8000, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString() },
-      { lat: -0.2500, lng: 31.2000, timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString() }, // Current position
+      { lat: -0.4000, lng: 31.0000, timestamp: new Date(Date.now() + 30 * 60 * 1000).toISOString() },
+      { lat: -0.5000, lng: 30.8500, timestamp: new Date(Date.now() + 60 * 60 * 1000).toISOString() },
     ],
     startTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    eta: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(), // 3 hours from now
+    eta: new Date(Date.now() + 1.5 * 60 * 60 * 1000).toISOString(), // 1.5 hours from now
     driverPhone: '+256 772 345 678',
     status: 'On Time',
     currentLocation: 'Near Masaka',
@@ -51,10 +59,8 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     startLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
     endLocation: { lat: 2.7747, lng: 32.2989, name: 'Gulu' },
     routeWaypoints: [
-      { lat: 0.3476, lng: 32.5825, timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString() }, // Start
-      { lat: 0.7000, lng: 32.4500, timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString() },
-      { lat: 1.0000, lng: 32.3700, timestamp: new Date(Date.now() - 0.5 * 60 * 60 * 1000).toISOString() },
-      { lat: 1.3733, lng: 32.2903, timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString() }, // Current
+      { lat: 1.8000, lng: 32.3000, timestamp: new Date(Date.now() + 45 * 60 * 1000).toISOString() },
+      { lat: 2.2500, lng: 32.3000, timestamp: new Date(Date.now() + 90 * 60 * 1000).toISOString() },
     ],
     startTime: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
     eta: new Date(Date.now() + 2.5 * 60 * 60 * 1000).toISOString(),
@@ -71,40 +77,6 @@ export const MOCK_TRUCK_LOCATIONS: TruckLocation[] = [
     engineTemp: 92,
     fuelConsumption: 22.3,
     alerts: ['Low fuel - refuel recommended'],
-  },
-  {
-    tripId: '3',
-    vehiclePlate: 'UBD 789P',
-    driverName: 'Moses Kizza',
-    latitude: 0.3800,
-    longitude: 32.8000,
-    speed: 0,
-    heading: 270, // West towards Kampala
-    lastUpdate: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 minutes ago
-    fuelLevel: 20,
-    routeName: 'Jinja → Kampala',
-    startLocation: { lat: 0.4241, lng: 33.2039, name: 'Jinja' },
-    endLocation: { lat: 0.3476, lng: 32.5825, name: 'Kampala' },
-    routeWaypoints: [
-      { lat: 0.4241, lng: 33.2039, timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString() }, // Start
-      { lat: 0.4000, lng: 33.0000, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
-      { lat: 0.3800, lng: 32.8000, timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString() }, // Current (stopped)
-    ],
-    startTime: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-    eta: new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString(),
-    driverPhone: '+256 784 567 890',
-    status: 'Delayed',
-    currentLocation: 'Stopped near Mukono',
-    distanceTraveled: 42,
-    distanceRemaining: 40,
-    averageSpeed: 28,
-    driverHours: 3.0,
-    cargoWeight: 15.5,
-    cargoType: 'Food Supplies',
-    odometer: 203567,
-    engineTemp: 72,
-    fuelConsumption: 19.8,
-    alerts: ['Vehicle stopped for 15+ mins', 'Critical: Low fuel level', 'Behind schedule by 45 mins'],
   },
 ];
 
